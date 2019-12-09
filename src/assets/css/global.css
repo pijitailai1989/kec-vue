@@ -1,0 +1,113 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 15px;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+a:link,a:visited,a:active,a:hover{text-decoration:none;color:inherit;}
+.weight{font-weight:600;}
+.flexs{
+    display: -webkit-box;  /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+    display: -moz-box;     /* 老版本语法: Firefox (buggy) */
+    display: -ms-flexbox;  /* 混合版本语法: IE 10 */
+    display: -webkit-flex; /* 新版本语法: Chrome 21+ */
+    display: flex;         /* 新版本语法: Opera 12.1, Firefox 22+ */
+}
+.rows{flex-flow: row wrap;}
+.rown{flex-flow: row nowrap;}
+.columns{flex-flow: column;}
+
+.j-start{justify-content: flex-start;}
+.j-end{justify-content: flex-end;}
+.j-center{justify-content: center;}
+.j-between{justify-content: space-between;}
+.j-around{justify-content: space-around;}
+/*flex-start | flex-end | center | space-between | space-around*/
+.a-start{align-items: flex-start;}
+.a-end{align-items: flex-end;}
+.a-center{align-items: center;}
+.a-baseline{align-items: baseline;}
+.a-stretch{align-items: stretch;}
+/*flex-start | flex-end | center | baseline | stretch;*/
+
+
+.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    
+    padding-right: 2px !important;
+    padding-left: 2px !important;
+}
+
+.row {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+.scrollbar::-webkit-scrollbar
+  {
+      width: 0px;
+      height: 0px;
+      background-color: #Fff;
+      cursor:pointer;
+  }
+   
+  /*定义滚动条轨道 内阴影+圆角*/
+  .scrollbar::-webkit-scrollbar-track
+  {
+      border-radius: 0px;
+      background-color: #Fff;
+  }
+   
+  /*定义滑块 内阴影+圆角*/
+  .scrollbar::-webkit-scrollbar-thumb
+  {
+      border-radius: 0px;
+      background-color: #ccc;
+  }
+ .scrollnone::-webkit-scrollbar {display:none}
+
+
+ .input-error .el-input__inner{
+    border-color: red !important;
+ }
+ .star::after
+ {
+  content:"*";
+  color:red;
+ }
