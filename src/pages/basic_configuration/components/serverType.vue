@@ -2,7 +2,7 @@
   <kec-scroll :numbers="179">
     <div class="flexs kec-btn j-end">
       <el-popover
-        placement="bottom-end"
+        placement="left-start"
         width="260"
         v-model="addVisible"
         trigger="click">
@@ -10,14 +10,26 @@
         <kec-button slot="reference" text="" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
       </el-popover>
       <el-popover
-        placement="bottom-end"
+        placement="left-start"
         width="260"
         v-model="changeVisible"
         trigger="click">
         <kec-server @close="closeFunc" type="changeVisible" :item="selectItem"></kec-server>
         <kec-button :disabled="selectIndex===null" slot="reference" text="" icon="fa-pencil" background="#17A2B8" color="#fff"></kec-button>
       </el-popover>
-        <kec-button @click.native="delFunc" :disabled="selectIndex===null" text="" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+      <el-popover
+        placement="left-start"
+        width="160"
+        :disabled="selectIndex===null"
+        v-model="visible">
+        <p>确定删除吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+          <el-button type="primary" size="mini" @click.native="delFunc">确定</el-button>
+        </div>
+        <kec-button slot="reference"
+          :disabled="selectIndex===null" text="" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+      </el-popover>
     </div>
     <div class="kec-content">
           <kec-table 
@@ -64,7 +76,8 @@ import KecServer from './addServer'
              name:{"title":'服务类型名称','slot':false},
              },
              selectIndex:null,
-           selectItem:null
+           selectItem:null,
+           visible:false
       };
     },
 
@@ -95,6 +108,7 @@ import KecServer from './addServer'
         },
         closeFunc(data){
           this.selectIndex = null ;
+          this.selectItem = null ;
           if(data.bool) {
             this.loadQueryServerTypes()
           }

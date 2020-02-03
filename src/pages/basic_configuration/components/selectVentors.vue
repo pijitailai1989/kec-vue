@@ -1,5 +1,34 @@
 <template>
-  <div style="background:#fff">
+  <kec-scroll :numbers="175">
+    <div class="flexs kec-btn j-end">
+      <el-popover
+        placement="left-start"
+        width="700"
+        v-model="addVisible"
+        trigger="click">
+        <kec-supplier @close="closeFunc" type="addVisible"></kec-supplier>
+        <kec-button slot="reference" text="新建供应商" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
+      </el-popover>
+      <kec-button-click
+        @click="eqitVentorFunc"
+        :disabled="selectIndex===null" 
+        slot="reference" text="编辑供应商" 
+        icon="fa-pencil" background="#17A2B8" 
+        color="#fff"></kec-button-click>
+      <el-popover
+        placement="left-start"
+        width="160"
+        :disabled="selectIndex===null"
+        v-model="visible">
+        <p>确定删除吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+          <el-button type="primary" size="mini" @click.native="delFunc">确定</el-button>
+        </div>
+        <kec-button slot="reference"
+          :disabled="selectIndex===null" text="删除供应商" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+      </el-popover>
+    </div>
     <div class="kec-content">
           <kec-table 
            height="221px"
@@ -22,22 +51,23 @@
             </template>
           </kec-table>
     </div>
-  </div>
+  </kec-scroll>
 </template>
 
 <script>
 import {mapState,mapActions,mapMutations} from 'vuex'
-import {KecButton , KecTable }  from '@/common/components'
+import {KecButton , KecTable,KecScroll,KecButtonClick }  from '@/common/components'
 import KecSupplier from './addSupplier' 
   export default {
     name:'selectVentors',
     props:[''],
     data () {
       return {
+           visible:false,
            addVisible:false,
            changeVisible:false,
            letWidth:{
-             "0":"50px"
+             "0":"60px"
            },
            lastWidth:'',
            tableHeader:{
@@ -46,9 +76,9 @@ import KecSupplier from './addSupplier'
              contactName:{"title":'联系人','slot':false},
              phone:{"title":'联系电话','slot':false},
              email:{"title":'邮箱','slot':false},
-             type:{"title":'类型','slot':false},
-             },
-             selectIndex:null,
+             webSite:{"title":'网址','slot':false},
+           },
+           selectIndex:null,
            selectItem:null
       };
     },
@@ -56,7 +86,9 @@ import KecSupplier from './addSupplier'
     components: {
         KecButton ,
         KecTable,
-        KecSupplier
+        KecSupplier,
+        KecButtonClick,
+        KecScroll
     },
 
     computed: {
@@ -67,17 +99,61 @@ import KecSupplier from './addSupplier'
 
     mounted() {
       this.loadVendorGetVendors()
+      this.loadDictionaryCURRENCY()
+      this.loadChargeUnits()
+      this.loadQueryServerTypes()
+      this.loadCountryQueryAll()
+      this.loadVendorType()
     },
 
     methods: {
-        ...mapActions('basic',['loadVendorGetVendors','loadVendorDeleteVendor']),
+        ...mapActions('basic',
+        ['loadVendorGetVendors',
+        'loadVendorDeleteVendor',
+        'loadQueryServerTypes',
+        'loadDictionaryCURRENCY',
+        'loadCountryQueryAll',
+        'loadVendorType',
+        'loadChargeUnits']
+        ),
         ...mapMutations('basic',['selectVentorsId','setVentorsInfo']),
         ...mapMutations('home',['pushBreadcrumbArr']),
         activeFunc(index) {
           this.selectIndex = index ;
         },
         activeItem(item){
-          this.selectItem = item;
+          this.selectItem = item
+        },
+        closeFunc(data){
+          this.selectIndex = null ;
+          this.selectItem = null ;
+          if(data.bool) {
+            this.loadVendorGetVendors()
+          }
+          if(data.type){
+              this[data.type] = false ;
+          } 
+        },
+        delFunc(){
+          if(this.selectIndex!==null) {
+            this.loadVendorDeleteVendor(this.selectItem.id).then(success=>{
+                   this.selectIndex = null ;
+                   this.loadVendorGetVendors()
+                   this.$message( {
+                    message: success,
+                    type: 'success'
+                   });
+                },error=>{
+                  this.selectIndex = null ;
+                   this.$message( {
+                    message: error,
+                    type: 'error'
+                   });
+                })
+          } 
+        },
+        eqitVentorFunc(){
+          let item = this.selectItem ;
           this.setVentorsInfo(item)
           this.selectVentorsId(item.id)
           this.pushBreadcrumbArr({name:'供应商信息',components:'ventorsItem'})

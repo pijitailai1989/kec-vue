@@ -23,28 +23,35 @@
         </kec-form>
     </div>
     <div class="col-sm-12">
-        <kec-form text="收费科目">
+        <kec-form text="科目项名称">
          <template #input>
-           <el-input v-model="payload.chargeSubjectName" placeholder="" size="medium"></el-input>
+           <el-select v-model="payload.chargeSubjectId" @change="changeItemFunc" filterable placeholder="" size="medium" style="width:100%">
+              <el-option
+                v-for="item in subjectItemList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
          </template>
         </kec-form>
     </div>
     <div class="col-sm-12">
-        <kec-form text="收费编号">
+        <kec-form text="科目项编号">
          <template #input>
-           <el-input v-model="payload.chargeSubjectCode" placeholder="" size="medium"></el-input>
+           <el-input v-model="payload.chargeSubjectPath" disabled placeholder="" size="medium"></el-input>
          </template>
         </kec-form>
     </div>
     <div class="col-sm-12">
         <kec-form text="收费单位">
          <template #input>
-           <el-select v-model="payload.unit" placeholder="" size="medium" style="width:100%">
+           <el-select v-model="payload.unitId" placeholder="" size="medium" style="width:100%">
               <el-option
                 v-for="item in unitsList"
                 :key="item.id"
                 :label="item.code"
-                :value="item.code">
+                :value="item.id">
               </el-option>
             </el-select>
          </template>
@@ -74,11 +81,11 @@ import {KecForm, KecButton }  from '@/common/components'
     data () {
       return {
         payload:{
+           id:null,
            name:'',
-           chargeSubjectCode:'',
-           chargeSubjectName:'',
-           unit:''
-           
+           chargeSubjectPath:'',
+           chargeSubjectId:null,
+           unitId:''
         }
       };
     },
@@ -89,7 +96,7 @@ import {KecForm, KecButton }  from '@/common/components'
     },
 
     computed: {
-      ...mapState('basic',['serverList','unitsList']),
+      ...mapState('basic',['serverList','unitsList','unitsClassList','subjectItemList']),
       
     },
 
@@ -101,22 +108,20 @@ import {KecForm, KecButton }  from '@/common/components'
       ...mapActions('basic',['loadCreateChargeItem','loadModifyChargeItem']),
       closeData(){
         this.payload={
+           id:null,
            name:'',
-           chargeSubjectCode:'',
-           chargeSubjectName:'',
-           unit:''
+           chargeSubjectPath:'',
+           chargeSubjectId:null,
+           unitId:''
         }
       },
       clickConfirm() {
         const _this = this ;
-        console.log(_this.payload,'_this.payload')
-        let data = {
-                  id:_this.serverId,
-                  chargeItems:_this.payload
-                }
+        let {name,chargeSubjectId,unitId,chargeSubjectPath,id} = _this.payload ;
+        let data = {id:_this.serverId}
         switch(_this.type){
           case 'addVisible':
-                
+                data.chargeItems = {name,chargeSubjectId,unitId}
                 _this.loadCreateChargeItem(data).then(success=>{
                    this.$emit('close',{type:this.type,bool:true})
                    this.closeData()
@@ -132,7 +137,7 @@ import {KecForm, KecButton }  from '@/common/components'
                 })
                 break;
           case 'changeVisible':
-                
+                data.chargeItems = {name,chargeSubjectId,unitId,id}
                 _this.loadModifyChargeItem(data).then(success=>{
                    this.$emit('close',{type:this.type,bool:true})
                    this.closeData()
@@ -153,9 +158,15 @@ import {KecForm, KecButton }  from '@/common/components'
         
         
       },
-      clickClose() {
+      clickClose(){
         this.$emit('close',{type:this.type,bool:false})
         this.closeData()
+      },
+      changeItemFunc(id){
+        let obj = this.subjectItemList.find(el=> {
+          return el.id == id ;
+        })
+        this.payload.chargeSubjectPath = obj.path ;
       }
     },
 
@@ -163,15 +174,13 @@ import {KecForm, KecButton }  from '@/common/components'
       item:{
           deep:true,
           handler:function(val){
-            console.log(val)
+            if(val){
+               let data = JSON.parse(JSON.stringify(val) );
+               let {unitId,chargeSubjectPath,chargeSubjectId,id,name} = data ;
+               this.payload = {unitId,chargeSubjectPath,chargeSubjectId,id,name}
+               console.log(this.payload,'this.payload')
+            }
             
-            let data = JSON.parse(JSON.stringify(val) );
-            this.payload={
-                name:data.name,
-                chargesSubject:data.chargesSubject,
-                id:data.id,
-                unit:data.unit
-             }
           }
       }
     }

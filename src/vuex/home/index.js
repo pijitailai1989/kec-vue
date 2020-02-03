@@ -62,7 +62,7 @@ export default {
       }
       
       tool && item && state.tableTabs.push(item) ;
-      length>8 && state.tableTabs.shift() ;
+      length>7 && state.tableTabs.shift() ;
 
     },
     deleteItemTabs(state,index) {

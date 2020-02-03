@@ -2,23 +2,35 @@
   <kec-scroll :numbers="179">
     <div class="flexs kec-btn j-end">
       <el-popover
-        placement="bottom-end"
-        width="450"
+        placement="left-start"
+        width="700"
         v-model="addVisible"
         trigger="click">
         <kec-customer @close="closeFunc" type="addVisible"></kec-customer>
         <kec-button slot="reference" text="" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
       </el-popover>
       <el-popover
-        placement="bottom-end"
-        width="450"
+        placement="left-start"
+        width="700"
         :disabled="selectIndex===null"
         v-model="changeVisible"
         trigger="click">
         <kec-customer @close="closeFunc" type="changeVisible" :item="selectItem"></kec-customer>
         <kec-button :disabled="selectIndex===null" slot="reference" text="" icon="fa-pencil" background="#17A2B8" color="#fff"></kec-button>
       </el-popover>
-        <kec-button @click.native="delFunc" :disabled="selectIndex===null" text="" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+      <el-popover
+        placement="left-start"
+        width="160"
+        :disabled="selectIndex===null"
+        v-model="visible">
+        <p>确定删除吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+          <el-button type="primary" size="mini" @click.native="delFunc">确定</el-button>
+        </div>
+        <kec-button slot="reference"
+          :disabled="selectIndex===null" text="" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+      </el-popover>
     </div>
     <div class="kec-content">
           <kec-table 
@@ -57,20 +69,21 @@ import KecCustomer from './addCustomer'
            addVisible:false,
            changeVisible:false,
            letWidth:{
-             "0":"50px"
+             "0":"60px"
            },
            lastWidth:'',
            tableHeader:{
-             id:{"title":'id','slot':false},
-             customerCode:{"title":'客户编码','slot':false},
-             companyName:{"title":'公司名称','slot':false},
-             contactName:{"title":'联系人','slot':false},
-             phone:{"title":'联系电话','slot':false},
-             email:{"title":'邮箱','slot':false},
-             type:{"title":'类型','slot':false},
-             },
-             selectIndex:null,
-           selectItem:null
+           id:{"title":'id','slot':false},
+           company_name:{"title":'公司名称','slot':false},
+           contact_name:{"title":'联系人','slot':false},
+           phone:{"title":'联系电话','slot':false},
+           email:{"title":'邮箱','slot':false},
+           type:{"title":'类型','slot':false},
+           web_site:{"title":'网址','slot':false},
+           },
+           selectIndex:null,
+           selectItem:null,
+           visible:false
       };
     },
 
@@ -96,15 +109,13 @@ import KecCustomer from './addCustomer'
         ...mapActions('basic',['loadCustomerQueryAll','loadCustomerUpdateStatus','loadDictionaryCURRENCY']),
         activeFunc(index) {
           this.selectIndex = index ;
-          console.log(index,'index')
         },
         activeItem(item){
           this.selectItem = item
-          console.log(item,'item')
         },
         closeFunc(data){
-          console.log(data,'data')
           this.selectIndex = null ;
+          this.selectItem = null ;
           if(data.bool) {
             this.loadCustomerQueryAll({status:'ENABLED'})
           }

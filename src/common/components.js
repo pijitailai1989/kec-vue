@@ -1,4 +1,6 @@
 import KecButton from './components/buttons.vue'
+import KecButtonNo from './components/buttonsNo.vue'
+import KecButtonClick from './components/buttonsClick.vue'
 import KecTable from './components/tables.vue'
 import KecDialog from './components/dialogs.vue'
 import KecForm from './components/forms.vue'
@@ -10,9 +12,12 @@ import KecPageHeader from './components/pageHeaders.vue'
 import KecCalendars from './components/calendars.vue'
 import KecWork from './components/workstatus.vue'
 import KecScroll from './components/scrolls.vue'
+import KecTree from './components/trees.vue'
 
 export { 
          KecButton,
+         KecButtonNo,
+         KecButtonClick,
          KecTable,
          KecDialog,
          KecForm,
@@ -23,7 +28,8 @@ export {
          KecPageHeader,
          KecCalendars,
          KecWork,
-         KecScroll
+         KecScroll,
+         KecTree
 
         };
 

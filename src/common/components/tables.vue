@@ -5,7 +5,7 @@
        maxHeight:tabsShow=='show'?`calc( 100vh - 44px - ${height} )`:`calc( 100vh - ${height} )`,
        overflowY:'auto'
       }">
-      <div ref="tableHeader" class="table-th flexs" :style="{background:themeColor.content_border_color}">
+      <div ref="tableHeader" class="table-th flexs" :style="{background:themeColor.content_border_color,borderColor:themeColor.content_border_color}">
           <span class="flexs a-center j-center" :class="[ letWidth[index]?'':'five' ]" :style="{'width':letWidth[index]}" v-for="(item,key,index) in tableHeader" :key="key">{{item['title']}}</span>
           <span class="flexs a-center j-center" :style="{'width':lastWidth}" v-if="lastWidth">操作</span>
       </div>
@@ -19,7 +19,7 @@
                       }"
                @click="clickItemUl(index,item)">
               <li :class="[ letWidth[index]?'':'five' ]" class="todo-li flexs a-center j-center" :style="{'width':letWidth[index]}" v-for="(todo,key,index) in tableHeader" :key="key">
-                <slot v-if="todo['slot']" name="a" v-bind:item="item[key]"></slot>
+                <slot v-if="todo['slot']" :name="key" v-bind:item="item[key]"></slot>
                 <slot v-else v-bind:item="item[key]"></slot>
                 
               </li>
@@ -54,7 +54,7 @@ import {mapState} from 'vuex'
     data () {
       return {
          active_index:null,
-         clientHeight:0
+         clientHeight:38
       };
     },
     computed: {
@@ -73,14 +73,12 @@ import {mapState} from 'vuex'
           if(tableHeader.clientHeight != this.clientWidth){
              this.clientHeight = tableHeader.clientHeight ;
           }
-            
-           
         }
     },
     mounted() {
       window.addEventListener('resize', this.handleResize)
       let tableHeader = this.$refs.tableHeader ;
-        this.clientHeight = tableHeader.clientHeight ;
+        this.clientHeight = tableHeader.clientHeight || 38;
     },
     destroyed () {
        window.removeEventListener('resize', this.handleResize)
@@ -101,19 +99,24 @@ import {mapState} from 'vuex'
  .tables 
    width 100%
    border-radius 3px 
+   border-bottom 1px solid #EBEEF5 
    .sky 
      background #F9F9F9
    .five  
      flex-grow 1  
      flex 1  
+     min-width 100px
    .table-th  
+      border-left 1px solid
+      border-right 1px solid
       color #fff
       width 100%
-      box-shadow  0px 1px 2px #ccc;
+      border-radius 3px
+      box-shadow  0px 1px 2px #EBEEF5
       background #fff
       position absolute
+      z-index 99
       padding 0
-      border-radius 3px 
       top 0 
       left 0
       span 
@@ -127,17 +130,17 @@ import {mapState} from 'vuex'
       width 100%
       
       ul
-       border-top 1px solid #ccc 
-       border-left 1px solid #ccc 
-       border-right 1px solid #ccc 
+       border-top 1px solid #EBEEF5 
+       border-left 1px solid #EBEEF5 
+       border-right 1px solid #EBEEF5 
        margin-bottom 0
        cursor pointer
        &:hover  
-         background #eee
+         background #F5F7FA
        &:last-child  
-          border-bottom 1px solid #ccc 
+          
        li+li
-         border-left 1px solid #ccc
+         border-left 1px solid #EBEEF5
        li  
          padding 8px 0px
          word-wrap  break-word

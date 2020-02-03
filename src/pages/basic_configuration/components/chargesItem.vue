@@ -10,11 +10,11 @@
                 :label="item.name"
                 :value="item.id">
               </el-option>
-            </el-select>
+           </el-select>
       </div>
       <div class="flexs ">
            <el-popover
-             placement="bottom-end"
+             placement="left-start"
              width="300"
              v-model="addVisible"
              trigger="click">
@@ -22,7 +22,7 @@
              <kec-button slot="reference" text="" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
            </el-popover>
            <el-popover
-             placement="bottom-end"
+             placement="left-start"
              width="300"
              v-model="changeVisible"
              :disabled="selectIndex===null"
@@ -30,7 +30,19 @@
              <kec-item :serverId="value" @close="closeFunc" type="changeVisible"  :item="selectItem"></kec-item>
              <kec-button :disabled="selectIndex===null" slot="reference" text="" icon="fa-pencil" background="#17A2B8" color="#fff"></kec-button>
            </el-popover>
-           <kec-button @click.native="delFunc" text="" :disabled="selectIndex===null" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+           <el-popover
+            placement="left-start"
+            width="160"
+            :disabled="selectIndex===null"
+            v-model="visible">
+            <p>确定删除吗？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+              <el-button type="primary" size="mini" @click.native="delFunc">确定</el-button>
+            </div>
+            <kec-button slot="reference"
+              :disabled="selectIndex===null" text="" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+          </el-popover>
       </div>
     </div>
     <div class="kec-content">
@@ -76,14 +88,15 @@ import KecItem from './addItem'
            tableHeader:{
              id:{"title":'id','slot':false},
              name:{"title":'收费项名称','slot':false},
-             chargeSubjectCode:{"title":'科目编号','slot':false},
-             chargeSubjectName:{"title":'收费科目','slot':false},
-             unit:{"title":'收费单位','slot':false}
+             chargeSubjectPath:{"title":'科目项编号','slot':false},
+             chargeSubjectName:{"title":'科目项名称','slot':false},
+             unitCode:{"title":'收费单位','slot':false}
              },
              selectIndex:null,
            selectItem:null,
            addVisible:false,
-           changeVisible:false
+           changeVisible:false,
+           visible:false
       };
     },
 
@@ -101,12 +114,14 @@ import KecItem from './addItem'
     beforeMount() {},
 
     mounted() {
+      this.$nextTick(function () {  })
       this.loadQueryServerTypes()
       this.loadChargeUnits()
+      this.loadSubjectQueryItem()
     },
 
     methods: {
-      ...mapActions('basic',['loadDeleteChargeItem','loadQueryServerTypes','loadChargeUnits']),
+      ...mapActions('basic',['loadDeleteChargeItem','loadQueryServerTypes','loadChargeUnits','loadSubjectQueryItem']),
         activeFunc(index) {
           this.selectIndex = index ;
         },
@@ -115,6 +130,7 @@ import KecItem from './addItem'
         },
         closeFunc(data){
           this.selectIndex = null ;
+          this.selectItem = null ;
           if(data.bool) {
             this.loadQueryServerTypes()
           }
@@ -131,7 +147,7 @@ import KecItem from './addItem'
                 id:_this.selectItem.id
               }
             }
-            this.loadDeleteChargeItem(data).then(success=>{
+            this.loadDeleteChargeItem({data}).then(success=>{
                    this.selectIndex = null ;
                    this.loadQueryServerTypes()
                    this.$message( {
@@ -151,7 +167,11 @@ import KecItem from './addItem'
           this.selectIndex = null ;
           this.serverList.forEach(element => {
             element.chargeItems.forEach(item => {
-              item['unitCode'] = item['unit']['code']
+              item['unitCode'] = item['chargeUnit'] && item['chargeUnit']['code'] || ''
+              item['unitId'] = item['chargeUnit'] && item['chargeUnit']['id'] || null
+              item['chargeSubjectPath'] = item['ledgerSubject'] && item['ledgerSubject']['path'] || ''
+              item['chargeSubjectId'] = item['ledgerSubject'] && item['ledgerSubject']['id'] || null
+              item['chargeSubjectName'] = item['ledgerSubject'] && item['ledgerSubject']['name'] || ''
             })
             if(element.id == val){
               this.tableData = element.chargeItems ;

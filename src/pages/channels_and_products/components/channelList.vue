@@ -1,12 +1,21 @@
 <template>
   <div>
     <div class="btn-fun flexs j-end">
-        <kec-button text="新增渠道" icon="fa-plus" @click.native="dislogFunC(!dialogVisible,'ChannelDialog')" background="#F18A33" color="#fff"></kec-button>
-        <kec-button text="修改资料" icon="fa-pencil" @click.native="dislogFunC(!dialogVisible,'ChannelDialog')" background="#17A2B8" color="#fff"></kec-button>
-        <kec-button text="编辑成本" icon="fa-trash-o" background="#17A2B8" color="#fff"></kec-button>
+        <kec-button text="新增渠道" 
+        icon="fa-plus" 
+        @click.native="dislogFunC('新增渠道',!dialogVisible,'ChannelDialog')" 
+        background="#F18A33" 
+        color="#fff"></kec-button>
+        <kec-button-click text="修改渠道" 
+        icon="fa-pencil" 
+        :disabled="selectIndex===null"  
+        @click="dislogFunC('修改渠道',!dialogVisible,'ChannelDialog','eqit')" 
+        background="#17A2B8" 
+        color="#fff"></kec-button-click>
+        <!-- <kec-button text="编辑成本" icon="fa-trash-o" background="#17A2B8" color="#fff"></kec-button>
         <kec-button text="共享管理" icon="fa-trash-o" @click.native="dislogFunC(!dialogVisible,'ShareDialog')" background="#17A2B8" color="#fff"></kec-button>
         <kec-button text="操作日志" icon="fa-trash-o" background="#DC3545" color="#fff"></kec-button>
-        <kec-button text="导出Excel" icon="fa-trash-o" background="#6C757D" color="#fff"></kec-button>
+        <kec-button text="导出Excel" icon="fa-trash-o" background="#6C757D" color="#fff"></kec-button> -->
     </div>
     <div class="list">
       
@@ -16,6 +25,7 @@
          :lastWidth="lastWidth" 
          :tableData="channelsList" 
          :letWidth="letWidth"
+         :selectIndex="selectIndex"
          @active-item="activeItem"
          @active-index="activeFunc">
           <template #operation>
@@ -31,13 +41,13 @@
         </kec-table>
       
     </div>
-    <component :is="componentName" :dialogVisible="dialogVisible" @closeFunc="cancelFunc"></component>
+    <component :is="componentName" :dialogVisible="dialogVisible" @closeFunc="cancelFunc" :text="textItem"></component>
   </div>
 </template>
 
 <script>
-import {mapState,mapActions} from 'vuex'
-import {KecButton , KecTable ,KecPageHeader}  from '@/common/components'
+import {mapState,mapActions,mapMutations} from 'vuex'
+import {KecButton , KecTable ,KecPageHeader,KecButtonClick}  from '@/common/components'
 import ChannelDialog from './channelDialogs'
 import ShareDialog from './shareDialog'
   export default {
@@ -45,42 +55,26 @@ import ShareDialog from './shareDialog'
     props:[''],
     data () {
       return {
+          visible:false,
           dialogVisible:false,
           componentName:'',
-          tableData: [{
-             a:'1',
-             b:'渠道编码',
-             c:'中文名称',
-             d:'英文名称',
-             e:'渠道类别',
-             f:'出/入库渠道',
-             g:'承运商',
-             h:'渠道功能',
-             i:'创建公司',
-             j:'创建人',
-             y:'共享'
-           },{
-             a:'#',
-             b:'渠道编码',
-             c:'中文名称',
-             d:'英文名称',
-             e:'渠道类别',
-             f:'出/入库渠道',
-             g:'承运商',
-             h:'渠道功能',
-             i:'创建公司',
-             j:'创建人',
-             y:'共享'
-           }],
+          tableData: [],
            letWidth:{
-             "0":"40px"
+             "0":"60px"
            },
            lastWidth:'',
            tableHeader:{
-             id:{"title":'#','slot':false},
-             channelCode:{"title":'渠道编码','slot':false}
+             id:{"title":'id','slot':false},
+             channelCode:{"title":'渠道编码','slot':false},
+             averageCostWeight:{"title":'成本','slot':false},
+             averageCostVolume:{"title":'平均成本','slot':false},
+             grossProfit:{"title":'毛利','slot':false},
+             useTime:{"title":'时效','slot':false}
            },
-           selectItem:null
+           selectItem:null,
+           selectIndex:null,
+           selectItem:null,
+           textItem:''
              
       };
     },
@@ -89,7 +83,8 @@ import ShareDialog from './shareDialog'
       KecTable,
       ChannelDialog,
       ShareDialog,
-      KecPageHeader
+      KecPageHeader,
+      KecButtonClick
     },
     computed: {
       ...mapState('home',['tabsShow']),
@@ -97,20 +92,28 @@ import ShareDialog from './shareDialog'
     },
     methods: {
       ...mapActions('basic',['loadQueryServerTypes','loadChannelGetChannels']),
-      dislogFunC(bool,component) {
+      ...mapMutations('basic',['setChannelInfo']),
+      dislogFunC(text,bool,component,type) {
+          this.textItem = text ;
           this.dialogVisible = bool ;
           this.componentName = component ;
+          type==='eqit' && this.setChannelInfo(this.selectItem)
       },
       cancelFunc(propsBool) {
-         this.dialogVisible = propsBool ;
-         this.loadChannelGetChannels()
+         this.dialogVisible = false ;
+         this.visible = false ;
+         this.selectIndex = null ;
+         this.selectItem = null ;
+         this.textItem = '' ;
+         this.setChannelInfo(null)
+         propsBool && this.loadChannelGetChannels()
+         
       },
       activeFunc(index) {
-          console.log(index,'index')
+          this.selectIndex = index ;
       },
       activeItem(item){
           this.selectItem = item
-          console.log(item,'item')
         },
     },
     mounted(){

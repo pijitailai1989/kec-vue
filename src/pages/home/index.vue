@@ -14,7 +14,9 @@
                   <home-tabs class="kec-tabs" v-if="tabsShow=='show'" :btnColor="themeColor.header_background_color"></home-tabs>
               </transition>
               <div class="kec-function" :style="{background:themeColor.content_background_color}">
-                  <keep-alive><router-view></router-view></keep-alive>
+                  <!-- <keep-alive> -->
+                    <router-view></router-view>
+                  <!-- </keep-alive> -->
               </div>
             </div>
             <div class="kec-copyright" :style="{background:themeColor.copy_background_color}">
@@ -54,11 +56,14 @@ import { formatDate } from '@/utils/fun'
     watch: {
       
     },
+    updated() {
+      // this.cookiesFunc()
+    },
     mounted() {
       window.addEventListener('resize', this.handleResize)
         let boxWork = this.$refs.boxWork ;
         this.clientWidth = boxWork.clientWidth ;
-      
+      // this.cookiesFunc()
     },
     methods: {
       ...mapMutations('home',['setIconType']),
@@ -69,7 +74,21 @@ import { formatDate } from '@/utils/fun'
            }else{
              !this.iconType && this.setIconType(true)
            }
-        },
+      },
+      cookiesFunc(){
+        const _this = this ;
+        let bool = this.$cookies.isKey('keyName') ;
+        if(!bool){ 
+          setTimeout(
+            function(){
+              _this.$router.push({  path:'/' })
+            }, 1500 );
+          this.$message( {
+                    message: '请重新登录！',
+                    type: 'warning'
+                   });
+        }
+      }
     },
     destroyed () {
        window.removeEventListener('resize', this.handleResize)
@@ -133,7 +152,7 @@ import { formatDate } from '@/utils/fun'
     position absolute 
     left 0
     top 0
-    z-index 1
+    z-index 1000
     opacity 0.8
     &.ipad-opened
       .menu 

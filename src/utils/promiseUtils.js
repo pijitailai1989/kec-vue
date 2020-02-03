@@ -24,7 +24,7 @@ export function getPromiseAction( p , commit , mutationType ){
     return promise ;
 }
 
-export function getPromiseActionNoMutations( p){
+export function getPromiseActionNoMutations(p){
     let promise = new Promise( (resolve,reject) => {
         p.then( res => {
             let {code ,message ,body} = res.data

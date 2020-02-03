@@ -26,7 +26,7 @@
     <div class="col-sm-12">
         <kec-form text="币种">
          <template #input>
-           <el-select v-model="payload.currency" placeholder="" size="medium" style="width:100%">
+           <el-select v-model="payload.currency" filterable placeholder="" size="medium" style="width:100%">
              <el-option
                v-for="item in currencyList"
                :key="item.id"
@@ -170,15 +170,17 @@ import {KecForm, KecButton }  from '@/common/components'
       item:{
           deep:true,
           handler:function(val){
-            
-            let data = JSON.parse(JSON.stringify(val) );
-            this.payload={
+            if(val){
+               let data = JSON.parse(JSON.stringify(val) );
+               this.payload={
                 chargeItemId:'',
                 chargeItemName:'',
                 unitPrice:'',
                 currency:'',
                 unit:''
-             }
+              }
+            }
+            
           }
       },
       chargeItems:{

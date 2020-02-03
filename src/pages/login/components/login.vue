@@ -8,7 +8,6 @@
          <el-form-item label="密码" prop="pass">
            <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
          </el-form-item>
-         
          <el-form-item>
            <el-button type="warning" @click="submitForm('ruleForm')">提交</el-button>
            <el-button @click="resetForm('ruleForm')" type="warning" plain>重置</el-button>
@@ -58,9 +57,9 @@
         submitForm(formName) {
           this.$refs[formName].validate((valid) => {
             if (valid) {
+              this.$cookies.set('keyName','dhg-345-fsdgsfg-454523')
               this.$router.push({path:'/channel-management'})
             } else {
-              console.log('error submit!!');
               return false;
             }
           });

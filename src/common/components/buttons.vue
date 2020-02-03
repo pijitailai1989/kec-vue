@@ -28,10 +28,10 @@
 </script>
 <style lang='stylus' scoped>
  .kec-button   
-   padding 0 8px  
-   height 30px
-   border-radius 3px  
-   cursor pointer
+   padding 0 8px 
+   height 30px 
+   border-radius 3px 
+   cursor pointer 
    box-shadow 1px 1px 2px #ccc  
    &:hover  
      opacity .8  

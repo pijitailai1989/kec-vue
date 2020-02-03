@@ -15,7 +15,18 @@ export default {
         "LOGISTICS_P":"物流流程",
         "BASIC_CONFIG":"基本配置",
         "VENDORS_CONFIG":"供应商配置",
-        "SUPPLIER_WROK":"供应商工作日"
-
+        "SUPPLIER_WROK":"供应商工作日",
+        "ORG_CONFIG":"组织角色",
+        "USER_CONFIG":"用户管理",
+        "REVENUE_COST":"收益成本配置",
+        "CARGO_GOODS":"货物品配置",
+        "CUSTOMER_MANAGEMENT":"客户管理",
+        "CUSTOMER_LIST":"客户列表",
+        "CUSTOMER_SERVICE":"客户服务",
+        "EX_HANDLING":"异常处理",
+        "FINANCIAL_MANAGEMENT":"财务管理",
+        "BILL_RECEIVABLER":"应收账单",
+        "BILL_PAYABLE":"应付账单",
+        "T_R":"T & R"
     }
 }

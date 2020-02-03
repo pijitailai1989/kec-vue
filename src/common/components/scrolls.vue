@@ -37,6 +37,5 @@ import {mapState} from 'vuex'
 <style lang='stylus' scoped>
 .scrolls   
   overflow-y scroll  
-  width 100%
   background:#fff
 </style>

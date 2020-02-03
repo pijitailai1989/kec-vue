@@ -1,12 +1,33 @@
 <template>
   <div>
     <div class="btn-fun flexs j-end">
-        <kec-button text="新增产品" icon="fa-plus" @click.native="dislogFunC(!dialogVisible,'ProductDialog')" background="#F18A33" color="#fff"></kec-button>
-        <kec-button text="修改资料" icon="fa-pencil" @click.native="dislogFunC(!dialogVisible,'ProductDialog')" background="#17A2B8" color="#fff"></kec-button>
-        <kec-button text="编辑卖价" icon="fa-trash-o" @click.native="dislogFunC(!dialogVisible,'EditPriceDialog')" background="#17A2B8" color="#fff"></kec-button>
+        <kec-button
+        text="新增产品" icon="fa-plus" 
+        @click.native="dislogFunC('新增产品',!dialogVisible,'ProductDialog')" 
+        background="#F18A33" color="#fff"></kec-button>
+        <kec-button-click 
+         style="margin-right:10px"
+         :disabled="selectIndex===null"  
+         text="修改产品" icon="fa-pencil"
+         @click="dislogFunC('修改产品',!dialogVisible,'ProductDialog','eqit')" 
+         background="#17A2B8" color="#fff"></kec-button-click>
+        <!-- <kec-button text="编辑卖价" icon="fa-trash-o" @click.native="dislogFunC(!dialogVisible,'EditPriceDialog')" background="#17A2B8" color="#fff"></kec-button>
         <kec-button text="共享管理" icon="fa-trash-o" @click.native="dislogFunC(!dialogVisible,'ShareDialog')" background="#17A2B8" color="#fff"></kec-button>
         <kec-button text="操作日志" icon="fa-trash-o" background="#DC3545" color="#fff"></kec-button>
-        <kec-button text="导出Excel" icon="fa-trash-o" background="#6C757D" color="#fff"></kec-button>
+        <kec-button text="导出Excel" icon="fa-trash-o" background="#6C757D" color="#fff"></kec-button> -->
+        <el-popover
+            placement="bottom-start"
+            width="160"
+            :disabled="selectIndex===null"
+            v-model="visible">
+            <p>确定删除吗？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="cancelFunc(false)">取消</el-button>
+              <el-button type="primary" size="mini" @click.native="delFunc(selectItem.id)">确定</el-button>
+            </div>
+            <kec-button slot="reference"
+              :disabled="selectIndex===null" text="删除产品" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+        </el-popover>
     </div>
     <div class="list">
       
@@ -14,30 +35,31 @@
          height="248px"
          :tableHeader="tableHeader" 
          :lastWidth="lastWidth" 
-         :tableData="tableData" 
+         :tableData="productsList" 
          :letWidth="letWidth"
+         :selectIndex="selectIndex"
+         @active-item="activeItem"
          @active-index="activeFunc">
-          <template #operation>
+          <template #productId>
             <kec-button text="操作" icon="fa-trash-o" background="#F18A33" color="#fff"></kec-button>
           </template>
           <template v-slot:default="slotProps">
             {{slotProps.item}}
           </template>
-          <template v-slot:a="slotProps">
-            <kec-button text="操作" icon="fa-trash-o" background="#F18A33" color="#fff"></kec-button>
-            <span>{{slotProps.item}}</span>
+          <template v-slot:needCargoTracking="slotProps">
+            <span>{{slotProps.item?'是':'否'}}</span>
           </template>
         </kec-table>
       
     </div>
-    <component :is="componentName" :dialogVisible="dialogVisible" @closeFunc="cancelFunc"></component>
+    <component :is="componentName" :dialogVisible="dialogVisible" @closeFunc="cancelFunc" :text="textItem"></component>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
-import {KecButton , KecTable ,KecPageHeader}  from '@/common/components'
-import ProductDialog from './productDialog'
+import {mapState,mapActions, mapMutations} from 'vuex'
+import {KecButton , KecTable ,KecPageHeader,KecButtonClick}  from '@/common/components'
+import ProductDialog from './productDialogs'
 import EditPriceDialog from './editPriceDialog'
 import ShareDialog from './shareDialog'
   export default {
@@ -45,42 +67,25 @@ import ShareDialog from './shareDialog'
     props:[''],
     data () {
       return {
-          dialogVisible:false,
-          componentName:'',
-          tableData: [{
-             a:'1',
-             b:'渠道编码',
-             c:'中文名称',
-             d:'英文名称',
-             e:'渠道类别',
-             f:'出/入库渠道'
-           },{
-             a:'#',
-             b:'渠道编码',
-             c:'中文名称',
-             d:'英文名称',
-             e:'渠道类别',
-             f:'出/入库渠道'
-           },{
-             a:'#',
-             b:'渠道编码',
-             c:'中文名称',
-             d:'英文名称',
-             e:'渠道类别',
-             f:'出/入库渠道'
-           }],
+           visible:false,
+           dialogVisible:false,
+           componentName:'',
+           tableData: [],
            letWidth:{
-             "0":"30px"
+             "0":"60px"
            },
            lastWidth:'',
            tableHeader:{
-             a:{"title":'#','slot':false},
-             b:{"title":'客户中文名称','slot':false},
-             c:{"title":'客户英文名称','slot':false},
-             d:{"title":'启用中的产品','slot':false},
-             e:{"title":'被停用的产品','slot':false},
-             f:{"title":'共享','slot':false}
-             }
+             id:{"title":'ID','slot':false},
+             name:{"title":'产品名称','slot':false},
+             code:{"title":'产品编码','slot':false},
+             destinationCountryCode:{"title":'目的国家','slot':false},
+             shippingCountryCode:{"title":'起运国家','slot':false},
+             needCargoTracking:{"title":'货态跟踪','slot':true}
+           },
+           selectIndex:null,
+           selectItem:null,
+           textItem:''
              
       };
     },
@@ -90,22 +95,81 @@ import ShareDialog from './shareDialog'
       ProductDialog,
       EditPriceDialog,
       ShareDialog,
-      KecPageHeader
+      KecPageHeader,
+      KecButtonClick
     },
     computed: {
       ...mapState('home',['tabsShow']),
+      ...mapState('basic',['productsList','tagTypeClass','tagsData']),
     },
     methods: {
-      dislogFunC(bool,component) {
+      ...mapActions('basic',['loadChannelGetChannels',
+      'loadDeleteProducts',
+      'loadPaymentMethods',
+      'loadDictionaryCURRENCY',
+      'loadChargeUnits',
+      'loadCountryQueryAll',
+      'loadProducts',
+      'loadGetTags']),
+      ...mapMutations('basic',['setProductsInfo','setProductsId','setDestination','setDestinationShow']),
+      
+      activeFunc(index) {
+          this.selectIndex = index ;
+      },
+      activeItem(item){
+        this.selectItem = item ;
+      },
+      dislogFunC(text,bool,component,type) {
+          this.textItem = text ;
           this.dialogVisible = bool ;
           this.componentName = component ;
+          type==='eqit' && this.setProductsInfo(this.selectItem)
+          // type==='eqit' && this.setProductsInfo(this.selectItem.productId)
       },
       cancelFunc(propsBool) {
-         this.dialogVisible = propsBool ;
+         this.dialogVisible = false ;
+         this.visible = false ;
+         this.selectIndex = null ;
+         this.selectItem = null ;
+         this.textItem = '' ;
+         this.setProductsInfo(null)
+         this.setDestination(null)
+         this.setDestinationShow(false)
+         propsBool && this.loadProducts()
+         
       },
-      activeFunc(index) {
-          console.log(index,'index')
-      }
+      delFunc(id){
+         this.loadDeleteProducts({data:{id}}).then(success=>{
+                   this.cancelFunc(true)
+                   this.$message( {
+                    message: success,
+                    type: 'success'
+                   });
+                }).catch(error=> {
+                   this.$message( {
+                    message: error,
+                    type: 'error'
+                   });
+                })
+      },
+      mountFunc(size,num){
+          const _ = this ;
+          let data = {
+            pageSize:size,
+            pageNumber:num
+          }
+          _.loadGetTags(data) ;
+        },
+    
+    },
+    mounted(){
+      this.loadChannelGetChannels()
+      this.loadPaymentMethods()
+      this.loadDictionaryCURRENCY()
+      this.loadChargeUnits()
+      this.loadProducts()
+      this.loadCountryQueryAll()
+      this.mountFunc(10000,1)
     }
 
   }

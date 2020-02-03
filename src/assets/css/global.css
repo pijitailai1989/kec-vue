@@ -26,6 +26,20 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 }
+::selection {
+    background:#F18A34; 
+    color:#FFF;
+}
+
+::-moz-selection {
+    background:#F18A34; 
+    color:#FFF;
+}
+
+::-webkit-selection {
+    background:#F18A34; 
+    color:#FFF;
+}
 ol, ul {
 	list-style: none;
 }
@@ -102,7 +116,24 @@ a:link,a:visited,a:active,a:hover{text-decoration:none;color:inherit;}
   }
  .scrollnone::-webkit-scrollbar {display:none}
 
-
+ 
+ /*定义滚动条轨道 内阴影+圆角*/
+ /* .is-scrolling-none::-webkit-scrollbar-track
+ {
+     border-radius: 0px;
+     background-color: #Fff;
+ } */
+  
+ /*定义滑块 内阴影+圆角*/
+ /* .is-scrolling-none::-webkit-scrollbar-thumb
+ {
+     border-radius: 0px;
+     background-color: #ccc;
+ } */
+ /* .is-scrolling-none::-webkit-scrollbar {display:none}
+ .el-table__body,.el-table__header{
+   width:100% !important;
+ } */
  .input-error .el-input__inner{
     border-color: red !important;
  }
@@ -111,3 +142,10 @@ a:link,a:visited,a:active,a:hover{text-decoration:none;color:inherit;}
   content:"*";
   color:red;
  }
+ .el-timeline-item__timestamp  {
+    color: #666 !important;
+    font-size: 14px !important;
+ }
+    
+ .el-table--striped .el-table__body tr.el-table__row--striped td{background:#FAFAFA}
+ .el-table--striped .el-table__body tr.el-table__row--striped.current-row td,.el-table__body tr.current-row>td,.el-table__body tr.hover-row.current-row>td,.el-table__body tr.hover-row.el-table__row--striped.current-row>td,.el-table__body tr.hover-row.el-table__row--striped>td,.el-table__body tr.hover-row>td{background-color:#FAE1CB !important;}

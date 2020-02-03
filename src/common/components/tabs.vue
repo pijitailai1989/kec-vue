@@ -18,7 +18,8 @@
     name:'tabs',
     props:{
         height:String,
-        titleList:Array
+        titleList:Array,
+        indexs:Number
     },
     data () {
       return {
@@ -45,7 +46,14 @@
         }
     },
 
-    watch: {}
+    watch: {
+      indexs:{
+        deep:true,
+        handler:function(){
+          this.activeIndex = 0
+        }
+      }
+    }
 
   }
 

@@ -2,7 +2,8 @@
   <div>
     <div style="" class="breadcrub">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item class="cur" @click.native="componentNameFunc(item.components,index)" v-for="(item,index) of breadcrumbArr" :key="item.path">{{item.name}}</el-breadcrumb-item>
+        <el-breadcrumb-item class="cur" @click.native="componentNameFunc(item.components,index)" 
+        v-for="(item,index) of breadcrumbArr" :key="index">{{item.name}}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <component :is="componentName" style="margin-top:10px"></component>
@@ -49,12 +50,13 @@ import {KecPageHeader}  from '@/common/components'
     watch: {
       breadcrumbArr(){
         let i = this.breadcrumbArr.length - 1 ;
-
+       if(this.breadcrumbArr[0]['components'] === 'selectVentors') {
         if(this.breadcrumbArr.length===1){
           this.componentName = 'selectVentors';
         }else{
           this.componentName = this.breadcrumbArr[i]['components']
         }
+       }
       },
       
     }

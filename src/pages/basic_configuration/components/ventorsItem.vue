@@ -2,7 +2,7 @@
   <div class="ventorsItem">
     <kec-tabs 
     style="margin-top:0" 
-    :titleList="['基本信息','服务与费率','工作日历']"
+    :titleList="['基本信息','服务与费率','工作日历','货态配置']"
     @change="tabsFunc"
     >
         <template>
@@ -18,6 +18,7 @@
 import ventorsInfo from './ventorsInfo'
 import serversRate from './serversRate'
 import supplierWorkday from './supplierWorkday'
+import cargoConfig from './cargoConfig'
 import {KecForm ,KecTabs,KecScroll}  from '@/common/components'
   export default {
     name:'ventorsItem',
@@ -37,7 +38,8 @@ import {KecForm ,KecTabs,KecScroll}  from '@/common/components'
         ventorsInfo,
         serversRate,
         KecScroll,
-        supplierWorkday
+        supplierWorkday,
+        cargoConfig
     },
 
     computed: {},
@@ -48,7 +50,7 @@ import {KecForm ,KecTabs,KecScroll}  from '@/common/components'
 
     methods: {
         tabsFunc(index) {
-            let arr = ['ventorsInfo','serversRate','supplierWorkday'] ;
+            let arr = ['ventorsInfo','serversRate','supplierWorkday','cargoConfig'] ;
             this.currentTabComponent = arr[index] ;
         }
     },

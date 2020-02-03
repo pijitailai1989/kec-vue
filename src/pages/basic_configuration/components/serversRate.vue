@@ -2,7 +2,7 @@
   <div class="serversRate">
     <div class="flexs kec-btn j-end">
       <el-popover
-        placement="bottom-end"
+        placement="left-start"
         width="300"
         v-model="addVisible"
         trigger="click">
@@ -10,7 +10,7 @@
         <kec-button slot="reference" text="添加服务" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
       </el-popover>
       <el-popover
-        placement="bottom-end"
+        placement="left-start"
         width="300"
         :disabled="todoIndex===null"
         v-model="changeVisible"
@@ -18,9 +18,20 @@
         <add-server-ventors @close="closeFunc" type="changeVisible" :item="selectItem"></add-server-ventors>
         <kec-button :disabled="todoIndex===null" slot="reference" text="修改服务" icon="fa-pencil" background="#17A2B8" color="#fff"></kec-button>
       </el-popover>
-      <kec-button @click.native="delFunc" :disabled="todoIndex===null" text="删除服务" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
       <el-popover
-        placement="bottom-end"
+        placement="left-start"
+        width="160"
+        :disabled="todoIndex===null"
+        v-model="visible">
+        <p>确定删除吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+          <el-button type="primary" size="mini" @click.native="delFunc">确定</el-button>
+        </div>
+        <kec-button :disabled="todoIndex===null" slot="reference" text="删除服务" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+      </el-popover>
+      <el-popover
+        placement="left-start"
         width="300"
         :disabled="todoIndex===null"
         v-model="addVisible1"
@@ -41,9 +52,7 @@
               :lastWidth="lastWidth" 
               :tableData="todo.vendorChargeItems || []" 
               :letWidth="letWidth"
-              :selectIndex="selectIndex"
-              @active-item="activeItem"
-              @active-index="activeFunc">
+              @active-item="activeItem">
                <template #operation>
                    <kec-button @click.native="editServerFunc(todo)" text="修改" icon="fa-pencil" background="#17A2B8" color="#fff"></kec-button>
                </template>
@@ -75,6 +84,7 @@ import editServerDialog from './editServerDialog'
     props:[''],
     data () {
       return {
+           visible:false,
           dialogVisible:false,
            componentName:'editServerDialog',
            addVisible:false,
@@ -120,12 +130,14 @@ import editServerDialog from './editServerDialog'
 
     mounted() {
       this.loadVendorGetVendor1([this.ventorsId,'service','getServices'])
-      this.loadChargeUnits()
-      this.loadDictionaryCURRENCY()
     },
 
     methods: {
-        ...mapActions('basic',['loadVendorGetVendor1','loadVendorPostVendor1','loadVendorDeleteVendor1','loadChargeUnits','loadDictionaryCURRENCY']),
+        ...mapActions('basic',[
+        'loadVendorGetVendor1',
+        'loadVendorPostVendor1',
+        'loadVendorDeleteVendor1',
+        ]),
         activeFunc(index) {
           this.selectIndex = index ;
         },
@@ -136,6 +148,7 @@ import editServerDialog from './editServerDialog'
          propsBool && this.loadVendorGetVendor1([this.ventorsId,'service','getServices'])
          this.dialogVisible = false ;
          this.selectIndex = null ;
+         this.selectItem = null ;
         },
         todoIndexClick(index,todo){
            if(index === this.todoIndex){
@@ -153,7 +166,7 @@ import editServerDialog from './editServerDialog'
            let obj = this.serverList.find(item => {
              return item.id === todo.serviceTypeId
            })
-           this.chargeItems = obj.chargeItems ;
+           if(obj) this.chargeItems = obj.chargeItems ;
 
 
         },

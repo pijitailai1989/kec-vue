@@ -16,6 +16,20 @@
         </kec-form>
     </div>
     <div class="col-sm-12">
+        <kec-form text="单位类型">
+         <template #input>
+           <el-select v-model="payload.unitTypeCode" placeholder="" size="medium" style="width:100%">
+              <el-option
+                v-for="item in unitsTypeList"
+                :key="item.code"
+                :label="item.text"
+                :value="item.code">
+              </el-option>
+            </el-select>
+         </template>
+        </kec-form>
+    </div>
+    <div class="col-sm-12">
         <kec-form text="符号单位">
          <template #input>
            <el-input v-model="payload.code" placeholder="" size="medium"></el-input>
@@ -41,7 +55,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 import {KecForm, KecButton }  from '@/common/components'
   export default {
     name:'unit',
@@ -55,7 +69,8 @@ import {KecForm, KecButton }  from '@/common/components'
            code: "",
            description: "",
            enName: "",
-           chName:""
+           chName:"",
+           unitTypeCode:null
         }
       };
     },
@@ -65,7 +80,9 @@ import {KecForm, KecButton }  from '@/common/components'
         KecButton
     },
 
-    computed: {},
+    computed: {
+      ...mapState('basic',['unitsTypeList'])
+    },
 
     beforeMount() {},
 
@@ -79,12 +96,12 @@ import {KecForm, KecButton }  from '@/common/components'
            code: "",
            description: "",
            enName: "",
-           chName:""
+           chName:"",
+           unitTypeCode:null
         }
       },
       clickConfirm() {
         const _this = this ;
-        console.log(_this.payload,'_this.payload')
         switch(_this.type){
           case 'addVisible':
                 _this.loadAddChargeUnits(_this.payload).then(success=>{
@@ -132,7 +149,7 @@ import {KecForm, KecButton }  from '@/common/components'
       item:{
           deep:true,
           handler:function(val){
-            this.payload = JSON.parse(JSON.stringify(val) );
+            if(val) this.payload = JSON.parse(JSON.stringify(val) );
           }
       }
       

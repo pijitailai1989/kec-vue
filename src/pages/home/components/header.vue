@@ -45,6 +45,7 @@ import {mapState,mapMutations} from 'vuex'
     },
     mounted() {
       this.selectLang = sessionStorage.getItem('locale') || 'zh';
+      
     },
     computed:{
       ...mapState('home',['iconType']),
@@ -72,6 +73,7 @@ import {mapState,mapMutations} from 'vuex'
       },
       handleLogout(logout){
         if(logout==='logout'){
+           this.$cookies.remove('keyName')
            this.$router.push({
              path:'/'
            })

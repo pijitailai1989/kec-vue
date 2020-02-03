@@ -5,11 +5,11 @@
       v-show="dialogVisible"
       >
       <template v-slot:title>
-        <span style="font-weight:bold;font-size:17px">新增渠道</span>
+        <span style="font-weight:bold;font-size:17px">{{text}}</span>
       </template>
       <template v-slot:btn>
         <div class="flexs j-end">
-           <kec-button @click.native="addChannelFun" text="新增" icon="fa-floppy-o" background="#28A745" color="#fff"></kec-button>
+           <kec-button @click.native="addChannelFun" text="保存" icon="fa-floppy-o" background="#28A745" color="#fff"></kec-button>
            <kec-button @click.native="cancel" text="取消" icon="fa-undo" background="#6C757D" color="#fff"></kec-button>
         </div>
       </template>
@@ -24,53 +24,67 @@
              </div>
           </div>
           <div class="col-sm-12 p2">
-                <div class="col-sm-2 flexs columns a-center" style="padding:30px 0">
+                <!-- <div class="col-sm-2 flexs columns a-center" style="padding:30px 0">
                       <i v-if="upShow" class="fa fa-arrow-up fa-2x" style="padding:10px;color:#ccc"></i>
                       <i v-else @click="shiftFunc('up',selectIndex)" class="cur fa fa-arrow-up fa-2x" style="padding:10px;color:#F18A33"></i>
                       <i v-if="downShow" class="fa fa-arrow-down fa-2x" style="padding:10px;color:#ccc"></i>
                       <i v-else @click="shiftFunc('down',selectIndex)" class="cur fa fa-arrow-down fa-2x" style="padding:10px;color:#F18A33"></i>
-                </div>
-                <div class="col-sm-10 flexs columns bor a-center p2">
+                </div> -->
+                <div class="col-sm-12 flexs columns bor a-center p2">
                     <div class="col-sm-12 flexs a-center back p2">
-                      <div class="col-sm-5 text bold">
+                      <div class="col-sm-4 text bold">
                           选择服务
                       </div>
-                      <div class="col-sm-5 text bold">
+                      <div class="col-sm-4 text bold">
                           选择服务商
                       </div>
-                      <div class="col-sm-2 text bold">
+                      <div class="col-sm-3 text bold">
                           操作时效
                       </div>
-                    </div>
-                    <div class="col-sm-12 flexs a-center p2 cur" 
-                     @click="selectClick(index)" 
-                     v-for="(item,index) of payload.channelServiceNodes" 
-                     :class="[selectIndex===index?'active':'']"
-                     :key="index">
-                      <div class="col-sm-5 flexs">
-                          <el-select v-model="item.serviceTypeId" @change="selectServerType(item.serviceTypeId,index)" placeholder="请选择" size="medium" style="width:70%">
-                            <el-option
-                              v-for="item in serverList"
-                              :key="item.id"
-                              :label="item.name"
-                              :value="item.id">
-                            </el-option>
-                          </el-select>
-                      </div>
-                      <div class="col-sm-5 flexs">
-                          <el-select v-model="item.vendorId" placeholder="请选择" size="medium" style="width:80%">
-                            <el-option
-                              v-for="item in item.selectArr"
-                              :key="item.id"
-                              :label="item.name"
-                              :value="item.id">
-                            </el-option>
-                          </el-select>
-                      </div>
-                      <div class="col-sm-2 text">
-                          {{item.text}}小时
+                      <div class="col-sm-1 text bold">
+                          删除
                       </div>
                     </div>
+                    <vuedraggable v-model="payload.channelServiceNodes" class="col-sm-12">
+                      <transition-group>
+                          <div class="col-sm-12 flexs a-center p2 cur" 
+                          @click="selectClick(index)"
+                          v-for="(item,index) of payload.channelServiceNodes" 
+                          :class="[selectIndex===index?'active':'']"
+                          :key="index+'item'">
+                            <div class="col-sm-4 flexs">
+                                <el-select v-model="item.serviceTypeId" 
+                                @change="selectServerType(item.serviceTypeId,index,true)" 
+                                placeholder="请选择" size="medium" style="width:90%">
+                                  <el-option
+                                    v-for="item in serverList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                  </el-option>
+                                </el-select>
+                            </div>
+                            <div class="col-sm-4 flexs">
+                                <el-select v-model="item.vendorId" placeholder="请选择" size="medium" style="width:90%">
+                                  <el-option
+                                    v-for="em in item.selectArr"
+                                    :key="em.id"
+                                    :label="em.companyName"
+                                    :value="em.id">
+                                  </el-option>
+                                </el-select>
+                            </div>
+                            <div class="col-sm-3 text">
+                                {{item.text}}小时
+                            </div>
+                            <div class="col-sm-1">
+                               <span style="padding:5px 10px" @click="delItemFunc(index)">
+                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
+                               </span> 
+                            </div>
+                          </div>
+                      </transition-group>
+                    </vuedraggable>
                 </div>
           </div>
           <div class="col-sm-12 p2">
@@ -95,20 +109,22 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex'
+import {mapState, mapActions, mapMutations} from 'vuex'
 import {KecButton , KecForm ,KecDialog}  from '@/common/components'
 import KecWeight from './weightComponents'
 import KecRule from './ruleComponents'
+import vuedraggable from 'vuedraggable';
   export default {
     name:'channelDialog',
     props:{
       dialogVisible:Boolean,
-      
+      text:String
     },
     data () {
       return {
          input:'',
          payload:{
+            "id":"",
             "channelCode":"",
             "channelServiceNodes":[
               {
@@ -131,29 +147,33 @@ import KecRule from './ruleComponents'
         KecForm,
         KecDialog,
         KecWeight,
-        KecRule
+        KecRule,
+        vuedraggable
     },
 
     computed: {
-      ...mapState('basic',['serverList','vendorsList']),
+      ...mapState('basic',['serverList','vendorsList','channelInfo']),
     },
 
     beforeMount() {},
 
-    mounted() {},
+    mounted() {
+     this.channelInfo && this.payloadFunC(this.channelInfo)
+    },
 
     methods: {
-        ...mapActions('basic',['loadGetVendorsByServiceType','loadChannelPostChannel']),
+        ...mapActions('basic',['loadGetVendorsByServiceType','loadChannelPostChannel','loadChannelPutChannel']),
+        ...mapMutations('basic',['setVendorsList']),
         cancel() {
             this.$emit('closeFunc',false)
             this.selectIndex=null,
             this.upShow=true,
             this.downShow=true,
-            this.pushIndex=null
             this.closeData()
         },
         closeData(){
           this.payload = {
+            "id":"",
             "channelCode":"",
             "channelServiceNodes":[
               {
@@ -163,6 +183,36 @@ import KecRule from './ruleComponents'
               }
             ]
          }
+        },
+        delItemFunc(i){
+          let arr = this.payload.channelServiceNodes ;
+          if(arr.length>1){
+            arr.splice(i,1)
+          }
+        },
+        payloadFunC(data){
+          this.payload["channelCode"] =data.channelCode ;
+          this.payload["id"] =data.id ;
+          let arr = [
+            {
+                "serviceTypeId":null,
+                "vendorId":null,
+                "selectArr":[]
+              }
+          ] 
+          if(data.services.length){
+            arr = []
+            data.services.forEach( (el,index)=>{
+              this.selectServerType(el.serviceTypeId,index)
+              let data = {
+                "serviceTypeId":el.serviceTypeId,
+                "vendorId":el.vendorId
+              }
+              arr.push(data)
+            })
+          }
+          this.payload["channelServiceNodes"] = arr ;
+         
         },
         selectClick(index){
             
@@ -203,12 +253,13 @@ import KecRule from './ruleComponents'
            this.selectClick(i) ;
            this.payload.channelServiceNodes = arr ;
         },
-        selectServerType(id,index){
-           this.loadGetVendorsByServiceType(['vendor','getVendorsByServiceType',id]) ;
-           this.pushIndex = index ;
+        selectServerType(id,index,bool){
+           this.loadGetVendorsByServiceType(['getVendorsByServiceType',id]) ;
+
+           if(bool) this.$set(this.payload.channelServiceNodes[index],'vendorId', null );
         },
         addChannelFun(){
-          let { channelCode,channelServiceNodes} = this.payload ;
+          let { channelCode,channelServiceNodes,id} = this.payload ;
           let data = {} ;
           let newArr = []
           let arr = JSON.parse(JSON.stringify(channelServiceNodes))
@@ -221,13 +272,14 @@ import KecRule from './ruleComponents'
           })
           data['channelCode'] = channelCode ;
           data['channelServiceNodes'] = newArr ;
-           this.loadChannelPostChannel(data).then(success=>{
+          if(this.channelInfo){
+            data['id'] = id;
+            this.loadChannelPutChannel(data).then(success=>{
                    this.closeData()
-                   this.$emit('closeFunc',false)
-                   this.selectIndex=null,
-                   this.upShow=true,
-                   this.downShow=true,
-                   this.pushIndex=null
+                   this.$emit('closeFunc',true)
+                   this.selectIndex=null
+                   this.upShow=true
+                   this.downShow=true
                    this.$message( {
                     message: success,
                     type: 'success'
@@ -238,6 +290,25 @@ import KecRule from './ruleComponents'
                     type: 'error'
                    });
                 })
+          }else{
+             this.loadChannelPostChannel(data).then(success=>{
+                   this.closeData()
+                   this.$emit('closeFunc',true)
+                   this.selectIndex=null
+                   this.upShow=true
+                   this.downShow=true
+                   this.$message( {
+                    message: success,
+                    type: 'success'
+                   });
+                }).catch(error=> {
+                   this.$message( {
+                    message: error,
+                    type: 'error'
+                   });
+                })
+          }
+           
         }
     },
 
@@ -245,9 +316,26 @@ import KecRule from './ruleComponents'
       vendorsList:{
         deep:true,
         handler:function(val){
-           const _ = this ;
-           let arr = JSON.parse(JSON.stringify(val))
-           this.payload.channelServiceNodes[_.pushIndex]['selectArr'] = arr ;
+          const _ = this ;
+          if(val !==null){
+            let obj = JSON.parse(JSON.stringify(val))
+            let arr = _.payload.channelServiceNodes;
+            let {serviceId,vendors} = obj ;
+            
+            arr.forEach( (el,index)=>{
+              if(serviceId==el.serviceTypeId){
+                _.$set(el, 'selectArr', vendors)
+              }
+            })
+            _.setVendorsList(null)
+          }
+           
+        }
+      },
+      channelInfo:{
+        deep:true,
+        handler:function(val){
+          val && this.payloadFunC(val)
         }
       }
     }
@@ -265,7 +353,7 @@ import KecRule from './ruleComponents'
  .p2 
    padding 2px 0
  .active  
-   background #FDCEA6
+   background #Fff
    border-radius 3px
  .cur 
    cursor pointer

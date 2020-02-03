@@ -58,11 +58,11 @@ import {KecForm, KecButton }  from '@/common/components'
     beforeMount() {},
 
     mounted() {
-      this.loadQueryServerTypes()
+      
     },
 
     methods: {
-      ...mapActions('basic',['loadQueryServerTypes','loadVendorPostVendor1','loadVendorPutVendor1']),
+      ...mapActions('basic',['loadVendorPostVendor1','loadVendorPutVendor1']),
       closeData(){
         this.payload={
            "serviceName":"",
@@ -134,13 +134,16 @@ import {KecForm, KecButton }  from '@/common/components'
       item:{
           deep:true,
           handler:function(val){
-            let data = JSON.parse(JSON.stringify(val) );
-            this.payload={
-                "serviceName":data.serviceName,
-                "serviceTypeId":data.serviceTypeId,
-                "id":data.id
-             }
-             this.serverId = data.serviceTypeId ;
+            if(val){
+               let data = JSON.parse(JSON.stringify(val) );
+                this.payload={
+                    "serviceName":data.serviceName,
+                    "serviceTypeId":data.serviceTypeId,
+                    "id":data.id
+                }
+                this.serverId = data.serviceTypeId ; 
+            }
+            
           }
       }
     }

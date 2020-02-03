@@ -7,7 +7,7 @@
           </div>
           <div class="flexs ">
               <el-popover
-                placement="bottom-end"
+                placement="left-start"
                 width="300"
                 v-model="addVisible"
                 trigger="click">
@@ -15,7 +15,7 @@
                 <kec-button slot="reference" text="" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
               </el-popover>
               <el-popover
-                placement="bottom-end"
+                placement="left-start"
                 width="300"
                 v-model="changeVisible"
                 :disabled="selectIndex===null"

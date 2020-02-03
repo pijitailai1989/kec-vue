@@ -26,10 +26,15 @@ const fetch = (options) => {
                   paths1 += `/${el}`;
                })
                urlPath1 = `${url}${paths1}`
+               return axios.delete(urlPath1)
+            }else if(data instanceof Object){
+               console.log(11111111111111111111111,data)
+               return axios.delete(url,data)
             }else{
                urlPath1 = `${url}/${data}`
+               return axios.delete(urlPath1)
             }
-            return axios.delete(urlPath1)
+            
         default:
             let urlPath2 = '' 
             let paths2 = '' 

@@ -1,9 +1,9 @@
 <template>
   <div class="row supplier">
     <div class="col-sm-3">
-        <kec-form text="年度">
+        <kec-form crosswise text="年份" width="40px">
           <template #input>
-            <el-select v-model="years" placeholder="" size="mini" @change="changeFunc">
+            <el-select v-model="years" placeholder="" @change="changeFunc">
               <el-option
                 v-for="item in options"
                 :key="item"
@@ -49,8 +49,9 @@ import {KecCalendars,KecButton,KecSwitch,KecForm,KecScroll}  from '@/common/comp
       ...mapState('home',['tabsShow']),
       ...mapState('basic',['workDays','ventorsId']),
       calendarsWidth(){
-        let width = parseInt( ( this.clientWidth - 64 ) / 28 ) 
-        return width * 7
+        let width = parseInt( ( this.clientWidth - 68 ) / 28 * 7 ) 
+        return width ;
+        
       }
     },
 
@@ -77,7 +78,7 @@ import {KecCalendars,KecButton,KecSwitch,KecForm,KecScroll}  from '@/common/comp
         ...mapActions('basic',['loadWorkdays']),
         handleResize() {
           let width = this.$refs.boxWork.clientWidth ;
-           if(width>=999) this.clientWidth = width ;
+           if(width>=699) this.clientWidth = width ;
         },
         dayFunc(){
           let arr = [] ;

@@ -1,7 +1,7 @@
 <template>
   <transition name="kec">
   <div class="workstatus flexs a-center j-center" >
-      <span class="status" :style="{background:colors}">{{status}}</span>
+      <!-- <span class="status" :style="{background:colors}">{{status}}</span> -->
       <slot></slot>
   </div>
   </transition>

@@ -60,7 +60,6 @@ import {KecForm, KecButton }  from '@/common/components'
       },
       clickConfirm() {
         const _this = this ;
-        console.log(_this.payload,'_this.payload')
         switch(_this.type){
           case 'addVisible':
                 _this.loadCreateServerType(_this.payload).then(success=>{
@@ -109,10 +108,13 @@ import {KecForm, KecButton }  from '@/common/components'
       item:{
           deep:true,
           handler:function(val){
-            let data = {}
-            data.id = val.id;
-            data.name = val.name;
-            this.payload = JSON.parse(JSON.stringify(data) );
+            if(val){
+                let data = {}
+                data.id = val.id;
+                data.name = val.name;
+                this.payload = JSON.parse(JSON.stringify(data) );
+            }
+            
           }
       }
     }

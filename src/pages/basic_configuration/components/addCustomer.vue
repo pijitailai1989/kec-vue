@@ -6,44 +6,44 @@
           <template #input>
             <div class="row borders err">
                 <div class="col-sm-6">
-                    <kec-form text="公司名称">
+                    <kec-form crosswise text="公司名称" width="80px">
                       <template #input>
-                        <el-input v-model="payload.companyName" placeholder="" size="mini"></el-input>
+                        <el-input v-model="payload.company_name" placeholder="" size="medium"></el-input>
                       </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="VAT#">
+                    <kec-form crosswise text="VAT#" width="80px">
                     <template #input>
-                      <el-input v-model="payload.vatNumber" placeholder="" size="mini"></el-input>
+                      <el-input v-model="payload.vat_number" placeholder="" size="medium"></el-input>
                     </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="联系人">
+                    <kec-form crosswise text="联系人" width="80px">
                     <template #input>
-                      <el-input v-model="payload.contactName" placeholder="" size="mini"></el-input>
+                      <el-input v-model="payload.contact_name" placeholder="" size="medium"></el-input>
                     </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="联系电话">
+                    <kec-form crosswise text="联系电话" width="80px">
                     <template #input>
-                      <el-input v-model="payload.phone" placeholder="" size="mini"></el-input>
+                      <el-input v-model="payload.phone" placeholder="" size="medium"></el-input>
                     </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="Email">
+                    <kec-form crosswise text="Email" width="80px">
                       <template #input>
-                        <el-input v-model="payload.email" placeholder="" size="mini"></el-input>
+                        <el-input v-model="payload.email" placeholder="" size="medium"></el-input>
                       </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="币种">
+                    <kec-form crosswise text="币种" width="80px">
                     <template #input>
-                      <el-select v-model="payload.currency" placeholder="" size="mini" style="width:100%">
+                      <el-select v-model="payload.currency" placeholder="" size="medium" style="width:100%">
                         <el-option
                           v-for="item in currencyList"
                           :key="item.id"
@@ -55,16 +55,16 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="类型">
+                    <kec-form crosswise text="类型" width="80px">
                     <template #input>
-                      <el-input v-model="payload.type" placeholder="" size="mini"></el-input>
+                      <el-input v-model="payload.type" placeholder="" size="medium"></el-input>
                     </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="网站地址">
+                    <kec-form crosswise text="网站地址" width="80px">
                     <template #input>
-                      <el-input v-model="payload.webSite" placeholder="" size="mini"></el-input>
+                      <el-input v-model="payload.web_site" placeholder="" size="medium"></el-input>
                     </template>
                     </kec-form>
                 </div>
@@ -77,55 +77,54 @@
          <template #input>
            <div class="row borders err">
               <div class="col-sm-6">
-                    <kec-form text="国家">
+                    <kec-form crosswise text="国家" width="80px">
                       <template #input>
-                        <el-input v-model="payload.address.country" placeholder="" size="mini"></el-input>
+                        <el-input v-model="payload.address.country" placeholder="" size="medium"></el-input>
                       </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="省市">
+                    <kec-form crosswise text="省市" width="80px">
                     <template #input>
-                      <el-input v-model="payload.address.province" placeholder="" size="mini"></el-input>
+                      <el-input v-model="payload.address.province" placeholder="" size="medium"></el-input>
                     </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="辖区">
+                    <kec-form crosswise text="辖区" width="80px">
                     <template #input>
-                      <el-input v-model="payload.address.district" placeholder="" size="mini"></el-input>
+                      <el-input v-model="payload.address.district" placeholder="" size="medium"></el-input>
                     </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="洲">
+                    <kec-form crosswise text="洲" width="80px">
                     <template #input>
-                      <el-input v-model="payload.address.state" placeholder="" size="mini"></el-input>
+                      <el-input v-model="payload.address.state" placeholder="" size="medium"></el-input>
                     </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="街道">
+                    <kec-form crosswise text="街道" width="80px">
                       <template #input>
-                        <el-input v-model="payload.address.street" placeholder="" size="mini"></el-input>
+                        <el-input v-model="payload.address.street" placeholder="" size="medium"></el-input>
                       </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form text="邮政编码">
+                    <kec-form crosswise text="邮政编码" width="80px">
                     <template #input>
-                      <el-input v-model="payload.address.postCode" placeholder="" size="mini"></el-input>
+                      <el-input v-model="payload.address.post_code" placeholder="" size="medium"></el-input>
                     </template>
                     </kec-form>
                 </div>
                 <div class="col-sm-12">
-                    <kec-form text="详细地址">
+                    <kec-form crosswise text="详细地址" width="80px">
                     <template #input>
                       <el-input
-                          size="medium"
                         type="textarea"
                         placeholder="请输入内容"
-                        v-model="payload.address.addrLine"
+                        v-model="payload.address.addr_line"
                         show-word-limit
                       >
                       </el-input>
@@ -159,25 +158,24 @@ import {KecForm, KecButton }  from '@/common/components'
     data () {
       return {
         payload:{
-                 "companyName": "",
-                  "vatNumber": "",
-                  "contactName": "",
+                 "company_name": "",
+                  "vat_number": "",
+                  "contact_name": "",
                   "phone": "",
                   "email": "",
                   "type": "",
-                  "webSite": "",
+                  "web_site": "",
                   "address": {
                     "country": "",
                     "state": "",
                     "city": "",
                     "district": "",
                     "street": "",
-                    "countryCode": "",
-                    "addrLine": "",
-                    "postCode": "",
+                    "country_code": "",
+                    "addr_line": "",
+                    "post_code": "",
                     "province": ""
-                  },
-                  "customerCode": ""
+                  }
                 }
         
       }
@@ -201,33 +199,28 @@ import {KecForm, KecButton }  from '@/common/components'
       ...mapActions('basic',['loadCustomerCreate','loadCustomerUpdate']),
       closeData(){
         this.payload={
-                 
-                 "companyName": "",
-                 "vatNumber": "",
-                 "contactName": "",
-                 "phone": "",
-                 "email": "",
-                 "locale": "",
-                 "type": "",
-                 "webSite": "",
-                 "currency":"",
-                 "address": { 
-                           "country": "",
-                           "state": "",
-                           "city": "",
-                           "district": "",
-                           "street": "",
-                           "countryCode": "",
-                           "addrLine": "",
-                           "postCode": "",
-                           "province": "" 
-                            },
-                 "customerCode": ""
+                 "company_name": "",
+                  "vat_number": "",
+                  "contact_name": "",
+                  "phone": "",
+                  "email": "",
+                  "type": "",
+                  "web_site": "",
+                  "address": {
+                    "country": "",
+                    "state": "",
+                    "city": "",
+                    "district": "",
+                    "street": "",
+                    "country_code": "",
+                    "addr_line": "",
+                    "post_code": "",
+                    "province": ""
+                  }
         }
       },
       clickConfirm() {
         const _this = this ;
-        console.log(_this.payload,'_this.payload')
         
         switch(_this.type){
           case 'addVisible':
@@ -276,7 +269,7 @@ import {KecForm, KecButton }  from '@/common/components'
       item:{
           deep:true,
           handler:function(val){
-            this.payload = JSON.parse(JSON.stringify(val) );
+            if(val) this.payload = JSON.parse(JSON.stringify(val) );
           }
       }
       

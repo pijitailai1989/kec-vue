@@ -1,7 +1,9 @@
 <template>
-  <div class="forms">
-      <label :class="[star==='star'?'star':'']">{{text}}</label>
-      <div class=""><slot name="input"></slot></div>
+  <div class="forms" :class="[crosswise?'flexs':'']">
+      <label 
+       :class="[star==='star'?'star':'',crosswise?'a-center j-end':'']" 
+       :style="{fontWeight:bold,display:crosswise?'flex':'',width:crosswise?width:''}">{{text}}</label>
+      <div style="flex:1"><slot name="input"></slot></div>
   </div>
 </template>
 
@@ -11,7 +13,16 @@
     name:'forms',
     props:{
       text:String,
-      star:String
+      bold:String,
+      star:String,
+      crosswise:{
+        type:Boolean,
+        default:false
+      },
+      width:{
+        type:String,
+        default:'30%'
+      }
     },
     data () {
       return {
@@ -38,10 +49,11 @@
  .forms 
    margin-bottom 4px
    label 
-    display inline-block;
-    max-width 100%;
+    display inline-block
+    max-width 100%
     color #747474
-    margin-bottom 3px;
-    font-weight 400;
+    margin-right 10px
+    margin-bottom 3px
+    font-weight 400
 
 </style>

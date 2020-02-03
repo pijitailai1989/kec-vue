@@ -1,7 +1,7 @@
 {
-  "name": "kec-oms-vue",
+  "name": "kec-vue",
   "version": "1.0.0",
-  "description": "KEC-OMS-VUE",
+  "description": "KEC-VUE",
   "author": "jack@spiderparcel.com",
   "private": true,
   "scripts": {
@@ -19,8 +19,10 @@
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "vue": "^2.5.2",
+    "vue-cookies": "^1.6.1",
     "vue-i18n": "^8.15.0",
     "vue-router": "^3.0.1",
+    "vuedraggable": "^2.23.2",
     "vuex": "^3.1.1"
   },
   "devDependencies": {
@@ -50,9 +52,12 @@
     "rimraf": "^2.6.0",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
     "vue-loader": "^13.3.0",
+    "vue-property-decorator": "^8.3.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.6.0",

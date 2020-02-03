@@ -40,7 +40,7 @@
             <div class="col-sm-12">
                 <kec-form text="币种">
                 <template #input>
-                      <el-select v-model="payload.currency" placeholder="" size="medium" style="width:100%">
+                      <el-select v-model="payload.currency" filterable placeholder="" size="medium" style="width:100%">
                         <el-option
                           v-for="item in currencyList"
                           :key="item.id"

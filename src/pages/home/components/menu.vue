@@ -1,8 +1,9 @@
 <template>
-  <div class="menu">
+  <div class="menu scrollbar">
     <el-menu
       default-active="1"
       class="el-menu-vertical-demo"
+      :unique-opened="true"
       :background-color="backgroundColor"
       :text-color="textColor"
       >
@@ -31,7 +32,7 @@
 </template>
 
 <script>
-
+import {KecScroll }  from '@/common/components'
 import {mapState,mapMutations} from 'vuex'
   export default {
     name:'HomeMenu',
@@ -64,27 +65,29 @@ import {mapState,mapMutations} from 'vuex'
              id:'1',
              icon:'fa-camera-retro',
              path:null
-           },{
-             title:'BASIC_INFO',
-             children:[
-                {
-                  title:'STATE_M',
-                  id:'2-1',
-                  icon:'fa-camera-retro',
-                  path:'/state-management',
-                  name:'stateManagement'
-                },{
-                  title:'LOGISTICS_P',
-                  id:'2-2',
-                  icon:'fa-camera-retro',
-                  path:'/logistics-process',
-                  name:'logisticsProcess'
-                },
-             ],
-             id:'2',
-             icon:'fa-camera-retro',
-             path:null
-           },{
+           },
+          //  {
+          //    title:'BASIC_INFO',
+          //    children:[
+          //       {
+          //         title:'STATE_M',
+          //         id:'2-1',
+          //         icon:'fa-camera-retro',
+          //         path:'/state-management',
+          //         name:'stateManagement'
+          //       },{
+          //         title:'LOGISTICS_P',
+          //         id:'2-2',
+          //         icon:'fa-camera-retro',
+          //         path:'/logistics-process',
+          //         name:'logisticsProcess'
+          //       },
+          //    ],
+          //    id:'2',
+          //    icon:'fa-camera-retro',
+          //    path:null
+          //  },
+           {
              title:'BASIC_CONFIG',
              children:[
                 {
@@ -102,9 +105,110 @@ import {mapState,mapMutations} from 'vuex'
                   name:'vendorsConfig',
                   components:'selectVentors',
                   comName:'供应商列表'
-                },
+                },{
+                  title:'ORG_CONFIG',
+                  id:'3-3',
+                  icon:'fa-camera-retro',
+                  path:'/organization-config',
+                  name:'organizationConfig',
+                  components:'organizationalRole',
+                  comName:'组织管理'
+                },{
+                  title:'USER_CONFIG',
+                  id:'3-4',
+                  icon:'fa-camera-retro',
+                  path:'/user-config',
+                  name:'userConfig',
+                  components:'userList',
+                  comName:'用户列表'
+                },{
+                  title:'REVENUE_COST',
+                  id:'3-5',
+                  icon:'fa-camera-retro',
+                  path:'/revenue-cost-class',
+                  name:'revenueCostClass',
+                  components:'subjectsClass',
+                  comName:'收益成本分类账科目'
+                },{
+                  title:'CARGO_GOODS',
+                  id:'3-6',
+                  icon:'fa-camera-retro',
+                  path:'/cargo-goods-class',
+                  name:'cargoGoodsClass',
+                  components:'goodsClass',
+                  comName:'货物品类结构'
+                }
              ],
              id:'3',
+             icon:'fa-camera-retro',
+             path:null
+           },{
+             title:'ORDER_MANAGEMENT',
+             children:[
+                {
+                  title:'ORDER_LIST',
+                  id:'4-1',
+                  icon:'fa-camera-retro',
+                  path:'/order-management',
+                  name:'orderManagement'
+                }
+             ],
+             id:'4',
+             icon:'fa-camera-retro',
+             path:null
+           },{
+             title:'CUSTOMER_MANAGEMENT',
+             children:[
+                {
+                  title:'CUSTOMER_LIST',
+                  id:'5-1',
+                  icon:'fa-camera-retro',
+                  path:'/customer-management',
+                  name:'customerManagement'
+                }
+             ],
+             id:'5',
+             icon:'fa-camera-retro',
+             path:null
+           },{
+             title:'CUSTOMER_SERVICE',
+             children:[
+                {
+                  title:'EX_HANDLING',
+                  id:'6-1',
+                  icon:'fa-camera-retro',
+                  path:'/exception-handling',
+                  name:'exceptionHandling'
+                },
+                {
+                  title:'T_R',
+                  id:'6-2',
+                  icon:'fa-camera-retro',
+                  path:'/t-r',
+                  name:'T_R'
+                }
+             ],
+             id:'6',
+             icon:'fa-camera-retro',
+             path:null
+           },{
+             title:'FINANCIAL_MANAGEMENT',
+             children:[
+                {
+                  title:'BILL_RECEIVABLER',
+                  id:'7-1',
+                  icon:'fa-camera-retro',
+                  path:'/channel-management',
+                  name:'channelManagement'
+                },{
+                  title:'BILL_PAYABLE',
+                  id:'7-2',
+                  icon:'fa-camera-retro',
+                  path:'/channel-management',
+                  name:'channelManagement'
+                }
+             ],
+             id:'7',
              icon:'fa-camera-retro',
              path:null
            }
@@ -133,7 +237,7 @@ import {mapState,mapMutations} from 'vuex'
           }
           this.setTableTabs(data) ;
           this.setBreadcrumbArr(
-            [{name:_this.menu[item.title],components:''},
+            [{name:_this.menu[item.title],components:item.components},
              {name:item.comName,components:item.components}]
             )
         },
@@ -145,7 +249,7 @@ import {mapState,mapMutations} from 'vuex'
             if(el.path === _this.routerPath && el.path){
               el.tableIndex = true ;
               _this.setTableTabs(el) ;
-              this.setBreadcrumbArr([{name:_this.menu[item.title],components:''},
+              this.setBreadcrumbArr([{name:_this.menu[item.title],components:item.components},
                                      {name:item.comName,components:item.components}])
               return ;
             }
@@ -153,7 +257,7 @@ import {mapState,mapMutations} from 'vuex'
               if(item.path === _this.routerPath){
                 item.tableIndex = true ;
                 _this.setTableTabs(item) ;
-                this.setBreadcrumbArr([{name:_this.menu[item.title],components:''},
+                this.setBreadcrumbArr([{name:_this.menu[item.title],components:item.components},
                                        {name:item.comName,components:item.components}])
                 return ;
               }
@@ -172,7 +276,11 @@ import {mapState,mapMutations} from 'vuex'
 
 </script>
 <style lang='stylus' scoped>
+ .menu 
+   height calc(100vh - 115px)
+   overflow-y scroll
  .menu >>> .el-menu
+   
    width 270px
    border-right none
    .el-submenu__icon-arrow 
