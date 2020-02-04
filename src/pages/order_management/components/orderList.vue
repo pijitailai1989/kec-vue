@@ -53,9 +53,21 @@
       <el-button size="medium" style="margin:0 0 4px 5px"  @click.native="funcSearch(productCode,stateId,customerId,startDate,endDate)">查询</el-button>
     </div>
     <kec-scroll :numbers="259" class="list">
-        <div class="flexs kec-btn j-end">
-         <kec-button-click :disabled="selectIndex===null" slot="reference" 
-         text="修改订单" icon="fa-pencil" @click="eqitFunc" background="#17A2B8" color="#fff"></kec-button-click>
+        <div class="flexs kec-btn j-end a-center">
+         <el-dropdown @command="selectCommand">
+            
+            <span class="el-dropdown-link">
+              模板导出<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="single">单行订单模板</el-dropdown-item>
+              <el-dropdown-item command="multiple">多行订单模板</el-dropdown-item>
+            </el-dropdown-menu>
+         </el-dropdown>
+         <kec-button-click 
+         text="订单导入" icon="fa-file-excel-o" background="#67c23a" @click="eqitFunc('importEexDialog')" color="#fff"></kec-button-click>
+         <kec-button-click :disabled="selectIndex===null" 
+         text="修改订单" icon="fa-pencil" @click="eqitFunc('orderDialog')" background="#17A2B8" color="#fff"></kec-button-click>
         </div>
         <div class="kec-content">
             <kec-table 
@@ -88,7 +100,11 @@
                 :total="total">
             </el-pagination>
         </div>
-        <component :is="componentName" :item="selectItem" :dialogVisible="dialogVisible" @closeFunc="cancelFunc" :text="textItem"></component>
+        <component :is="componentName" 
+        :item="selectItem" 
+        :dialogVisible="dialogVisible"
+         @closeFunc="cancelFunc" 
+         :text="textItem"></component>
     </kec-scroll>
     
  </div>
@@ -99,7 +115,9 @@
 import {mapState,mapActions,mapMutations} from 'vuex'
 import {KecButton , KecTable ,KecScroll ,KecForm,KecButtonClick}  from '@/common/components'
 import orderDialog from './orderDialog'
+import importEexDialog from './importEexDialog'
 import { formatDate } from '@/utils/fun'
+import axios from '@/http/config'
   export default {
     name:'orderList',
     props:[''],
@@ -143,7 +161,8 @@ import { formatDate } from '@/utils/fun'
         KecScroll,
         KecForm,
         KecButtonClick,
-        orderDialog
+        orderDialog,
+        importEexDialog
     },
 
     computed: {
@@ -165,6 +184,22 @@ import { formatDate } from '@/utils/fun'
         handleCurrentChange(page){
           this.PageNum = page ;
           this.mountFunc(this.PageSize,page)
+        },
+        selectCommand(type){
+          let url = axios.defaults.baseURL ;
+          let hrefStr = ''
+          switch(type) {
+            case 'single': 
+                  hrefStr = '/file/order/download/simpleTemplate'
+                  break;
+            case 'multiple':
+                  hrefStr = '/file/order/download/multiTemplate'
+                  break;
+            default:
+                  break;
+          }
+
+          window.location.href = url + hrefStr ;
         },
         funcSearch(productCode,stateId,customerId,startDate,endDate){
           this.mountFunc(this.PageSize,1,productCode,stateId,customerId,startDate,endDate)
@@ -200,11 +235,20 @@ import { formatDate } from '@/utils/fun'
           this.selectIndex = null ;
           this.selectItem = null ;
           this.dialogVisible = false
+          this.componentName = 'orderDialog'
+          data && this.mountFunc(this.PageSize,1)
         },
-        eqitFunc(){
+        eqitFunc(str){
+           this.componentName = str ; 
+           if(str === 'orderDialog'){
+              this.setOrderInfo(this.selectItem)
+              this.textItem = '修改订单'
+           }else{
+              this.textItem = '订单导入'
+              this.setOrderInfo(null)
+           }
            this.dialogVisible = true
-           this.setOrderInfo(this.selectItem)
-           this.textItem = '修改订单'
+           
         }
         
     },
@@ -230,4 +274,12 @@ import { formatDate } from '@/utils/fun'
    padding 1px
  .kec-btn  
    padding 5px
+
+ .el-dropdown-link 
+    cursor pointer
+    color #409EFF
+  
+  .el-icon-arrow-down 
+    font-size 12px
+  
 </style>

@@ -92,7 +92,10 @@ a:link,a:visited,a:active,a:hover{text-decoration:none;color:inherit;}
     margin-right: 0 !important;
     margin-left: 0 !important;
 }
-
+.el-upload__input  {
+    display: none !important
+}
+    
 .scrollbar::-webkit-scrollbar
   {
       width: 0px;

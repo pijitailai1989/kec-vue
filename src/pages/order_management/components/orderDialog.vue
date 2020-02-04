@@ -1,6 +1,6 @@
 <template>
     <kec-dialog 
-      boxWidth="960px"
+      :boxWidth="widths"
       boxTop="12vh"
       v-show="dialogVisible"
       >
@@ -52,7 +52,8 @@ import recipients from './recipients'
     name:'orderDialog',
     props:{
       dialogVisible:Boolean,
-      text:String
+      text:String,
+      widths:String
     },
     data () {
       return {

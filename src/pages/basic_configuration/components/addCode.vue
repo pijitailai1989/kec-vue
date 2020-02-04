@@ -212,6 +212,7 @@ import { formatDate } from '@/utils/fun'
                 default:
                     value && value1 && ( data['structureValue'] = `${value}-${value1}`  )
                     value && value1 && ( this.intervalShow = true )
+                    break;
             }
 
             data['structureValue'] && this.payload.structures.push(data)
