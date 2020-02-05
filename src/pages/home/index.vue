@@ -57,13 +57,13 @@ import { formatDate } from '@/utils/fun'
       
     },
     updated() {
-      // this.cookiesFunc()
+      this.cookiesFunc()
     },
     mounted() {
       window.addEventListener('resize', this.handleResize)
         let boxWork = this.$refs.boxWork ;
         this.clientWidth = boxWork.clientWidth ;
-      // this.cookiesFunc()
+      this.cookiesFunc()
     },
     methods: {
       ...mapMutations('home',['setIconType']),
@@ -83,7 +83,7 @@ import { formatDate } from '@/utils/fun'
             function(){
               _this.$router.push({  path:'/' })
             }, 1500 );
-          this.$message( {
+          _this.$message( {
                     message: '请重新登录！',
                     type: 'warning'
                    });

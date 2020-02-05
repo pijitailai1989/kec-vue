@@ -49,6 +49,9 @@ export default {
     loadPutOrders({commit},payload){
       return getPromiseActionNoMutations (api.putOrders(payload))
     },
+    loadPatchOrders({commit},payload){
+      return getPromiseActionNoMutations (api.patchOrders(payload))
+    },
     
   }
 }

@@ -95,6 +95,7 @@ const locationDelete = data => http({ methods:'delete' ,url:`/common/settings/lo
 
 const getOrders = data => http({ methods:'get' ,url:`/business/orders`,data}) //获取订单
 const putOrders = data => http({ methods:'put' ,url:`/business/orders`,data}) //修改订单
+const patchOrders = data => http({ methods:'patch' ,url:`/business/orders`,data}) //拦截订单
 const getQueryLevelTwo = data => http({ methods:'get' ,url:`/common/settings/standardState/queryLevelTwo`,data}) //查询所有的订单的状态 
 const getProductBrief = data => http({ methods:'get' ,url:`/product/productBrief`,data}) //查询所有产品
 const getCustomerBrief = data => http({ methods:'get' ,url:`/business/customer/customerBrief`,data}) //查询所有的用户的Id和名字
@@ -137,7 +138,11 @@ const vendorStateCreate = data => http({ methods:'post' ,url:`/business/vendorSt
 const vendorStateUpdate = data => http({ methods:'put' ,url:`/business/vendorState/update`,data}) //修改供应商货态
 const vendorStateDelete = data => http({ methods:'delete' ,url:`/business/vendorState/delete`,data}) // 删除供应商货态
 
+const postLogin = data => http({ methods:'post' ,url:`/auth/login`,data}) //登陆
+
 export default {
+    postLogin,
+    
     queryByVendorId,
     vendorStateCreate,
     vendorStateUpdate,
@@ -173,6 +178,7 @@ export default {
 
     getOrders,
     putOrders,
+    patchOrders,
     getQueryLevelTwo,
     getProductBrief,
     getCustomerBrief,

@@ -9,19 +9,24 @@
       >
       <template v-for="item in menuList">
         <template v-if="item.children">
-           <el-submenu :index="item.id" :key="item.id">
+           <el-submenu :index="item.id" :key="item.id" v-show="item.id in isShowMenu">
              <template slot="title" style="color:#fff">
                <i :class="['fa',item.icon]"></i>
                <span class="menu-span">{{menu[item.title]}}</span>
              </template>
-              <el-menu-item :style="{'color':routerPath===todo.path?activeColor:textColor}" :index="todo.id" v-for="todo of item.children" :key="todo.id" @click.native="RouterLinkTo(todo)">
+              <el-menu-item :style="{'color':routerPath===todo.path?activeColor:textColor}" 
+              :index="todo.id" v-for="todo of item.children" :key="todo.id" 
+              @click.native="RouterLinkTo(todo)" v-show="todo.id in isShowMenu"
+               >
                 <i :class="['fa',todo.icon]"></i>
                 <span slot="title">{{menu[todo.title]}}</span>
               </el-menu-item>
            </el-submenu>
         </template>
         <template v-else>
-          <el-menu-item :style="{'color':routerPath===item.path?activeColor:textColor}" :index="item.id" :key="item.id" @click.native="RouterLinkTo(item)">
+          <el-menu-item :style="{'color':routerPath===item.path?activeColor:textColor}" 
+          :index="item.id" :key="item.id" v-show="item.id in isShowMenu"
+           @click.native="RouterLinkTo(item)">
             <i :class="['fa',item.icon]"></i>
             <span class="menu-span" slot="title">{{menu[item.title]}}</span>
           </el-menu-item>
@@ -213,11 +218,12 @@ import {mapState,mapMutations} from 'vuex'
              path:null
            }
            
-         ]
+         ],
+         isShowArr:{}
       };
     },
     computed: {
-      ...mapState('home',['iconType']),
+      ...mapState('home',['iconType','userInfo','isShowMenu']),
       menu(){
         return this.$t('menu')
       }
@@ -263,14 +269,20 @@ import {mapState,mapMutations} from 'vuex'
               }
             })
           })
-        }
+        },
+       
     },
     mounted() {
       this.getPath()
+      this.$nextTick(function () {
+          this.isShowArr = this.isShowMenu
+          console.log( '4' in this.isShowArr, this.isShowMenu ,'this.isShowArr')
+        })
     },
     watch: {
-       '$route':'getPath'
-    }
+       '$route':'getPath',
+       
+    },
 
   }
 

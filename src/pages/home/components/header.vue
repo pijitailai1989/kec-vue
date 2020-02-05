@@ -16,7 +16,7 @@
              </el-dropdown>
          </div>
          <el-dropdown trigger="click" @command="handleLogout">
-               <span :style="{color:textColor}">嘉里电子商务</span>
+               <span :style="{color:textColor}">{{userInfo.userName}}</span>
                <el-dropdown-menu slot="dropdown">
                  <el-dropdown-item command="logout">登出</el-dropdown-item>
                </el-dropdown-menu>
@@ -48,7 +48,7 @@ import {mapState,mapMutations} from 'vuex'
       
     },
     computed:{
-      ...mapState('home',['iconType']),
+      ...mapState('home',['iconType','userInfo']),
       headers() {
         return this.$t('header')
       }

@@ -2,14 +2,14 @@
   <div class="content-login flexs a-center j-center">
     <div class="form-login">
        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
-         <el-form-item label="账号" prop="account">
-           <el-input v-model="ruleForm.account"></el-input>
+         <el-form-item label="账号" prop="userName">
+           <el-input v-model="ruleForm.userName"></el-input>
          </el-form-item>
-         <el-form-item label="密码" prop="pass">
-           <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+         <el-form-item label="密码" prop="password">
+           <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
          </el-form-item>
          <el-form-item>
-           <el-button type="warning" @click="submitForm('ruleForm')">提交</el-button>
+           <el-button type="warning" @click="submitForm('ruleForm',ruleForm)">提交</el-button>
            <el-button @click="resetForm('ruleForm')" type="warning" plain>重置</el-button>
          </el-form-item>
        </el-form>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-
+import { mapState ,mapActions,mapMutations} from 'vuex';
   export default {
     name:'loginlogin',
     data() {
@@ -40,25 +40,43 @@
       };
       return {
          ruleForm: {
-          pass: '',
-          account: ''
+          userName: '',
+          password: ''
          },
          rules: {
-          pass: [
+          password: [
               { validator: checkPass , trigger: 'blur' }
           ],
-          account: [
+          userName: [
               { validator: checkAccount, trigger: 'blur' },
           ],
          }
       };
     },
+    computed: {
+      ...mapState('home',['userInfo'])
+    },
     methods: {
-        submitForm(formName) {
-          this.$refs[formName].validate((valid) => {
+      ...mapActions('home',['loadPostLogin']),
+        submitForm(formName,ruleForm) {
+          const _this = this ;
+          
+          _this.$refs[formName].validate((valid) => {
             if (valid) {
-              this.$cookies.set('keyName','dhg-345-fsdgsfg-454523')
-              this.$router.push({path:'/channel-management'})
+              _this.loadPostLogin(ruleForm).then(success=>{
+                   _this.userInfo.token && _this.$cookies.set('keyName',_this.userInfo.token)
+                   _this.userInfo.token && _this.$router.push({path:'/home'})
+                   _this.$message( {
+                    message: success,
+                    type: 'success'
+                   });
+                }).catch(error=> {
+                   _this.$message( {
+                    message: error,
+                    type: 'error'
+                   });
+                })
+              
             } else {
               return false;
             }

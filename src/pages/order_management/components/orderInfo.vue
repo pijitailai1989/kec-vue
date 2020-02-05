@@ -64,24 +64,36 @@
          </template>
         </kec-form>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-2">
         <kec-form text="高度">
           <template #input>
             <el-input v-model="payload.height" placeholder="" size="medium"></el-input>
           </template>
         </kec-form>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-2">
         <kec-form text="长度">
           <template #input>
             <el-input v-model="payload.length" placeholder="" size="medium"></el-input>
           </template>
         </kec-form>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-2">
         <kec-form text="宽度">
           <template #input>
             <el-input v-model="payload.width" placeholder="" size="medium"></el-input>
+          </template>
+        </kec-form>
+      </div>
+      <div class="col-sm-2 col-sm-offset-4">
+        <kec-form text="拦截操作">
+          <template #input>
+            <div class="flexs a-center" style="padding-top:2px"> 
+               <kec-button-click :disabled="isIntercept" text="拦截订单" 
+                @click="interceptFunc(id)" :loading="loading" 
+                background="#F18A33" color="#fff"></kec-button-click>
+            </div>
+            
           </template>
         </kec-form>
       </div>
@@ -90,7 +102,7 @@
 </template>
 
 <script>
-import {KecForm, KecButton }  from '@/common/components'
+import {KecForm, KecButton,KecButtonClick }  from '@/common/components'
 import { mapState ,mapActions,mapMutations} from 'vuex';
   export default {
     name:'orderInfo',
@@ -115,13 +127,17 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
           width: null
         },
         channelCode:null,
-        trackingNumber:null
+        trackingNumber:null,
+        isIntercept:true,
+        id:null,
+        loading:false
       };
     },
 
     components: {
         KecForm ,
-        KecButton
+        KecButton,
+        KecButtonClick
     },
 
     computed: {
@@ -136,7 +152,25 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
     methods: {
       ...mapMutations('basic',['setDestination']),
       ...mapActions('basic',['loadQueryByCountryCode']),
-      
+      ...mapActions('order',['loadPatchOrders']),
+      interceptFunc(id){
+            this.loading = true ;
+             this.loadPatchOrders({id:id}).then(success=>{
+                   this.$emit('closeFunc',true)
+                   this.loading = false ;
+                   
+                   this.$message( {
+                    message: success,
+                    type: 'success'
+                   });
+                }).catch(error=> {
+                  this.loading = false ;
+                   this.$message( {
+                    message: error,
+                    type: 'error'
+                   });
+                })
+      }
       
     },
 
@@ -144,11 +178,14 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
       orderInfos:{
         deep:true,
         handler:function(val){
-          let {aPackage,channelCode,trackingNumber} = val ;
+          let {aPackage,channelCode,trackingNumber,isIntercept,id} = val ;
           this.channelCode = channelCode ;
           this.trackingNumber = trackingNumber ;
+          this.isIntercept = isIntercept ;
+          this.id = id ;
           this.payload = aPackage
           // this.payload = JSON.parse( JSON.stringify(aPackage) )
+          console.log(val,'val')
         }
       }
     }

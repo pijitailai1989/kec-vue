@@ -1,6 +1,6 @@
 <template>
     <kec-dialog 
-      :boxWidth="widths"
+      boxWidth="960px"
       boxTop="12vh"
       v-show="dialogVisible"
       >
@@ -28,7 +28,7 @@
                 >
                   <template>
                     <div>
-                      <order-info v-show="componentName==='orderInfo'"></order-info>
+                      <order-info @closeFunc="cancelFunc" v-show="componentName==='orderInfo'"></order-info>
                       <cargo-info v-show="componentName==='cargoInfo'"></cargo-info>
                       <addresser v-show="componentName==='addresser'"></addresser>
                       <recipients v-show="componentName==='recipients'"></recipients>
@@ -52,8 +52,7 @@ import recipients from './recipients'
     name:'orderDialog',
     props:{
       dialogVisible:Boolean,
-      text:String,
-      widths:String
+      text:String
     },
     data () {
       return {
@@ -100,13 +99,15 @@ import recipients from './recipients'
         cancel() {
             this.$emit('closeFunc',false)
         },
+        cancelFunc(){
+            this.$emit('closeFunc',true)
+        },
         tabsFunc(index) {
             let arr = ['orderInfo','addresser','recipients','cargoInfo'] ;
             this.componentName = arr[index] ;
         },
         clickConfirm(data){
            this.loading = true ;
-           console.log(data,'orderInfos')
              this.loadPutOrders(data).then(success=>{
                    this.$emit('closeFunc',true)
                    this.loading = false ;
