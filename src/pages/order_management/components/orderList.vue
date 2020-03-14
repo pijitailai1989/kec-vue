@@ -68,10 +68,23 @@
          text="订单导入" icon="fa-file-excel-o" background="#67c23a" @click="eqitFunc('importEexDialog')" color="#fff"></kec-button-click>
          <kec-button-click :disabled="selectIndex===null" 
          text="修改订单" icon="fa-pencil" @click="eqitFunc('orderDialog')" background="#17A2B8" color="#fff"></kec-button-click>
+         <el-popover
+          placement="left-start"
+          width="160"
+          :disabled="selectIndex===null"
+          v-model="visible">
+          <p>确定删除吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click.native="delFunc">确定</el-button>
+          </div>
+          <kec-button slot="reference"
+            :disabled="selectIndex===null" text="删除订单" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+        </el-popover>
         </div>
         <div class="kec-content">
             <kec-table 
-            height="221px"
+            height="339px"
             :tableHeader="tableHeader" 
             :lastWidth="lastWidth" 
             :tableData="order_list" 
@@ -79,8 +92,8 @@
             :selectIndex="selectIndex"
             @active-item="activeItem"
             @active-index="activeFunc">
-                <template #operation>
-                <kec-button text="操作" icon="fa-trash-o" background="#F18A33" color="#fff"></kec-button>
+                <template v-slot:operation="slotProps">
+                <kec-button text="面单地址" @click.native="urlFunc(slotProps.item.labelUrl)" background="#8EB9F5" color="#fff"></kec-button>
                 </template>
                 <template v-slot:default="slotProps">
                 {{slotProps.item}}
@@ -129,17 +142,17 @@ import axios from '@/http/config'
            order_list:[],
            letWidth:{
            },
-           lastWidth:'',
+           lastWidth:'100px',
            tableHeader:{
-             orderNum:{"title":'订单跟踪号','slot':false},
-             channelCode:{"title":'产品编码','slot':false},
-             salePlatform:{"title":'客户参考号','slot':false},
-             id:{"title":'预报时间','slot':false},
-             serviceType:{"title":'客户','slot':false}
+             orderNum:{"title":'订单跟踪号','slot':false,'sort':'OTHER'},
+             channelCode:{"title":'产品编码','slot':false,'sort':'OTHER'},
+             salePlatform:{"title":'客户参考号','slot':false,'sort':'OTHER'},
+             orderDate:{"title":'预报时间','slot':false},
+             customerName:{"title":'客户','slot':false,'sort':'ZH'}
            },
            selectIndex:null,
            selectItem:null,
-           PageSize:10,
+           PageSize:8,
            PageNum:1,
            total:null,
            stateId:null,
@@ -179,7 +192,7 @@ import axios from '@/http/config'
     },
 
     methods: {
-        ...mapActions('order',['loadGetOrders','loadGetQueryLevelTwo','loadGetProductBrief','loadGetCustomerBrief']),
+        ...mapActions('order',['loadGetOrders','loadGetQueryLevelTwo','loadGetProductBrief','loadGetCustomerBrief','loadDeleteOrders']),
         ...mapMutations('order',['setOrderInfo']),
         handleCurrentChange(page){
           this.PageNum = page ;
@@ -190,10 +203,10 @@ import axios from '@/http/config'
           let hrefStr = ''
           switch(type) {
             case 'single': 
-                  hrefStr = '/file/order/download/simpleTemplate'
+                  hrefStr = '/auth/file/order/download/simpleTemplate'
                   break;
             case 'multiple':
-                  hrefStr = '/file/order/download/multiTemplate'
+                  hrefStr = '/auth/file/order/download/multiTemplate'
                   break;
             default:
                   break;
@@ -249,6 +262,32 @@ import axios from '@/http/config'
            }
            this.dialogVisible = true
            
+        },
+        urlFunc(url){
+             window.location.href = url ;
+            // url && window.open(url);
+        },
+        delFunc(){
+          let {length} = this.order_list ;
+          if(this.selectIndex!==null) {
+            this.loadDeleteOrders({data:{id:this.selectItem.id}}).then(success=> {
+                   this.selectIndex = null ;
+                   if(length == 1){
+                     this.PageNum >=2 && this.PageNum -- ;
+                   }
+                   this.mountFunc(this.PageSize,this.PageNum)
+                   this.$message( {
+                    message: success,
+                    type: 'success'
+                   });
+                }).catch(error=> {
+                  this.selectIndex = null ;
+                   this.$message( {
+                    message: error,
+                    type: 'error'
+                   });
+                })
+          } 
         }
         
     },

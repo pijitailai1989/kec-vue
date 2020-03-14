@@ -13,15 +13,23 @@ const delChargeUnit = data => http({ methods:'delete' ,url:`/common/settings/cha
 
 
 const queryServerType = data => http({ methods:'get' ,url:`/common/settings/serviceTypes/query/serverType`,data}) //查询某个具体的服务类型
-const queryServerTypes = data => http({ methods:'get' ,url:`/common/settings/serviceTypes/query/serverTypes`,data}) //查询所有的服务类型列表
+// const queryServerTypes = data => http({ methods:'get' ,url:`/common/settings/serviceTypes/query/serverTypes`,data}) //查询所有的服务类型列表
+const queryServerTypes = data => http({ methods:'get' ,url:`/common/settings/enums/serviceTypes`,data}) //查询所有的服务类型列表
 const subjectQueryItem = data => http({ methods:'get' ,url:`/accounting/subject/queryItem`,data}) //查询所有的科目
 
 const createServerType = data => http({ methods:'post' ,url:`/common/settings/serviceTypes/create/serverType`,data}) //  新增服务类型
 const modifyServiceType = data => http({ methods:'post' ,url:`/common/settings/serviceTypes/modify/serviceType`,data}) //   修改服务类型的名称
-const createChargeItem = data => http({ methods:'post' ,url:`/common/settings/serviceTypes/chargeItems`,data}) //   新增服务类型收费项
-const modifyChargeItem = data => http({ methods:'put' ,url:`/common/settings/serviceTypes/chargeItems`,data}) //   修改服务收费项
-const deleteChargeItem = data => http({ methods:'delete' ,url:`/common/settings/serviceTypes/chargeItems`,data}) //   删除服务收费项
+// const createChargeItem = data => http({ methods:'post' ,url:`/common/settings/serviceTypes/chargeItems`,data}) //   新增服务类型收费项
+// const modifyChargeItem = data => http({ methods:'put' ,url:`/common/settings/serviceTypes/chargeItems`,data}) //   修改服务收费项
+// const deleteChargeItem = data => http({ methods:'delete' ,url:`/common/settings/serviceTypes/chargeItems`,data}) //   删除服务收费项
 const deleteServiceType = data => http({ methods:'post' ,url:`/common/settings/serviceTypes/delete/serviceType`,data}) //   删除某个服务类型
+
+const getChargeItem = data => http({ methods:'get' ,url:`/common/settings/chargeItems`,data}) //   查询收费项
+const getAccountObject = data => http({ methods:'get' ,url:`/common/settings/enums/accountObject`,data}) //   查询所有的计费依据 
+const getChargeItemAll = data => http({ methods:'get' ,url:`/common/settings/chargeItems/all`,data}) //   查询收费项
+const createChargeItem = data => http({ methods:'post' ,url:`/common/settings/chargeItems`,data}) //  新增收费项
+const modifyChargeItem = data => http({ methods:'put' ,url:`/common/settings/chargeItems`,data}) //   修改收费项
+const deleteChargeItem = data => http({ methods:'delete' ,url:`/common/settings/chargeItems`,data}) // 删除收费项
 
 const customerQueryAll = data => http({ methods:'get' ,url:`/business/customer/queryAll`,data}) //查询全部客户
 const dictionaryCURRENCY = data => http({ methods:'get' ,url:`/business/customer/care/dictionaryData/CURRENCY`,data}) //查询币种
@@ -47,9 +55,12 @@ const vendorPostChargeItems = data => http({ methods:'post' ,url:`/business/vend
 const vendorPutChargeItems = data => http({ methods:'put' ,url:`/business/vendor`,data}) //  修改供应商费用表收费项
 
 const getVendorsByServiceType = data => http({ methods:'get' ,url:`/business/vendor`,data}) //根据服务类型ID获取对于的供应商列表
-const channelGetChannels = data => http({ methods:'get' ,url:`/product/channel/getChannels`,data}) //渠道列表
-const channelPostChannel = data => http({ methods:'post' ,url:`/product/channel/postChannel`,data}) //创建渠道
-const channelPutChannel = data => http({ methods:'put' ,url:`/product/channel/putChannel`,data}) //修改渠道
+// const channelGetChannels = data => http({ methods:'get' ,url:`/product/channel/getChannels`,data}) //渠道列表
+// const channelPostChannel = data => http({ methods:'post' ,url:`/product/channel/postChannel`,data}) //创建渠道
+// const channelPutChannel = data => http({ methods:'put' ,url:`/product/channel/putChannel`,data}) //修改渠道
+const channelGetChannels = data => http({ methods:'get' ,url:`/product/channel`,data}) //渠道列表
+const channelPostChannel = data => http({ methods:'post' ,url:`/product/channel`,data}) //创建渠道
+const channelPutChannel = data => http({ methods:'put' ,url:`/product/channel`,data}) //修改渠道
 
 const organizationQueryParent = data => http({ methods:'get' ,url:`/admin/settings/organization/queryParent`,data}) //查找所有节点
 const subjectQueryParent = data => http({ methods:'get' ,url:`/accounting/subject/queryParent`,data}) //查找科目/级别
@@ -95,6 +106,7 @@ const locationDelete = data => http({ methods:'delete' ,url:`/common/settings/lo
 
 const getOrders = data => http({ methods:'get' ,url:`/business/orders`,data}) //获取订单
 const putOrders = data => http({ methods:'put' ,url:`/business/orders`,data}) //修改订单
+const deleteOrders = data => http({ methods:'delete' ,url:`/business/orders`,data}) //删除订单
 const patchOrders = data => http({ methods:'patch' ,url:`/business/orders`,data}) //拦截订单
 const getQueryLevelTwo = data => http({ methods:'get' ,url:`/common/settings/standardState/queryLevelTwo`,data}) //查询所有的订单的状态 
 const getProductBrief = data => http({ methods:'get' ,url:`/product/productBrief`,data}) //查询所有产品
@@ -130,18 +142,132 @@ const postPermissionRole = data => http({ methods:'post' ,url:`/admin/settings/p
 const codeQueryPage = data => http({ methods:'post' ,url:`/common/rule/code/queryPage`,data}) //查询编码规则
 const codeCreate = data => http({ methods:'post' ,url:`/common/rule/code/create`,data}) //创建编码规则
 const codeUpdate = data => http({ methods:'put' ,url:`/common/rule/code/update`,data}) //修改编码规则
+const bindRelation = data => http({ methods:'put' ,url:`/common/rule/code/bindRelation`,data}) //编码规则绑定
+const releaseRelation = data => http({ methods:'put' ,url:`/common/rule/code/releaseRelation`,data}) //编码规则解绑
 const codeDelete = data => http({ methods:'delete' ,url:`/common/rule/code/delete`,data}) //删除编码规则
 const codeStatus = data => http({ methods:'get' ,url:`/common/rule/code/status`,data}) //更新状态
+const codeQuery = data => http({ methods:'get' ,url:`/common/rule/code/query`,data}) //单个查询
 
 const queryByVendorId = data => http({ methods:'get' ,url:`/business/vendorState/queryByVendorId`,data}) //查询供应商货态
 const vendorStateCreate = data => http({ methods:'post' ,url:`/business/vendorState/create`,data}) //新增供应商货态
 const vendorStateUpdate = data => http({ methods:'put' ,url:`/business/vendorState/update`,data}) //修改供应商货态
 const vendorStateDelete = data => http({ methods:'delete' ,url:`/business/vendorState/delete`,data}) // 删除供应商货态
 
+const getVendorProducts = data => http({ methods:'get' ,url:`/business/vendor-products`,data}) //查询供应商产品
+const postVendorProducts = data => http({ methods:'post' ,url:`/business/vendor-products`,data}) //新增供应商产品
+const putVendorProducts = data => http({ methods:'put' ,url:`/business/vendor-products`,data}) //修改供应商产品
+
 const postLogin = data => http({ methods:'post' ,url:`/auth/login`,data}) //登陆
+const postLogout = data => http({ methods:'post' ,url:`/auth/logout`,data}) //登出
+
+const putInvestAccount = data => http({ methods:'put' ,url:`/business/customer/investAccount`,data}) //充值
+const getQueryAccount = data => http({ methods:'get' ,url:`/business/customer/queryAccount`,data}) //账户余额
+
+const getLastMileExtraInfos = data => http({ methods:'get' ,url:`/business/last-mile-extra-infos`,data}) // 末公里附加信息模块_查询全部
+// const getLastMileExtraInfosOrder = data => http({ methods:'get' ,url:`/business/last-mile-extra-infos/order`,data}) // 末公里附加信息模块_用ProductCode查一个 
+const postLastMileExtraInfos = data => http({ methods:'post' ,url:`/business/last-mile-extra-infos`,data}) //末公里附加信息模块_新建
+const putLastMileExtraInfos= data => http({ methods:'put' ,url:`/business/last-mile-extra-infos`,data}) //末公里附加信息模块_更改一个
+const deleltLastMileExtraInfos = data => http({ methods:'delete' ,url:`/business/last-mile-extra-infos`,data}) // 末公里附加信息模块_删除一个
+
+const getFindAll = data => http({ methods:'get' ,url:`/product/findAll`,data}) //可用产品
+const getUsersByRoleCodeSALES = data => http({ methods:'get' ,url:`/admin/user/auth/getUsersByRoleCode/SALES_REP`,data}) //查找销售代表的用户
+const getUsersByRoleCodeSERVICE = data => http({ methods:'get' ,url:`/admin/user/auth/getUsersByRoleCode/SERVICE_REP`,data}) //查找客服代表的用户
+const postAgreementCreate = data => http({ methods:'post' ,url:`/business/agreement/create`,data}) //新增合同
+const postAgreementQueryPage = data => http({ methods:'post' ,url:`/business/agreement/queryPage`,data}) //分页查询合同
+const putAgreementfirstExamine = data => http({ methods:'put' ,url:`/business/agreement/firstExamine`,data}) //合同审核
+const putAgreementUpdate = data => http({ methods:'put' ,url:`/business/agreement/update`,data}) //修改合同
+
+const getCustomerInfo = data => http({ methods:'get' ,url:`/business/customer/customerInfo`,data}) //查询顾客的名字和顾客编码 
+const getProductByCustomer = data => http({ methods:'get' ,url:`/business/agreement/productByCustomer`,data}) //获取客户下的合同产品
+const getQueryRelation = data => http({ methods:'get' ,url:`/common/rule/code/queryRelation`,data}) //查询关系
+const getCostStatements = data => http({ methods:'get' ,url:`/business/cost-statements`,data}) //查询成本
+const putCostStatements = data => http({ methods:'put' ,url:`/business/cost-statements`,data}) //修改成本
+
+const getProductQuotations = data => http({ methods:'get' ,url:`/product/product-quotations`,data}) //查询供应商产品成本
+const getCostByProduct = data => http({ methods:'get' ,url:`/business/cost-statements/getCostByProduct`,data}) //查询产品成本
+const putProductQuotations = data => http({ methods:'put' ,url:`/product/product-quotations`,data}) //修改供应商产品成本
+
+const getCostStatementsVersions = data => http({ methods:'get' ,url:`/business/cost-statements/versions`,data}) //成本表_查_版本编号列表
+const getCostStatementsVersionsTwo = data => http({ methods:'get' ,url:`/business/cost-statements/versions`,data}) //成本表_查_通过版本编码查
+// const getQueryItem = data => http({ methods:'get' ,url:`/accounting/subject/queryItem`,data}) //获取应付/应付类型科目
+const getQueryItem = data => http({ methods:'get' ,url:`/common/settings/ledgerSubject`,data}) //获取应付/应付类型科目
+const getExamineLog = data => http({ methods:'get' ,url:`/business/agreement/examineLog`,data}) //合同日志
+
+const getLocations = data => http({ methods:'get' ,url:`/common/settings/location/locations`,data}) //分页查询地点
+const getPartitionSchemas = data => http({ methods:'get' ,url:`/common/settings/PartitionSchemas`,data}) //分页查询分区
+const postPartitionSchemas = data => http({ methods:'post' ,url:`/common/settings/PartitionSchemas`,data}) //新增供应商分区
+const putPartitionSchemas = data => http({ methods:'put' ,url:`/common/settings/PartitionSchemas`,data}) //修改供应商分区
+const deletePartitionSchemas = data => http({ methods:'delete' ,url:`/common/settings/PartitionSchemas`,data}) // 删除供应商分区
+
+const putRecall = data => http({ methods:'put' ,url:`/business/cost-statements/recall`,data}) //成本表_审核_撤回
+const putEexamine = data => http({ methods:'put' ,url:`/business/cost-statements/examine`,data}) //成本表_审核_审核
+const putSubmit = data => http({ methods:'put' ,url:`/business/cost-statements/submit`,data}) //成本表_审核_提交 
+
+const getServicePartitions = data => http({ methods:'get' ,url:`/common/settings/ServicePartitions`,data}) //通过供应商产品的id查询对应的所有分区 
+const getProductTypes = data => http({ methods:'get' ,url:`/common/settings/enums/ProductTypes`,data}) //产品类型 
+
+const getProductQuotation = data => http({ methods:'get' ,url:`/product/product-quotations`,data}) //报价单_查询单个
+const getCountryPartition = data => http({ methods:'get' ,url:`/product/product-quotations/country-and-partition`,data}) //报价单_查询单个产品所有报价表的国家和分区
+const postProductQuotation = data => http({ methods:'post' ,url:`/product/product-quotations`,data}) //报价单_增加单个
+const putProductQuotation = data => http({ methods:'put' ,url:`/product/product-quotations`,data}) //报价单_集体修改
 
 export default {
+    getProductQuotation,
+    getCountryPartition,
+    postProductQuotation,
+    putProductQuotation,
+    
+    getProductTypes,
+    getServicePartitions,
+    
+    putRecall,
+    putEexamine,
+    putSubmit,
+
+    getLocations,
+    getPartitionSchemas,
+    postPartitionSchemas,
+    putPartitionSchemas,
+    deletePartitionSchemas,
+
+    getExamineLog,
+    getQueryItem,
+    getCostStatementsVersions,
+    getCostStatementsVersionsTwo,
+    getProductQuotations,
+    getCostByProduct,
+    putProductQuotations,
+    
+    getCostStatements,
+    putCostStatements,
+
+    getQueryRelation,
+    getProductByCustomer,
+    getCustomerInfo,
+    
+    getFindAll,
+    getUsersByRoleCodeSALES,
+    getUsersByRoleCodeSERVICE,
+    postAgreementCreate,
+    postAgreementQueryPage,
+    putAgreementfirstExamine,
+    putAgreementUpdate,
+
+    getLastMileExtraInfos,
+    // getLastMileExtraInfosOrder,
+    postLastMileExtraInfos,
+    putLastMileExtraInfos,
+    deleltLastMileExtraInfos,
+    
+    putInvestAccount,
+    getQueryAccount,
+
     postLogin,
+    postLogout,
+    
+    getVendorProducts,
+    postVendorProducts,
+    putVendorProducts,
     
     queryByVendorId,
     vendorStateCreate,
@@ -151,8 +277,11 @@ export default {
     codeQueryPage,
     codeCreate,
     codeUpdate,
+    bindRelation,
+    releaseRelation,
     codeDelete,
     codeStatus,
+    codeQuery,
     
     getPermission,
     getFindRouterPathList,
@@ -178,6 +307,7 @@ export default {
 
     getOrders,
     putOrders,
+    deleteOrders,
     patchOrders,
     getQueryLevelTwo,
     getProductBrief,
@@ -219,6 +349,9 @@ export default {
     
     createServerType,
     modifyServiceType,
+    getChargeItem,
+    getAccountObject,
+    getChargeItemAll,
     createChargeItem, 
     modifyChargeItem, 
     deleteChargeItem, 

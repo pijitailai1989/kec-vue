@@ -13,7 +13,7 @@
 import exceptionList from './components/exceptionList'
 import {KecPageHeader}  from '@/common/components'
   export default {
-    name:'exceptionHandling',
+    name:'fidleConfig',
     props:[''],
     data () {
       return {

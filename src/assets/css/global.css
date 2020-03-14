@@ -149,6 +149,11 @@ a:link,a:visited,a:active,a:hover{text-decoration:none;color:inherit;}
     color: #666 !important;
     font-size: 14px !important;
  }
+ .el-tabs__header {margin: 0 0 5px !important}
+      
+ body .el-table th.gutter {
+    display: table-cell !important
+}
     
  .el-table--striped .el-table__body tr.el-table__row--striped td{background:#FAFAFA}
  .el-table--striped .el-table__body tr.el-table__row--striped.current-row td,.el-table__body tr.current-row>td,.el-table__body tr.hover-row.current-row>td,.el-table__body tr.hover-row.el-table__row--striped.current-row>td,.el-table__body tr.hover-row.el-table__row--striped>td,.el-table__body tr.hover-row>td{background-color:#FAE1CB !important;}

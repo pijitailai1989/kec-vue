@@ -107,7 +107,7 @@ import {mapActions, mapState} from 'vuex'
 import {KecForm, KecButton ,KecDialog}  from '@/common/components'
 import {formatDate} from '@/utils/fun'
   export default {
-    name:'addException',
+    name:'addContract',
     props:{
       type:String,
       item:Object,

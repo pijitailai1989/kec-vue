@@ -1,20 +1,26 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import login from '@/pages/login/index'
-import channelManagement from '@/pages/channels_and_products/channelManagement.vue'
-import productManagement from '@/pages/channels_and_products/productManagement.vue'
-import stateManagement from '@/pages/basic_information/stateManagement.vue'
-import logisticsProcess from '@/pages/basic_information/logisticsProcess.vue'
-import basicConfig from '@/pages/basic_configuration/basicConfig.vue'
-import vendorsConfig from '@/pages/basic_configuration/vendorsConfig.vue'
-import organizationConfig from '@/pages/basic_configuration/organizationConfig.vue'
-import userConfig from '@/pages/basic_configuration/userConfig.vue'
-import revenueCostClass from '@/pages/basic_configuration/revenueCostClass.vue'
-import cargoGoodsClass from '@/pages/basic_configuration/cargoGoodsClass.vue'
-import customerManagement from '@/pages/customer_management/customerManagement.vue'
-import orderManagement from '@/pages/order_management/orderManagement.vue'
-import exceptionHandling from '@/pages/customer_service/exceptionHandling.vue'
-import T_R from '@/pages/customer_service/t_r.vue'
+
+const channelManagement  = ()=>import( '@/pages/channels_and_products/channelManagement.vue')
+const productManagement  = ()=>import( '@/pages/channels_and_products/productManagement.vue')
+const quoteManager       = ()=>import( '@/pages/channels_and_products/quoteManager.vue')
+const stateManagement    = ()=>import( '@/pages/basic_information/stateManagement.vue')
+const logisticsProcess   = ()=>import( '@/pages/basic_information/logisticsProcess.vue')
+const basicConfig        = ()=>import( '@/pages/basic_configuration/basicConfig.vue')
+const vendorsConfig      = ()=>import( '@/pages/vendor_management/vendorsConfig.vue')
+const organizationConfig = ()=>import( '@/pages/basic_configuration/organizationConfig.vue')
+const userConfig         = ()=>import( '@/pages/basic_configuration/userConfig.vue')
+const revenueCostClass   = ()=>import( '@/pages/basic_configuration/revenueCostClass.vue')
+const cargoGoodsClass    = ()=>import( '@/pages/basic_configuration/cargoGoodsClass.vue')
+const customerManagement = ()=>import( '@/pages/customer_management/customerManagement.vue')
+const orderManagement    = ()=>import( '@/pages/order_management/orderManagement.vue')
+const exceptionHandling  = ()=>import( '@/pages/customer_service/exceptionHandling.vue')
+const T_R                = ()=>import( '@/pages/customer_service/t_r.vue')
+const fidleConfig        = ()=>import( '@/pages/fidle_configuration/fidleConfig.vue')
+const contractManagement = ()=>import( '@/pages/customer_management/contractManagement.vue')
+const exchangeTable      = ()=>import( '@/pages/customer_management/exchangeTable.vue')
+const costTable          = ()=>import( '@/pages/vendor_management/costTable.vue')
 
 Vue.use(Router)
 
@@ -37,6 +43,9 @@ const router = new Router({
                  },{
                    path: '/product-management',name:'productManagement',
                    component: productManagement   //产品管理
+                 },{
+                  path: '/quote-manager',name:'quoteManager',
+                  component: quoteManager   //报价管理
                  },{
                    path: '/state-management',name:'stateManagement',
                    component: stateManagement  //状态管理
@@ -73,6 +82,18 @@ const router = new Router({
                  },{
                   path: '/t-r',name:'T_R',
                   component: T_R  //货态
+                 },{
+                  path: '/fidle-config',name:'fidleConfig',
+                  component: fidleConfig  //额外字段配置
+                 },{
+                  path: '/contract-management',name:'contractManagement',
+                  component: contractManagement  //合同管理
+                 },{
+                  path: '/exchange-table',name:'exchangeTable',
+                  component: exchangeTable  //汇率表
+                 },{
+                  path: '/cost-table',name:'costTable',
+                  component: costTable  //成本表
                  },
       ]
     }

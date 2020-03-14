@@ -52,6 +52,9 @@ export default {
     loadPatchOrders({commit},payload){
       return getPromiseActionNoMutations (api.patchOrders(payload))
     },
+    loadDeleteOrders({commit},payload){
+      return getPromiseActionNoMutations (api.deleteOrders(payload))
+    },
     
   }
 }

@@ -8,7 +8,7 @@ export function getPromiseAction( p , commit , mutationType ){
                 return resolve(message)
                 
             } else {
-                return reject( {code: 0,message: message} )
+                return reject(message)
             }
         }, error => {
             
@@ -32,7 +32,7 @@ export function getPromiseActionNoMutations(p){
                 return resolve(message)
                 
             } else {
-                return reject( {code: 0 , message: message} )
+                return reject(message)
             }
         }, error => {
             return reject(

@@ -20,7 +20,7 @@
     <div class="list">
       
         <kec-table 
-         height="248px"
+         height="251px"
          :tableHeader="tableHeader" 
          :lastWidth="lastWidth" 
          :tableData="channelsList" 
@@ -34,10 +34,11 @@
           <template v-slot:default="slotProps">
             {{slotProps.item}}
           </template>
-          <template v-slot:a="slotProps">
-            <kec-button text="操作" icon="fa-trash-o" background="#F18A33" color="#fff"></kec-button>
-            <span>{{slotProps.item}}</span>
-          </template>
+          <template v-slot:vendorProducts="slotProps">
+                  <div class="flexs columns">
+                    <el-tag class="pr" type="info" size="small" v-for="(item,i) of slotProps.item" :key="i">{{item.name}}</el-tag>
+                  </div>
+                </template>
         </kec-table>
       
     </div>
@@ -65,7 +66,9 @@ import ShareDialog from './shareDialog'
            lastWidth:'',
            tableHeader:{
              id:{"title":'id','slot':false},
-             channelCode:{"title":'渠道编码','slot':false},
+             channelCode:{"title":'渠道编码','slot':false,'sort':'ZH'},
+             channelName:{"title":'渠道名称','slot':false,'sort':'ZH'},
+             vendorProducts:{"title":'供应商产品','slot':true},
              averageCostWeight:{"title":'成本','slot':false},
              averageCostVolume:{"title":'平均成本','slot':false},
              grossProfit:{"title":'毛利','slot':false},
@@ -139,4 +142,6 @@ import ShareDialog from './shareDialog'
    background #fff
  .kec-button+.kec-button 
    margin-left 10px
+ .pr+.pr  
+     margin-top 2px
 </style>

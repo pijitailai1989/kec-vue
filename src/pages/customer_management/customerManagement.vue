@@ -1,43 +1,70 @@
 <template>
   <div>
-    <kec-page-header 
-      :textArray="['客户管理','客户列表']" 
-      @click="tabsFunC"
-      :nameComponent="{1:'customerList'}">
-    </kec-page-header>
-    <component :is="componentName" class="content"></component>
+    <div style="" class="breadcrub">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item class="cur" @click.native="componentNameFunc(item.components,index)" 
+        v-for="(item,index) of breadcrumbArr" :key="index">{{item.name}}</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <component :is="componentName" style="margin-top:10px"></component>
   </div>
 </template>
 
 <script>
-import customerList from './components/customerList'
+import {mapState,mapActions,mapMutations} from 'vuex'
+import selectCustomer from './components/selectCustomer'
+import customerItem from './components/customerItem'
 import {KecPageHeader}  from '@/common/components'
   export default {
-    name:'customerManagement',
+    name:'customerManagements',
     props:[''],
     data () {
       return {
-          componentName:'customerList'
-             
+          componentName:'selectCustomer'
       };
     },
     components:{
-      customerList,
-      KecPageHeader
+      KecPageHeader,
+      selectCustomer,
+      customerItem
     },
     computed: {
-      
+      ...mapState('basic',['ventorsId']),
+      ...mapState('home',['breadcrumbArr']),
     },
     methods: {
-      tabsFunC(name) {
-         this.componentName = name ;
+      ...mapMutations('home',['delBreadcrumbArr']),
+      componentNameFunc(components,index,item){
+         
+         if(index>=1){
+           this.componentName = components ;
+           this.delBreadcrumbArr(index) ;
+         }
+         
       }
+    },
+    watch: {
+      breadcrumbArr(){
+        let i = this.breadcrumbArr.length - 1 ;
+       if(this.breadcrumbArr[0]['components'] === 'selectCustomer') {
+        if(this.breadcrumbArr.length===1){
+          this.componentName = 'selectCustomer';
+        }else{
+          this.componentName = this.breadcrumbArr[i]['components']
+        }
+       }
+      },
+      
     }
+
 
   }
 
 </script>
 <style lang='stylus' scoped>
-.content  
-  margin-top 10px
+.breadcrub
+   padding 10px 5px
+   background #fff
+   .cur
+     cursor pointer !important
 </style>

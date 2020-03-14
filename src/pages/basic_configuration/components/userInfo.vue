@@ -34,6 +34,35 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
+                    <kec-form crosswise text="关联客户" width="80px">
+                    <template #input>
+                      <el-select v-model="payload.customerCode" filterable placeholder="" style="width:100%">
+                        <el-option
+                          v-for="item in customerInfoList"
+                          :key="item.id"
+                          :label="item.companyName"
+                          :value="item.customer_code">
+                        </el-option>
+                      </el-select>
+                    </template>
+                    </kec-form>
+                </div>
+                <div class="col-sm-6">
+                    <kec-form crosswise text="类型" width="80px">
+                    <template #input>
+                      <div class="col-sm-12 borders flexs" style="padding:8px">
+                           <el-switch
+                              v-model="payload.canLogin"
+                              active-color="#13ce66"
+                              inactive-text="可登录用户界面"
+                              inactive-color="#ccc">
+                            </el-switch>
+                      </div>
+                       
+                    </template>
+                    </kec-form>
+                </div>
+                <div class="col-sm-6">
                     <kec-form crosswise text="主要角色" width="80px">
                     <template #input>
                       <el-select v-model="payload.mainRoleId" filterable placeholder="" style="width:100%">
@@ -51,7 +80,7 @@
                 <div class="col-sm-6">
                     <kec-form crosswise text="密码" width="80px">
                       <template #input>
-                        <el-input v-model="payload.password" placeholder=""></el-input>
+                        <el-input v-model="payload.password"  type="password" placeholder=""></el-input>
                       </template>
                     </kec-form>
                 </div>
@@ -99,7 +128,8 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
                  "organizationId": null,
                  "mainRoleId": null,
                  "tokenTimeout": "",
-                 "createTime":null
+                 "customerCode":null,
+                 "canLogin": false
                 }
         
       }
@@ -112,7 +142,7 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
     },
 
     computed: {
-      ...mapState('basic',['organizationQueryList','queryByOrgList','userInfo']),
+      ...mapState('basic',['organizationQueryList','queryByOrgList','userInfo','customerInfoList']),
     },
 
     beforeMount() {},
@@ -137,14 +167,15 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
                  "organizationId": null,
                  "mainRoleId": null,
                  "tokenTimeout": "",
-                 "createTime":null
+                 "customerCode":null,
+                 "canLogin": false
         }
       },
       clickConfirm() {
         const _this = this ;
         if(!_this.payload.userName) return
-        let {userName,id,email,mainRoleId,organizationId,tokenTimeout} = _this.payload
-        let data = {userName,id,email,mainRoleId,organizationId,tokenTimeout}
+        let {userName,id,email,mainRoleId,organizationId,tokenTimeout,customerCode,canLogin} = _this.payload
+        let data = {userName,id,email,mainRoleId,organizationId,tokenTimeout,customerCode,canLogin}
         _this.loadUpdateUser(data).then(success=>{
             this.setUserInfo(_this.payload)
             this.selectMainRoleId(mainRoleId)
@@ -177,6 +208,8 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
           ,organizationName
           ,tokenTimeout
           ,userName
+          ,canLogin
+          ,customerCode
         } = info ;
         organizationId && this.loadQueryByOrgId([organizationId]) ;
         _.payload = {
@@ -189,7 +222,9 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
           ,organizationName
           ,tokenTimeout
           ,userName
-                     
+          ,canLogin:canLogin?canLogin:null
+          ,customerCode:customerCode?customerCode:null
+
         }
       }
     },

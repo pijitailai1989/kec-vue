@@ -1,10 +1,13 @@
 import qs from 'qs' 
 import axios from './config'
-
-
-
+let nums = 0 ;
 const fetch = (options) => {
     const { methods = 'get',data,url } = options  
+    let tokenLacalStorage =  sessionStorage.getItem('token') ;
+    if(tokenLacalStorage && nums === 0){
+      nums ++ ;
+      axios.defaults.headers['Authorization'] = 'Bearer ' + tokenLacalStorage 
+    }
     switch (methods.toLowerCase()) {
         case 'get':
             let urlPath = '' 
@@ -28,7 +31,6 @@ const fetch = (options) => {
                urlPath1 = `${url}${paths1}`
                return axios.delete(urlPath1)
             }else if(data instanceof Object){
-               console.log(11111111111111111111111,data)
                return axios.delete(url,data)
             }else{
                urlPath1 = `${url}/${data}`

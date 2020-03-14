@@ -159,7 +159,15 @@ import goodsAttribute from './goodsAttribute'
             this.currentTabComponent = arr[index] ;
         },
         channelData(data){
-            this.payload.channelList = data ;
+            let arr = []
+            if(data && data.length){
+              data.forEach(item=>{
+                 let data = {id:item.id}
+                 arr.push(data)
+              })
+            }
+            this.payload.channelList = arr ;
+
         },
         serverData(data){
             let arr = JSON.parse( JSON.stringify(data.servicePartitionList) )
@@ -197,6 +205,9 @@ import goodsAttribute from './goodsAttribute'
             this.payload["compensationCurrency"]=data.compensationCurrency
             this.payload["compensationUnitId"]=data.compensationUnitId
             this.payload["destinationCountryCode"]=data.destinationCountryCode
+            this.payload["ableReturn"]=data.ableReturn
+            this.payload["ableSensitive"]=data.ableSensitive
+            this.payload["type"]=data.type
         },
         goodsData(data){
             this.payload["threeDimensionsMaxSize"]=data.threeDimensionsMaxSize

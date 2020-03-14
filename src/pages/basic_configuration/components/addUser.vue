@@ -20,6 +20,35 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-12">
+                    <kec-form crosswise text="关联客户" width="70px">
+                    <template #input>
+                      <el-select v-model="payload.customerCode" filterable placeholder="" style="width:100%">
+                        <el-option
+                          v-for="item in customerInfoList"
+                          :key="item.id"
+                          :label="item.companyName"
+                          :value="item.customer_code">
+                        </el-option>
+                      </el-select>
+                    </template>
+                    </kec-form>
+                </div>
+                <div class="col-sm-12">
+                    <kec-form crosswise text="类型" width="70px">
+                    <template #input>
+                      <div class="col-sm-12 borders flexs" style="padding:8px">
+                           <el-switch
+                              v-model="payload.canLogin"
+                              active-color="#13ce66"
+                              inactive-text="可登录用户界面"
+                              inactive-color="#CCC">
+                            </el-switch>
+                      </div>
+                       
+                    </template>
+                    </kec-form>
+                </div>
+                <div class="col-sm-12">
                     <kec-form crosswise text="组织" width="70px">
                     <template #input>
                       <el-select v-model="payload.organizationId" @change="orgChange" filterable placeholder="" style="width:100%">
@@ -33,6 +62,7 @@
                     </template>
                     </kec-form>
                 </div>
+                
                 <div class="col-sm-12">
                     <kec-form crosswise text="主要角色" width="70px">
                       <template #input>
@@ -51,7 +81,7 @@
                 <div class="col-sm-12">
                     <kec-form crosswise text="密码" width="70px">
                     <template #input>
-                      <el-input v-model="payload.password" placeholder=""></el-input>
+                      <el-input v-model="payload.password"  type="password" placeholder=""></el-input>
                     </template>
                     </kec-form>
                 </div>
@@ -94,7 +124,9 @@ import {KecForm, KecButton }  from '@/common/components'
                  "email": "",
                  "organizationId": null,
                  "mainRoleId": null,
-                 "tokenTimeout": ""
+                 "tokenTimeout": "",
+                 "customerCode":null,
+                 "canLogin": false
                 }
         
       }
@@ -106,7 +138,7 @@ import {KecForm, KecButton }  from '@/common/components'
     },
 
     computed: {
-      ...mapState('basic',['organizationQueryList','queryByOrgList'])
+      ...mapState('basic',['organizationQueryList','queryByOrgList','customerInfoList'])
     },
 
     beforeMount() {},
@@ -128,7 +160,9 @@ import {KecForm, KecButton }  from '@/common/components'
                  "email": "",
                  "organizationId": null,
                  "mainRoleId": null,
-                 "tokenTimeout": ""
+                 "tokenTimeout": "",
+                 "customerCode":null,
+                 "canLogin": false
         }
       },
       clickConfirm() {

@@ -104,62 +104,19 @@ export default {
       state.userInfo = body || {};
       if(body){
          let obj = {}
-         let {permissions} = body ;
+         let {permissions,token} = body ;
+         sessionStorage.setItem('token',token)
+         sessionStorage.setItem('userInfo',JSON.stringify(body))
          if(permissions.length){
             permissions.forEach(el => {
-              switch(el) {
-                case '/product/channel:R':
-                    obj['1'] = '1'
-                    obj['1-1'] = '1-1'
-                    break;
-                case '/product:R':
-                    obj['1'] = '1'
-                    obj['1-1'] = '1-2'
-                    break;
-                case '/common/settings:R':
-                    obj['3'] = '3'
-                    obj['3-1'] = '3-1'
-                    break;
-                case '/business/vendor:R':
-                    obj['3'] = '3'
-                    obj['3-2'] = '3-2'
-                    break;
-                case '/admin/settings:R':
-                    obj['3'] = '3'
-                    obj['3-3'] = '3-3'
-                    break;
-                case '/admin/user/auth:R':
-                    obj['3'] = '3'
-                    obj['3-4'] = '3-4'
-                    break;
-                case '/accounting/subject:R':
-                    obj['3'] = '3'
-                    obj['3-5'] = '3-5'
-                    break;
-                case '/common/settings:R':
-                    obj['3'] = '3'
-                    obj['3-6'] = '3-6'
-                    break;
-                case '/business:R':
-                    obj['4'] = '4'
-                    obj['4-1'] = '4-1'
-                    break;
-                case '/business/customer:R':
-                    obj['5'] = '5'
-                    obj['5-1'] = '5-1'
-                    break;
-               case '/business/customer/care:R':
-                    obj['6'] = '6-1'
-                    obj['6-1'] = '6-1'
-                    break;
-                default:
-                    break;
-             }
+                 let index = el.lastIndexOf(":R")
+                 if(index !== -1){
+                  obj[el] = true ;
+                 }
             })
          }
-          
          state.isShowMenu = obj ;
-         
+         sessionStorage.setItem('isShowMenu',JSON.stringify(obj) )
       }
       
     }
@@ -168,6 +125,8 @@ export default {
     loadPostLogin({commit},payload){
         return getPromiseAction (api.postLogin(payload),commit,types.POST_LOGIN)
     },
-    
+    loadPostLogout({commit},payload){
+      return getPromiseActionNoMutations (api.postLogout(payload))
+    },
   }
 }

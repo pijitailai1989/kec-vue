@@ -37,6 +37,7 @@
      opacity .8  
    span,i
      padding 3px
+     white-space nowrap
    &.disabled 
      cursor not-allowed
      opacity 0.6

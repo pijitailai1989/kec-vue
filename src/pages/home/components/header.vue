@@ -16,7 +16,7 @@
              </el-dropdown>
          </div>
          <el-dropdown trigger="click" @command="handleLogout">
-               <span :style="{color:textColor}">{{userInfo.userName}}</span>
+               <span :style="{color:textColor}">{{userName}}</span>
                <el-dropdown-menu slot="dropdown">
                  <el-dropdown-item command="logout">登出</el-dropdown-item>
                </el-dropdown-menu>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {mapState,mapMutations} from 'vuex'
+import {mapState,mapMutations,mapActions} from 'vuex'
   export default {
     name:'HomeHeader',
     props:{
@@ -39,13 +39,14 @@ import {mapState,mapMutations} from 'vuex'
            {ids:"zh",title:"简体中文"},
            {ids:"en",title:"English"},
         ],
-        selectLang:""
-
+        selectLang:"",
+        userName:''
       };
     },
     mounted() {
       this.selectLang = sessionStorage.getItem('locale') || 'zh';
-      
+      let userInfo = JSON.parse( sessionStorage.getItem('userInfo') ) 
+      userInfo && ( this.userName = userInfo.userName )
     },
     computed:{
       ...mapState('home',['iconType','userInfo']),
@@ -55,6 +56,7 @@ import {mapState,mapMutations} from 'vuex'
     },
     methods: {
       ...mapMutations('home',['setIconType']),
+      ...mapActions('home',['loadPostLogout']),
       handleCommand(lang) {
         this.selectLang = lang ;
         sessionStorage.setItem('locale', lang);
@@ -73,10 +75,23 @@ import {mapState,mapMutations} from 'vuex'
       },
       handleLogout(logout){
         if(logout==='logout'){
-           this.$cookies.remove('keyName')
-           this.$router.push({
-             path:'/'
-           })
+           this.loadPostLogout({}).then(success=>{
+                    // this.$cookies.remove('keyName')
+                    sessionStorage.clear()
+                    this.$router.push({
+                      path:'/'
+                    })
+                   this.$message( {
+                    message: success,
+                    type: 'success'
+                   });
+                }).catch(error=> {
+                   this.$message( {
+                    message: error,
+                    type: 'error'
+                   });
+                })
+          
         }
       }
     },

@@ -16,20 +16,7 @@
         </kec-form>
       </div>
     </div>
-    <div class="col-sm-6">
-        <kec-form text="目的国家">
-          <template #input>
-            <el-select v-model="payload.destinationCountryCode" @change="changeCountryCode" :disabled="productsInfo?true:false || destinationShow" filterable placeholder="" size="medium" style="width:100%">
-              <el-option
-                v-for="item in countryList"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code">
-              </el-option>
-            </el-select>
-          </template>
-        </kec-form>
-    </div>
+    
     <div class="col-sm-6">
         <kec-form text="起运国家">
          <template #input>
@@ -42,6 +29,20 @@
               </el-option>
             </el-select>
          </template>
+        </kec-form>
+    </div>
+    <div class="col-sm-6">
+        <kec-form text="目的国家">
+          <template #input>
+            <el-select v-model="payload.destinationCountryCode" @change="changeCountryCode" :disabled="productsInfo?true:false || destinationShow" filterable placeholder="" size="medium" style="width:100%">
+              <el-option
+                v-for="item in countryList"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code">
+              </el-option>
+            </el-select>
+          </template>
         </kec-form>
     </div>
       <div class="col-sm-6">
@@ -87,7 +88,7 @@
                 </el-select>
                 <el-select v-model="payload.compensationUnitId" placeholder="" style="width:100px" size="medium">
                   <el-option
-                    v-for="item in unitsClassList[5]"
+                    v-for="item in unitsList"
                     :key="item.id"
                     :label="item.code"
                     :value="item.id">
@@ -98,6 +99,46 @@
          </template>
         </kec-form>
     </div>
+    <div class="col-sm-6">
+        <kec-form text="类型">
+          <template #input>
+            <el-select v-model="payload.type" placeholder="" style="width:100%" size="medium">
+                  <el-option
+                    v-for="(item) in productTypeList"
+                    :key="item.code"
+                    :label="item.text"
+                    :value="item.code">
+                  </el-option>
+                </el-select>
+          </template>
+        </kec-form>
+      </div>
+      <div class="col-sm-6">
+        <kec-form text="支持退货">
+          <template #input>
+            <div style="padding:5px">
+                <el-switch
+                active-color="#13ce66"
+                v-model="payload.ableReturn">
+                </el-switch>
+            </div>
+             
+          </template>
+        </kec-form>
+      </div>
+      <div class="col-sm-6">
+        <kec-form text="支持敏感货">
+          <template #input>
+            <div style="padding:5px">
+                <el-switch
+                active-color="#13ce66"
+                v-model="payload.ableSensitive">
+                </el-switch>
+            </div>
+             
+          </template>
+        </kec-form>
+      </div>
   </div>
 </template>
 
@@ -121,7 +162,10 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
           "needCargoTracking": false,
           "compensationLimit": null,
           "compensationCurrency": "",
-          "compensationUnitId": null
+          "compensationUnitId": null,
+          "ableSensitive ":false,
+          "ableReturn ":false,
+          "type ":''
         },
         Tracking:[
           {text:'是',value:true},
@@ -136,6 +180,7 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
     },
 
     computed: {
+      ...mapState('channels',['productTypeList']),
       ...mapState('basic',['paymentMethodsList','unitsList','currencyList','productsInfo','unitsClassList','countryList','destinationShow'])
     },
     beforeMount() {},
@@ -166,7 +211,10 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
                 needCargoTracking,
                 compensationLimit,
                 compensationCurrency,
-                compensationChargeUnitId
+                compensationChargeUnitId,
+                ableSensitive,
+                ableReturn,
+                type
               } = info ;
               this.payload = {
                 code,
@@ -177,7 +225,10 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
                 needCargoTracking,
                 compensationLimit,
                 compensationCurrency,
-                compensationUnitId:compensationChargeUnitId
+                compensationUnitId:compensationChargeUnitId,
+                ableSensitive,
+                ableReturn,
+                type
               }
 
             }

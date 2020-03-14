@@ -77,7 +77,8 @@ import { formatDate } from '@/utils/fun'
       },
       cookiesFunc(){
         const _this = this ;
-        let bool = this.$cookies.isKey('keyName') ;
+        // let bool = this.$cookies.isKey('keyName') ;
+        let bool = sessionStorage.getItem('token')
         if(!bool){ 
           setTimeout(
             function(){

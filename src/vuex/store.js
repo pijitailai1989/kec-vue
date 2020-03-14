@@ -5,6 +5,8 @@ import channels from './channels'
 import basic from './basic'
 import order from './order'
 import customer from './customer'
+import vendor from './vendor'
+import fidle from './fidle'
 
 
 Vue.use(Vuex)
@@ -15,7 +17,9 @@ export default new Vuex.Store({
         channels,
         basic,
         customer,
-        order
+        order,
+        vendor,
+        fidle
     }
     // plugins: [createPersistedState()]
 })

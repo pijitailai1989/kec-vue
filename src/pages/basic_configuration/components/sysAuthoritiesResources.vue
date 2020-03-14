@@ -47,9 +47,9 @@
     </div>
     <div class="kec-content">
         <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
-          <div class="padd" style="width:240px">模块</div>
-          <div class="padd" style="width:200px">权限名称</div>
-          <div class="padd flx">路径</div>
+          <div-sort class="padd" style="width:240px" @clickSort="sortFunc" :sortType="{a:'moduleName',b:'ZH'}">模块</div-sort>
+          <div-sort class="padd" style="width:200px" @clickSort="sortFunc" :sortType="{a:'moduleName',b:'ZH'}">权限名称</div-sort>
+          <div-sort class="padd flx" @clickSort="sortFunc" :sortType="{a:'routerPathString',b:'ZH'}">路径</div-sort>
           <div class="padd" style="width:50px">分配</div>
           <div class="padd" style="width:49px">增</div>
           <div class="padd" style="width:50px">查</div>
@@ -145,7 +145,8 @@
 
 <script>
 import {mapState,mapActions,mapMutations} from 'vuex'
-import {KecButton , KecTable ,KecScroll ,KecButtonClick,KecForm}  from '@/common/components'
+import {sortCompare } from '@/utils/fun'
+import {KecButton , KecTable ,KecScroll ,KecButtonClick,KecForm,KecSort}  from '@/common/components'
 import addResources from './addResources' 
   export default {
     name:'sysAuthoritiesResources',
@@ -174,7 +175,8 @@ import addResources from './addResources'
         KecTable,
         KecScroll,
         addResources,
-        KecForm
+        KecForm,
+        DivSort:KecSort
     },
 
     computed: {
@@ -214,6 +216,11 @@ import addResources from './addResources'
             });
          })
          
+        },
+        sortFunc(type){
+             let {a,b} = type ;
+             const _this = this ;
+              _this.tableRole = sortCompare(_this.tableRole,a,b)
         },
         changeSelectFunc(obj){
            this.itemObj = obj ;

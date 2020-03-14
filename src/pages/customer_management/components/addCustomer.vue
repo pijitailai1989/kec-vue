@@ -5,7 +5,7 @@
         <kec-form text="客户基本信息">
           <template #input>
             <div class="row borders err">
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <kec-form crosswise text="公司名称" width="80px">
                       <template #input>
                         <el-input v-model="payload.companyName" placeholder="" size="medium"></el-input>
@@ -72,6 +72,13 @@
                     <kec-form crosswise text="网站地址" width="80px">
                     <template #input>
                       <el-input v-model="payload.webSite" placeholder="" size="medium"></el-input>
+                    </template>
+                    </kec-form>
+                </div>
+                <div class="col-sm-6">
+                    <kec-form crosswise text="客户编码" width="80px">
+                    <template #input>
+                      <el-input v-model="payload.customerCode" placeholder="" size="medium"></el-input>
                     </template>
                     </kec-form>
                 </div>
@@ -201,7 +208,8 @@ import {KecForm, KecButton }  from '@/common/components'
                  "street": "",
                  "addrLine": "",
                  "postCode": "",
-                 "province": ""
+                 "province": "",
+                 "customerCode":""
                 },
         types:{DIRECT:"直客", PEER:"同行"}
         
@@ -245,7 +253,8 @@ import {KecForm, KecButton }  from '@/common/components'
                  "street": "",
                  "addrLine": "",
                  "postCode": "",
-                 "province": ""
+                 "province": "",
+                 "customerCode":""
         }
       },
       clickConfirm() {
@@ -310,6 +319,7 @@ import {KecForm, KecButton }  from '@/common/components'
                       webSite,
                       currency,
                       type,
+                      customer_code,
                       address:{
                               country:{code},
                               subdivision,
@@ -332,6 +342,7 @@ import {KecForm, KecButton }  from '@/common/components'
                       webSite,
                       currency,
                       type,
+                      customerCode:customer_code?customer_code:"",
                       countryCode:code,
                       subdivisionId:subdivision.id,
                       state,

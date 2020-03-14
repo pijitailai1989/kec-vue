@@ -1,6 +1,6 @@
 <template>
   <kec-scroll :numbers="179">
-    <div class="flexs kec-btn j-end">
+    <!-- <div class="flexs kec-btn j-end">
       <el-popover
         placement="left-start"
         width="260"
@@ -30,7 +30,7 @@
         <kec-button slot="reference"
           :disabled="selectIndex===null" text="" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
       </el-popover>
-    </div>
+    </div> -->
     <div class="kec-content">
           <kec-table 
            height="221px"
@@ -72,8 +72,8 @@ import KecServer from './addServer'
            },
            lastWidth:'',
            tableHeader:{
-             id:{"title":'id','slot':false},
-             name:{"title":'服务类型名称','slot':false},
+             code:{"title":'Code','slot':false},
+             text:{"title":'服务类型名称','slot':false},
              },
              selectIndex:null,
            selectItem:null,

@@ -1,56 +1,43 @@
 <template>
   <kec-scroll :numbers="179">
-    <div class="flexs kec-btn j-between a-center">
-      <div class="flexs a-center">
-           <span style="width:120px">服务类型</span>
-           <el-select v-model="value" placeholder="" @change="selectFunc" size="mini" style="width:100%">
-              <el-option
-                v-for="item in serverList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-           </el-select>
-      </div>
-      <div class="flexs ">
-           <el-popover
-             placement="left-start"
-             width="300"
-             v-model="addVisible"
-             trigger="click">
-             <kec-item :serverId="value" @close="closeFunc" type="addVisible"></kec-item>
-             <kec-button slot="reference" text="" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
-           </el-popover>
-           <el-popover
-             placement="left-start"
-             width="300"
-             v-model="changeVisible"
-             :disabled="selectIndex===null"
-             trigger="click">
-             <kec-item :serverId="value" @close="closeFunc" type="changeVisible"  :item="selectItem"></kec-item>
-             <kec-button :disabled="selectIndex===null" slot="reference" text="" icon="fa-pencil" background="#17A2B8" color="#fff"></kec-button>
-           </el-popover>
-           <el-popover
-            placement="left-start"
-            width="160"
-            :disabled="selectIndex===null"
-            v-model="visible">
-            <p>确定删除吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click.native="delFunc">确定</el-button>
-            </div>
-            <kec-button slot="reference"
-              :disabled="selectIndex===null" text="" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
-          </el-popover>
-      </div>
+    <div class="flexs kec-btn j-end" ref="box">
+      <el-popover
+        placement="left-start"
+        width="360"
+        v-model="addVisible"
+        trigger="click">
+        <kec-item @close="closeFunc" type="addVisible"></kec-item>
+        <kec-button slot="reference" text="添加" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
+      </el-popover>
+      <el-popover
+        placement="left-start"
+        width="360"
+        v-model="changeVisible"
+        :disabled="selectIndex===null"
+        trigger="click">
+        <kec-item @close="closeFunc" type="changeVisible" :item="selectItem"></kec-item>
+        <kec-button :disabled="selectIndex===null" slot="reference" text="修改" icon="fa-pencil" background="#17A2B8" color="#fff"></kec-button>
+      </el-popover>
+      <el-popover
+        placement="left-start"
+        width="160"
+        :disabled="selectIndex===null"
+        v-model="visible">
+        <p>确定删除吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+          <el-button type="primary" size="mini" @click.native="delFunc">确定</el-button>
+        </div>
+        <kec-button slot="reference"
+          :disabled="selectIndex===null" text="删除" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+      </el-popover>
     </div>
     <div class="kec-content">
           <kec-table 
-           height="221px"
+           height="255px"
            :tableHeader="tableHeader" 
            :lastWidth="lastWidth" 
-           :tableData="tableData" 
+           :tableData="tagsList" 
            :letWidth="letWidth"
            :selectIndex="selectIndex"
            @active-item="activeItem"
@@ -61,11 +48,19 @@
             <template v-slot:default="slotProps">
               {{slotProps.item}}
             </template>
-            <template v-slot:a="slotProps">
-              <kec-button text="操作" icon="fa-trash-o" background="#F18A33" color="#fff"></kec-button>
-              <span>{{slotProps.item}}</span>
+            <template v-slot:receiptsDirection="slotProps">
+              <span>{{slotProps.item ?'应收':'应付'}}</span>
             </template>
           </kec-table>
+    </div>
+    <div class="flexs j-end">
+      <el-pagination
+        layout="prev, pager, next"
+        @current-change="handleCurrentChange"
+        :current-page.sync="PageNum"
+        :page-size="PageSize"
+        :total="total">
+      </el-pagination>
     </div>
   </kec-scroll>
 </template>
@@ -75,28 +70,33 @@ import {mapState,mapActions,mapMutations} from 'vuex'
 import {KecButton , KecTable ,KecScroll }  from '@/common/components'
 import KecItem from './addItem' 
   export default {
-    name:'chargeItem',
+    name:'chargesItem',
     props:[''],
     data () {
       return {
-        value:null,
-         tableData: [],
+           visible:false,
+           addVisible:false,
+           changeVisible:false,
+           tagsList:[],
            letWidth:{
-             "0":"50px",
            },
            lastWidth:'',
            tableHeader:{
-             id:{"title":'id','slot':false},
-             name:{"title":'收费项名称','slot':false},
-             chargeSubjectPath:{"title":'科目项编号','slot':false},
-             chargeSubjectName:{"title":'科目项名称','slot':false},
-             unitCode:{"title":'收费单位','slot':false}
-             },
-             selectIndex:null,
+            //  name:{"title":'收费项名称','slot':false,'sort':'ZH'},
+             serviceTypeText:{"title":'服务类型名称','slot':false,'sort':'ZH'},
+             chargeSubjectPath:{"title":'科目项编号','slot':false,'sort':'OTHER'},
+             chargeSubjectName:{"title":'科目项名称','slot':false,'sort':'ZH'},
+             accountingObjectText:{"title":'计费依据','slot':false},
+             accountingWayText:{"title":'计费纬度','slot':false},
+             receiptsDirection:{"title":'计费方向','slot':true},
+             unitCode:{"title":'计费单位','slot':false}
+             
+           },
+           selectIndex:null,
            selectItem:null,
-           addVisible:false,
-           changeVisible:false,
-           visible:false
+           PageSize:10,
+           PageNum:1,
+           total:null
       };
     },
 
@@ -108,48 +108,79 @@ import KecItem from './addItem'
     },
 
     computed: {
-      ...mapState('basic',['serverList']),
+      ...mapState('basic',['chargeItemList'])
     },
 
     beforeMount() {},
 
     mounted() {
-      this.$nextTick(function () {  })
+      this.mountFunc(this.PageSize,this.PageNum)
       this.loadQueryServerTypes()
       this.loadChargeUnits()
       this.loadSubjectQueryItem()
+      this.loadGetAccountObject()
+      this.loadUnitTypes()
     },
 
     methods: {
-      ...mapActions('basic',['loadDeleteChargeItem','loadQueryServerTypes','loadChargeUnits','loadSubjectQueryItem']),
+        ...mapActions('basic',['loadGetChargeItem','loadDeleteChargeItem','loadQueryServerTypes','loadGetAccountObject',
+        'loadChargeUnits','loadSubjectQueryItem','loadUnitTypes']),
+        handleCurrentChange(page){
+          this.PageNum = page ;
+          this.mountFunc(this.PageSize,page)
+        },
+        mountFunc(size,num){
+          const _ = this ;
+          let data = {
+            pageSize:size,
+            pageNumber:num
+          }
+          _.loadGetChargeItem(data).then(success => {
+            let {content,totalElements} = _.chargeItemList;
+            if(content && content.length){
+              content.forEach(el=>{
+                el['unitCode'] = el['chargeUnit']['code']
+                el['unitId'] = el['chargeUnit']['id']
+                el['chargeSubjectName'] = el['ledgerSubject']['name']
+                el['chargeSubjectId'] = el['ledgerSubject']['id']
+                el['chargeSubjectPath'] = el['ledgerSubject']['path']
+                el['serviceTypeText'] = el['serviceType']['text']
+                el['accountingObjectText'] = el['accountingObject'] && el['accountingObject']['text']
+                el['accountingWayText'] = el['accountingWay'] && el['accountingWay']['text']
+                el['serviceTypeCode'] = el['serviceType']['code']
+              })
+              _.tagsList = content ;
+            }
+            
+            _.total = totalElements ;
+          })
+        },
         activeFunc(index) {
           this.selectIndex = index ;
         },
         activeItem(item){
-          this.selectItem = item
+          this.selectItem = item ;
         },
         closeFunc(data){
           this.selectIndex = null ;
           this.selectItem = null ;
           if(data.bool) {
-            this.loadQueryServerTypes()
+            if(data.type === 'addVisible') this.PageNum = 1 ;
+            this.mountFunc(this.PageSize,this.PageNum)
           }
           if(data.type){
               this[data.type] = false ;
           } 
         },
         delFunc(){
-          const _this = this ;
+          let {length} = this.tagsList ;
           if(this.selectIndex!==null) {
-            let data = {
-              id:_this.value,
-              chargeItems:{
-                id:_this.selectItem.id
-              }
-            }
-            this.loadDeleteChargeItem({data}).then(success=>{
+            this.loadDeleteChargeItem({data:{id:this.selectItem.id}}).then(success=> {
                    this.selectIndex = null ;
-                   this.loadQueryServerTypes()
+                   if(length == 1){
+                     this.PageNum >=2 && this.PageNum -- ;
+                   }
+                   this.mountFunc(this.PageSize,this.PageNum)
                    this.$message( {
                     message: success,
                     type: 'success'
@@ -162,36 +193,11 @@ import KecItem from './addItem'
                    });
                 })
           } 
-        },
-        selectFunc(val){
-          this.selectIndex = null ;
-          this.serverList.forEach(element => {
-            element.chargeItems.forEach(item => {
-              item['unitCode'] = item['chargeUnit'] && item['chargeUnit']['code'] || ''
-              item['unitId'] = item['chargeUnit'] && item['chargeUnit']['id'] || null
-              item['chargeSubjectPath'] = item['ledgerSubject'] && item['ledgerSubject']['path'] || ''
-              item['chargeSubjectId'] = item['ledgerSubject'] && item['ledgerSubject']['id'] || null
-              item['chargeSubjectName'] = item['ledgerSubject'] && item['ledgerSubject']['name'] || ''
-            })
-            if(element.id == val){
-              this.tableData = element.chargeItems ;
-            }
-          });
         }
     },
 
     watch: {
-      serverList:{
-        deep:true,
-        handler:function(val){
-           const _this = this ;
-           if(val.length){
-              _this.value = _this.value===null ? _this.serverList[0]['id'] : _this.value ;
-              _this.selectFunc(_this.value)
-           }
-           
-        }
-      }
+      
     }
 
   }

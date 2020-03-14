@@ -39,6 +39,20 @@
         </kec-form>
     </div>
     <div class="col-sm-12">
+        <kec-form crosswise width="70px" text="费用关联">
+         <template #input>
+           <el-select v-model="payload.chargeItemIds" multiple placeholder="请选择" style="width:100%">
+              <el-option
+                v-for="item in chargeItemList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+         </template>
+        </kec-form>
+    </div>
+    <div class="col-sm-12">
         <kec-form crosswise width="70px" text="描述">
         <template #input>
           <el-input
@@ -82,7 +96,8 @@ import {KecForm, KecButton }  from '@/common/components'
            serviceId:null,
            seq:null,
            status:false,
-           id:null
+           id:null,
+           chargeItemIds:[]
         }
       };
     },
@@ -93,6 +108,7 @@ import {KecForm, KecButton }  from '@/common/components'
     },
 
     computed: {
+      ...mapState('customer',['chargeItemList'])
     },
 
     beforeMount() {},
@@ -102,6 +118,7 @@ import {KecForm, KecButton }  from '@/common/components'
 
     methods: {
       ...mapActions('basic',['loadPostStandardState','loadPutStandardState']),
+      
       closeData(){
         this.payload={
            code: "",
@@ -111,16 +128,17 @@ import {KecForm, KecButton }  from '@/common/components'
            serviceId:null,
            seq:null,
            status:false,
-           id:null
+           id:null,
+           chargeItemIds:[]
         }
       },
       clickConfirm() {
         const _this = this ;
-        let { code,description,name,nameEn,seq,status,id,serviceId } = _this.payload ;
+        let { code,description,name,nameEn,seq,status,id,serviceId ,chargeItemIds} = _this.payload ;
         let data = {}
         switch(_this.type){
           case 'addVisible':
-                data = {code,description,name,nameEn,seq,status,serviceId}
+                data = {code,description,name,nameEn,seq,status,serviceId,chargeItemIds}
                 _this.loadPostStandardState(data).then(success=>{
                    this.$emit('close',{type:this.type,bool:true})
                    this.closeData()
@@ -136,7 +154,7 @@ import {KecForm, KecButton }  from '@/common/components'
                 })
                 break;
           case 'changeVisible':
-               data = {code,description,name,nameEn,seq,status,id}
+               data = {code,description,name,nameEn,seq,status,id,chargeItemIds}
                 _this.loadPutStandardState(data).then(success=>{
                    this.$emit('close',{type:this.type,bool:true})
                    this.closeData()
@@ -170,9 +188,9 @@ import {KecForm, KecButton }  from '@/common/components'
             const _ = this ;
             if(val){
                let payload = JSON.parse(JSON.stringify(val) );
-               let { code,description,name,nameEn,serviceId,seq,status,id } = payload
+               let { code,description,name,nameEn,serviceId,seq,status,id,chargeItemIds } = payload
 
-               _.payload = {code,description: description || '',name,nameEn:nameEn || '',serviceId,seq,status,id}
+               _.payload = {code,description: description || '',name,nameEn:nameEn || '',serviceId,seq,status,id,chargeItemIds}
 
             } 
           }

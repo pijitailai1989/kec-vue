@@ -121,7 +121,7 @@ import exceptionReply from './exceptionReply'
            },
            lastWidth:'',
            tableHeader:{
-             orderNum:{"title":'订单编号','slot':false},
+             orderNum:{"title":'订单编号','slot':false,'sort':'ZH'},
              details:{"title":'异常详情','slot':false},
              salePlatform:{"title":'销售平台','slot':false},
              channelCode:{"title":'运输渠道','slot':false},

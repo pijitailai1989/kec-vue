@@ -6,6 +6,7 @@
            :key="index"  
            @click="clickItem(index)"
            :style="{background:activeIndex===index?'#fff':''}"
+           v-show="item"
            >{{item}}</span>
      </div>
      <slot></slot>
@@ -60,7 +61,8 @@
 </script>
 <style lang='stylus' scoped>
  .tabs  
-   border-radius 4px    
+   border-radius 4px   
+   background #fff 
    border 1px solid #DCDFE6
    .bg-title  
      background #eee

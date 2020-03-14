@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import {Form,FormItem} from 'element-ui'
 import { mapState ,mapActions,mapMutations} from 'vuex';
   export default {
     name:'loginlogin',
@@ -56,6 +57,10 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
     computed: {
       ...mapState('home',['userInfo'])
     },
+    components: {
+        'el-form':Form ,
+        'el-form-item':FormItem
+    },
     methods: {
       ...mapActions('home',['loadPostLogin']),
         submitForm(formName,ruleForm) {
@@ -64,7 +69,7 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
           _this.$refs[formName].validate((valid) => {
             if (valid) {
               _this.loadPostLogin(ruleForm).then(success=>{
-                   _this.userInfo.token && _this.$cookies.set('keyName',_this.userInfo.token)
+                  //  _this.userInfo.token && _this.$cookies.set('keyName',_this.userInfo.token)
                    _this.userInfo.token && _this.$router.push({path:'/home'})
                    _this.$message( {
                     message: success,

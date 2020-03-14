@@ -23,7 +23,7 @@
         </kec-form>
     </div>
     <div class="col-sm-12">
-        <kec-form text="标签值">
+        <kec-form text="标签编码">
          <template #input>
            <el-input v-model="payload.tagValue" placeholder="" size="medium"></el-input>
          </template>

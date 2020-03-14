@@ -1,6 +1,6 @@
 <template>
     <kec-dialog 
-      boxWidth="800px"
+      boxWidth="1100px"
       boxTop="12vh"
       v-show="dialogVisible"
       >
@@ -16,8 +16,14 @@
       <template>
         <div class="row">
           <div class="col-sm-12 flexs a-center p2">
-             <div class="col-sm-2 text bold">
-                渠道名称/编码
+             <div class="col-sm-1 text bold flexs j-end">
+                渠道名称
+             </div>
+             <div class="col-sm-3">
+                <el-input v-model="payload.channelName" placeholder="" size="medium"></el-input>
+             </div>
+             <div class="col-sm-1 text bold flexs j-end">
+                渠道编码
              </div>
              <div class="col-sm-3">
                 <el-input v-model="payload.channelCode" placeholder="" size="medium"></el-input>
@@ -32,14 +38,23 @@
                 </div> -->
                 <div class="col-sm-12 flexs columns bor a-center p2">
                     <div class="col-sm-12 flexs a-center back p2">
-                      <div class="col-sm-4 text bold">
+                      <div class="col-sm-3 text bold">
                           选择服务
                       </div>
-                      <div class="col-sm-4 text bold">
+                      <div class="col-sm-3 text bold">
                           选择服务商
                       </div>
                       <div class="col-sm-3 text bold">
+                          选择服务商产品
+                      </div>
+                      <!-- <div class="col-sm-2 text bold">
+                          选择分区
+                      </div> -->
+                      <div class="col-sm-1 text bold">
                           操作时效
+                      </div>
+                      <div class="col-sm-1 text bold">
+                          成本
                       </div>
                       <div class="col-sm-1 text bold">
                           删除
@@ -47,25 +62,27 @@
                     </div>
                     <vuedraggable v-model="payload.channelServiceNodes" class="col-sm-12">
                       <transition-group>
-                          <div class="col-sm-12 flexs a-center p2 cur" 
+                          <div class="flexs a-center p2 cur" 
                           @click="selectClick(index)"
                           v-for="(item,index) of payload.channelServiceNodes" 
                           :class="[selectIndex===index?'active':'']"
                           :key="index+'item'">
-                            <div class="col-sm-4 flexs">
+                            <div class="col-sm-3 flexs">
                                 <el-select v-model="item.serviceTypeId" 
                                 @change="selectServerType(item.serviceTypeId,index,true)" 
                                 placeholder="请选择" size="medium" style="width:90%">
                                   <el-option
                                     v-for="item in serverList"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
+                                    :key="item.code"
+                                    :label="item.text"
+                                    :value="item.code">
                                   </el-option>
                                 </el-select>
                             </div>
-                            <div class="col-sm-4 flexs">
-                                <el-select v-model="item.vendorId" placeholder="请选择" size="medium" style="width:90%">
+                            <div class="col-sm-3 flexs">
+                                <el-select v-model="item.vendorId" 
+                                @change="selectVendor(item.vendorId,index,true)" 
+                                placeholder="请选择" size="medium" style="width:90%">
                                   <el-option
                                     v-for="em in item.selectArr"
                                     :key="em.id"
@@ -74,7 +91,32 @@
                                   </el-option>
                                 </el-select>
                             </div>
-                            <div class="col-sm-3 text">
+                            <!-- <div class="col-sm-2 flexs">
+                                <el-select v-model="item.vendorProductId" 
+                                @change="selectPartition(item.vendorProductId,index,true)"
+                                placeholder="请选择" size="medium" style="width:90%">
+                                  <el-option
+                                    v-for="em in item.selectArrs"
+                                    :key="em.id"
+                                    :label="em.name"
+                                    :value="em.id">
+                                  </el-option>
+                                </el-select>
+                            </div> -->
+                            <div class="col-sm-3 flexs">
+                                <el-select v-model="item.partitionId" placeholder="请选择" size="medium" style="width:90%">
+                                  <el-option
+                                    v-for="em in item.selectArrss"
+                                    :key="em.id"
+                                    :label="em.partitionName"
+                                    :value="em.id">
+                                  </el-option>
+                                </el-select>
+                            </div>
+                            <div class="col-sm-1 text">
+                                {{item.text}}小时
+                            </div>
+                            <div class="col-sm-1 text">
                                 {{item.text}}小时
                             </div>
                             <div class="col-sm-1">
@@ -126,11 +168,16 @@ import vuedraggable from 'vuedraggable';
          payload:{
             "id":"",
             "channelCode":"",
+            "channelName":"",
             "channelServiceNodes":[
               {
                 "serviceTypeId":null,
                 "vendorId":null,
-                "selectArr":[]
+                "vendorProductId":null,
+                "partitionId":null,
+                "selectArr":[],
+                "selectArrs":[],
+                "selectArrss":[],
               }
             ]
          },
@@ -153,6 +200,8 @@ import vuedraggable from 'vuedraggable';
 
     computed: {
       ...mapState('basic',['serverList','vendorsList','channelInfo']),
+      ...mapState('vendor',['vendorProductList']),
+      ...mapState('channels',['partitionsList'])
     },
 
     beforeMount() {},
@@ -164,6 +213,9 @@ import vuedraggable from 'vuedraggable';
     methods: {
         ...mapActions('basic',['loadGetVendorsByServiceType','loadChannelPostChannel','loadChannelPutChannel']),
         ...mapMutations('basic',['setVendorsList']),
+        ...mapMutations('vendor',['setVendorProductList']),
+        ...mapActions('vendor',['loadGetVendorProducts']),
+        ...mapActions('channels',['loadGetServicePartitions']),
         cancel() {
             this.$emit('closeFunc',false)
             this.selectIndex=null,
@@ -175,11 +227,17 @@ import vuedraggable from 'vuedraggable';
           this.payload = {
             "id":"",
             "channelCode":"",
+            "channelName":"",
             "channelServiceNodes":[
               {
                 "serviceTypeId":null,
                 "vendorId":null,
-                "selectArr":[]
+                "vendorProductId":null,
+                "partitionId":null,
+                "selectArr":[],
+                "selectArrs":[],
+                "selectArrss":[],
+
               }
             ]
          }
@@ -192,21 +250,38 @@ import vuedraggable from 'vuedraggable';
         },
         payloadFunC(data){
           this.payload["channelCode"] =data.channelCode ;
+          this.payload["channelName"] =data.channelName ;
           this.payload["id"] =data.id ;
           let arr = [
             {
                 "serviceTypeId":null,
                 "vendorId":null,
-                "selectArr":[]
+                "vendorProductId":null,
+                "partitionId":null,
+                "selectArr":[],
+                "selectArrs":[],
+                "selectArrss":[]
               }
           ] 
-          if(data.services.length){
+          if(data && data.vendorProducts && data.vendorProducts.length){
             arr = []
-            data.services.forEach( (el,index)=>{
-              this.selectServerType(el.serviceTypeId,index)
+            let arr1 = data.servicePartitionSet
+            let arr2 = data.vendorProducts
+            arr2.forEach( (item,index)=>{
+                item['servicePartition'] = arr1[index].servicePartition ;
+            })
+            arr2.forEach( (el,index)=>{
+              
+              let{serviceTypeCode,id,partitionSchema,vendor,servicePartition} = el
+              
+              this.selectServerType(serviceTypeCode,index)
+              vendor && this.selectVendor(vendor.id,index)
+              this.selectPartition(id,index)
               let data = {
-                "serviceTypeId":el.serviceTypeId,
-                "vendorId":el.vendorId
+                "serviceTypeId":serviceTypeCode,
+                "vendorId":vendor && vendor.id,
+                "vendorProductId":id,
+                "partitionId":servicePartition.id
               }
               arr.push(data)
             })
@@ -236,7 +311,11 @@ import vuedraggable from 'vuedraggable';
           let data = {
                 "serviceTypeId":null,
                 "vendorId":null,
-                "selectArr":[]
+                "vendorProductId":null,
+                "partitionId":null,
+                "selectArr":[],
+                "selectArrs":[],
+                "selectArrss":[]
           }
           this.payload.channelServiceNodes.push(data)
         },
@@ -256,24 +335,69 @@ import vuedraggable from 'vuedraggable';
         selectServerType(id,index,bool){
            this.loadGetVendorsByServiceType(['getVendorsByServiceType',id]) ;
 
-           if(bool) this.$set(this.payload.channelServiceNodes[index],'vendorId', null );
+           if(bool){
+              this.$set(this.payload.channelServiceNodes[index],'vendorId', null )
+              this.$set(this.payload.channelServiceNodes[index],'vendorProductId', null )
+              this.$set(this.payload.channelServiceNodes[index],'partitionId', null )
+           } 
+        },
+        selectVendor(id,index,bool){
+           const _ = this ;
+           _.loadGetVendorProducts([id]).then(success=>{
+             let arr = _.payload.channelServiceNodes;
+             let serviceTypeCode = arr[index]['serviceTypeId']
+             let arrays = []
+             if(_.vendorProductList && _.vendorProductList.length){
+               _.vendorProductList.forEach(el=>{
+                 if(el.serviceTypeCode==serviceTypeCode){
+                     arrays.push(el)
+                 }
+               })
+             }
+              _.$set(arr[index], 'selectArrs', arrays)
+              
+           })
+           if(bool){
+              _.$set(_.payload.channelServiceNodes[index],'vendorProductId', null );
+              _.$set(this.payload.channelServiceNodes[index],'partitionId', null )
+           } 
+        },
+        selectPartition(id,index,bool){
+           const _ = this ;
+           _.loadGetServicePartitions([id]).then(success=>{
+             let arr = _.payload.channelServiceNodes;
+             let arrays = []
+             if(_.partitionsList && _.partitionsList.length){
+               _.partitionsList.forEach(el=>{
+                     arrays.push(el)
+               })
+             }
+              _.$set(arr[index], 'selectArrss', arrays)
+              
+           })
+           if(bool) _.$set(_.payload.channelServiceNodes[index],'partitionId', null );
         },
         addChannelFun(){
-          let { channelCode,channelServiceNodes,id} = this.payload ;
+          let { channelCode,channelName,channelServiceNodes,id} = this.payload ;
+          
           let data = {} ;
           let newArr = []
+          let newArrs = []
           let arr = JSON.parse(JSON.stringify(channelServiceNodes))
           arr.forEach(el=>{
             let de = {
-              "serviceTypeId":el.serviceTypeId,
-              "vendorId":el.vendorId
+              "productId":el.vendorProductId,
+              "PartitionId":el.partitionId
             }
-            newArr.push(de)
+            newArr.push(el.vendorProductId)
+            newArrs.push(de)
           })
           data['channelCode'] = channelCode ;
-          data['channelServiceNodes'] = newArr ;
+          data['channelName'] = channelName ;
+          data['vendorProductIds'] = newArr ;
+          // data['partition'] = newArrs ;
           if(this.channelInfo){
-            data['id'] = id;
+            data['channelId'] = id;
             this.loadChannelPutChannel(data).then(success=>{
                    this.closeData()
                    this.$emit('closeFunc',true)
@@ -317,6 +441,7 @@ import vuedraggable from 'vuedraggable';
         deep:true,
         handler:function(val){
           const _ = this ;
+
           if(val !==null){
             let obj = JSON.parse(JSON.stringify(val))
             let arr = _.payload.channelServiceNodes;

@@ -11,7 +11,11 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-const env = require('../config/prod.env')
+// const env = process.env.NODE_ENNV === 'dev'
+//   ? require('../config/dev.env')
+//   : require('../config/prod.env')
+
+const env = config.build[process.env.env_config+'Env']
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -106,7 +110,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       name: 'app',
       async: 'vendor-async',
       children: true,
-      minChunks: 3
+      minChunks: 2
     }),
 
     // copy custom static assets
@@ -130,7 +134,7 @@ if (config.build.productionGzip) {
 
   webpackConfig.plugins.push(
     new CompressionWebpackPlugin({
-      asset: '[path].gz[query]',
+      filename: '[path].gz[query]',
       algorithm: 'gzip',
       test: new RegExp(
         '\\.(' +
@@ -138,7 +142,8 @@ if (config.build.productionGzip) {
         ')$'
       ),
       threshold: 10240,
-      minRatio: 0.8
+      minRatio: 0.8,
+      deleteOriginalAssets: false
     })
   )
 }

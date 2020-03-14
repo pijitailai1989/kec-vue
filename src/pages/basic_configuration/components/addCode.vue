@@ -18,24 +18,41 @@
           <div class="col-sm-4">
               <kec-form text="编号">
                 <template #input>
-                  <el-input v-model="payload.code" placeholder="" size="medium"></el-input>
+                  <el-input v-model="payload.code" placeholder="" ></el-input>
                 </template>
               </kec-form>
           </div>
           <div class="col-sm-4">
+                      <kec-form text="类型">
+                      <template #input>
+                        <div class="flexs">
+                             <el-select v-model="payload.type" placeholder="请选择" class="flx">
+                                <el-option
+                                  v-for="item in tagTypeClass[6]"
+                                  :key="item.id"
+                                  :label="item.tagName"
+                                  :value="item.tagValue">
+                                </el-option>
+                              </el-select>
+                        </div>
+                      </template>
+                      </kec-form>
+          </div>
+          <div class="col-sm-2">
               <kec-form text="预警值">
               <template #input>
-                <el-input v-model="payload.warningLine" placeholder="" size="medium"></el-input>
+                <el-input v-model="payload.warningLine" placeholder="" ></el-input>
               </template>
               </kec-form>
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-2">
                       <kec-form text="步长">
                       <template #input>
-                        <el-input v-model="payload.step" placeholder="" size="medium"></el-input>
+                        <el-input v-model="payload.step" placeholder=""></el-input>
                       </template>
                       </kec-form>
                   </div>
+          
           <div class="col-sm-12">
               <kec-form text="描述">
               <template #input>
@@ -150,7 +167,8 @@ import { formatDate } from '@/utils/fun'
             "stringText":'',
             "date":'',
             "min":null,
-            "max":null
+            "max":null,
+            "type":null
          },
          options:['yyyy','yyyyMM','yyyyMMdd'],
          intervalShow:false
@@ -166,7 +184,7 @@ import { formatDate } from '@/utils/fun'
     },
 
     computed: {
-      
+      ...mapState('basic',['tagTypeClass'])
     },
 
     beforeMount() {},
@@ -193,7 +211,8 @@ import { formatDate } from '@/utils/fun'
             "stringText":'',
             "date":'',
             "min":null,
-            "max":null
+            "max":null,
+            "type":null
          }
         },
         addFunc(array, type , value , value1 ){
@@ -219,7 +238,6 @@ import { formatDate } from '@/utils/fun'
             this.payload.structures.forEach( (item,index) => {
               item.sort = index + 1 ;
             })
-            console.log(this.payload.structures,'this.payload.structures')
         },
         closeTagFunc(index,type){
            if(type === 'interval'){
@@ -230,10 +248,10 @@ import { formatDate } from '@/utils/fun'
               item.sort = index + 1 ;
            })
         },
-        addCodeFun(type){
-          let {id,code,remark,warningLine,structures,step} = this.payload ;
-          if(type==='add'){
-            let data = {code,remark,warningLine,structures,step}
+        addCodeFun(types){
+          let {id,code,remark,warningLine,structures,step,type} = this.payload ;
+          if(types==='add'){
+            let data = {code,remark,warningLine,structures,step,type}
             this.loadCodeCreate(data).then(success=>{
                    
                    this.$emit('closeFunc',true)
@@ -249,7 +267,7 @@ import { formatDate } from '@/utils/fun'
                    });
                 })
           }else{
-            let data = {code,remark,warningLine,structures,step,id}
+            let data = {code,remark,warningLine,structures,step,id,type}
             this.loadCodeUpdate(data).then(success=>{
                    this.$emit('closeFunc',true)
                    this.closeData()
@@ -277,8 +295,8 @@ import { formatDate } from '@/utils/fun'
         handler:function(val){
           if(val){
              let data = JSON.parse( JSON.stringify(val) )
-             let {id,code,remark,warningLine,structures,step} = data ;
-             this.payload = {id,code,remark,warningLine,structures,step,
+             let {id,code,remark,warningLine,structures,step,type} = data ;
+             this.payload = {id,code,remark,warningLine,structures,step,type,
              stringText:'',date:'',min:null,max:null}
              let obj = structures.find( item => { return  item.structureType == 'interval'})
              obj && ( this.intervalShow = true )

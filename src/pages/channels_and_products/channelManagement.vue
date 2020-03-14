@@ -5,13 +5,15 @@
       @click="tabsFunC"
       :nameComponent="{1:'ChannelList'}">
     </kec-page-header>
-    <component :is="componentName"></component>
+    <component :is="componentName">
+    </component>
+    
   </div>
 </template>
 
 <script>
 import ChannelList from './components/channelList'
-import {KecPageHeader}  from '@/common/components'
+import {KecPageHeader,KecDrag}  from '@/common/components'
   export default {
     name:'stateManagement',
     props:[''],
@@ -23,7 +25,8 @@ import {KecPageHeader}  from '@/common/components'
     },
     components:{
       ChannelList,
-      KecPageHeader
+      KecPageHeader,
+      KecDrag
     },
     computed: {
       

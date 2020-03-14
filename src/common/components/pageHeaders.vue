@@ -19,7 +19,8 @@ import {mapState} from 'vuex'
     name:'pageHeaders',
     props:{
         textArray:Array,
-        nameComponent:Object
+        nameComponent:Object,
+        indexs:Number
     },
     data () {
       return {
@@ -46,7 +47,13 @@ import {mapState} from 'vuex'
       }
     },
 
-    watch: {}
+    watch: {
+      indexs(val){
+         if(val){
+           this.indexActive = val 
+         }
+      }
+    }
 
   }
 

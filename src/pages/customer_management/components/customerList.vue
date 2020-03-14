@@ -77,11 +77,12 @@ import KecCustomer from './addCustomer'
            lastWidth:'',
            tableHeader:{
            id:{"title":'id','slot':false},
-           companyName:{"title":'公司名称','slot':false},
-           contactName:{"title":'联系人','slot':false},
+           companyName:{"title":'公司名称','slot':false,'sort':'ZH'},
+           customer_code:{"title":'客户编码','slot':false,'sort':'ZH'},
+           contactName:{"title":'联系人','slot':false,'sort':'ZH'},
            phone:{"title":'联系电话','slot':false},
            email:{"title":'邮箱','slot':false},
-           type:{"title":'类型','slot':false},
+           type:{"title":'类型','slot':false,'sort':'ZH'},
            webSite:{"title":'网址','slot':false},
            },
            selectIndex:null,
@@ -104,13 +105,18 @@ import KecCustomer from './addCustomer'
     beforeMount() {},
 
     mounted() {
-      this.loadCustomerQueryAll({status:'ENABLED'})
+      this.loadCustomerQueryAll({status:'ENABLED'}).then(success=>{
+        console.log(this.customerList,'customerList')
+      })
       this.loadDictionaryCURRENCY()
       this.loadCountryQueryAll()
     },
 
     methods: {
-        ...mapActions('basic',['loadCustomerQueryAll','loadCustomerUpdateStatus','loadDictionaryCURRENCY','loadCountryQueryAll']),
+        ...mapActions('basic',['loadCustomerQueryAll',
+        'loadCustomerUpdateStatus',
+        'loadDictionaryCURRENCY',
+        'loadCountryQueryAll']),
         activeFunc(index) {
           this.selectIndex = index ;
         },

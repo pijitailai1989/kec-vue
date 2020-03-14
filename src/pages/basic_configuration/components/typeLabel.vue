@@ -85,9 +85,9 @@ import KecLabel from './addLabel'
            lastWidth:'',
            tableHeader:{
              id:{"title":'id','slot':false},
-             tagTypeText:{"title":'类型','slot':false},
-             tagName:{"title":'标签名','slot':false},
-             tagValue:{"title":'标签内容','slot':false}
+             tagTypeText:{"title":'类型','slot':false,'sort':'ZH'},
+             tagName:{"title":'标签名','slot':false,'sort':'ZH'},
+             tagValue:{"title":'标签编码','slot':false,'sort':'ZH'}
              
            },
            selectIndex:null,

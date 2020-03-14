@@ -32,7 +32,7 @@
     <div class="list">
       
         <kec-table 
-         height="248px"
+         height="251px"
          :tableHeader="tableHeader" 
          :lastWidth="lastWidth" 
          :tableData="productsList" 
@@ -77,10 +77,10 @@ import ShareDialog from './shareDialog'
            lastWidth:'',
            tableHeader:{
              id:{"title":'ID','slot':false},
-             name:{"title":'产品名称','slot':false},
-             code:{"title":'产品编码','slot':false},
-             destinationCountryCode:{"title":'目的国家','slot':false},
-             shippingCountryCode:{"title":'起运国家','slot':false},
+             name:{"title":'产品名称','slot':false,'sort':'ZH'},
+             code:{"title":'产品编码','slot':false,'sort':'OTHER'},
+             destinationCountryCode:{"title":'目的国家','slot':false,'sort':'ZH'},
+             shippingCountryCode:{"title":'起运国家','slot':false,'sort':'ZH'},
              needCargoTracking:{"title":'货态跟踪','slot':true}
            },
            selectIndex:null,
@@ -111,6 +111,7 @@ import ShareDialog from './shareDialog'
       'loadCountryQueryAll',
       'loadProducts',
       'loadGetTags']),
+      ...mapActions('channels',['loadGetProductTypes']),
       ...mapMutations('basic',['setProductsInfo','setProductsId','setDestination','setDestinationShow']),
       
       activeFunc(index) {
@@ -170,6 +171,7 @@ import ShareDialog from './shareDialog'
       this.loadProducts()
       this.loadCountryQueryAll()
       this.mountFunc(10000,1)
+      this.loadGetProductTypes()
     }
 
   }

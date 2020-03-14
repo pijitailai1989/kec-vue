@@ -49,6 +49,29 @@
                       </template>
                     </kec-form>
                 </div>
+                <div class="col-sm-10 col-sm-offset-1" v-show=" typeString === 'newRole' || typeString === 'ROLE' ">
+                    <kec-form text="角色编码">
+                      <template #input>
+                        <el-input v-model="payload.roleCode" placeholder=""></el-input>
+                      </template>
+                    </kec-form>
+                </div>
+                
+                <div class="col-sm-10 col-sm-offset-1" v-show=" typeString === 'organization' || typeString === 'ORG' ">
+                    <kec-form text="组织类型">
+                    <template #input>
+                      
+                      <el-select v-model="payload.orgType" placeholder="" style="width:100%">
+                        <el-option
+                          v-for="item in options"
+                          :key="item.code"
+                          :label="item.text"
+                          :value="item.code">
+                        </el-option>
+                      </el-select>
+                    </template>
+                    </kec-form>
+                </div>
                 <div class="col-sm-10 col-sm-offset-1">
                     <kec-form text="描述">
                     <template #input>
@@ -135,8 +158,15 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
            "description":"" ,
            "id":null,
            "orgId":null,
+           "orgType":null,
+           "roleCode":null
         },
-        idType:null
+        idType:null,
+        options:[
+          {code:'OPERATION',text:'运营主体'},
+          {code:'CUSTOMER',text:'客户'},
+          {code:'VENDOR',text:'供应商'},
+        ]
         
       }
     },
@@ -176,6 +206,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
           if(el) el.style.display = 'none';
       },
       contextmenuFunc(event,id,type,name){
+        return ;
         event.preventDefault();
         event.stopPropagation()
         this.closeIdFunc()
@@ -199,6 +230,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
 
       },
       handleNodeClick(data){
+        console.log(data,'data')
         this.closeIdFunc()
          this.closeData()
          this.payload = {
@@ -207,7 +239,9 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
             "address":data.address, 
             "description":data.description ,
             "id":data.id,
-            "orgId":data.id
+            "orgId":data.id,
+            "orgType":data.orgType?data.orgType:null,
+            "roleCode":data.roleCode
          } ;
          this.parentName = data.name ;
          if(data.type==='ORG'){
@@ -230,14 +264,15 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
            "description":"" ,
            "id":null,
            "orgId":null,
-
+           "roleCode":null,
+           "orgType":null
         }
       },
       clickConfirm(type){
-        let {name,parentId,address,description,id,orgId} = this.payload ;
+        let {name,parentId,address,description,id,orgId,roleCode,orgType} = this.payload ;
         let data = {}
         if(type==='organization'){
-           data = { name,parentId,address,description}
+           data = { name,parentId,address,description,orgType}
            this.loadOrganizationCreate(data).then(success=>{
                    this.loadOrganizationQueryParent()
                    this.closeData()
@@ -252,7 +287,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
                    });
                 })
         }else if(type==='ORG'){
-          data = {name,address,description,id}
+          data = {name,address,description,id,orgType}
            this.loadOrganizationUpdate(data).then(success=>{
                    this.loadOrganizationQueryParent()
                    this.closeData()
@@ -267,7 +302,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
                    });
                 })
         }else if(type === 'newRole'){
-          data = {name,description,orgId}
+          data = {name,description,orgId,roleCode}
            this.loadRoleCreate(data).then(success=>{
                    this.loadOrganizationQueryParent()
                    this.closeData()
@@ -282,7 +317,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
                    });
                 })
         }else if(type === 'ROLE'){
-           data = {name,description,id}
+           data = {name,description,id,roleCode}
            this.loadRoleUpdate(data).then(success=>{
                    this.loadOrganizationQueryParent()
                    this.closeData()
@@ -306,6 +341,8 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
          this.payload["name"] = ""
          this.payload["address"] = ""
          this.payload["description"] = "" 
+         this.payload["orgType"] = null
+         this.payload["roleCode"] = null
          switch(type){
             case 'organization':
               this.typeText = '新建组织';

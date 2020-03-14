@@ -149,7 +149,11 @@ import {KecForm, KecButton }  from '@/common/components'
       item:{
           deep:true,
           handler:function(val){
-            if(val) this.payload = JSON.parse(JSON.stringify(val) );
+            if(val){
+               this.payload = JSON.parse(JSON.stringify(val) );
+            }
+            
+
           }
       }
       

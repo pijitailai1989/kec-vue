@@ -9,14 +9,14 @@
       >
       <template v-for="item in menuList">
         <template v-if="item.children">
-           <el-submenu :index="item.id" :key="item.id" v-show="item.id in isShowMenu">
+           <el-submenu :index="item.id" :key="item.id" v-show="item.authorityText in isShowMenu">
              <template slot="title" style="color:#fff">
                <i :class="['fa',item.icon]"></i>
                <span class="menu-span">{{menu[item.title]}}</span>
              </template>
-              <el-menu-item :style="{'color':routerPath===todo.path?activeColor:textColor}" 
-              :index="todo.id" v-for="todo of item.children" :key="todo.id" 
-              @click.native="RouterLinkTo(todo)" v-show="todo.id in isShowMenu"
+              <el-menu-item :style="{'color':routerPath===todo.path?activeColor:textColor}"
+              :index="todo.id" v-for="todo of item.children" :key="todo.id"
+              @click.native="RouterLinkTo(todo)" v-show="todo.authorityText in isShowMenu"
                >
                 <i :class="['fa',todo.icon]"></i>
                 <span slot="title">{{menu[todo.title]}}</span>
@@ -24,8 +24,8 @@
            </el-submenu>
         </template>
         <template v-else>
-          <el-menu-item :style="{'color':routerPath===item.path?activeColor:textColor}" 
-          :index="item.id" :key="item.id" v-show="item.id in isShowMenu"
+          <el-menu-item :style="{'color':routerPath===item.path?activeColor:textColor}"
+          :index="item.id" :key="item.id" v-show="item.authorityText in isShowMenu"
            @click.native="RouterLinkTo(item)">
             <i :class="['fa',item.icon]"></i>
             <span class="menu-span" slot="title">{{menu[item.title]}}</span>
@@ -49,23 +49,88 @@ import {mapState,mapMutations} from 'vuex'
     data () {
       return {
          routerPath:'',
-         menuList:[{
+         menuList:[           {
+           title:'BASIC_CONFIG',
+           authorityText:'/node/commonSetting:R',
+           children:[
+             {
+               title:'BASIC_CONFIG',
+               authorityText:'/common/settings:R',
+               id:'3-1',
+               icon:'fa-camera-retro',
+               path:'/basic-config',
+               name:'basicConfig'
+             },
+             {
+               title:'ORG_CONFIG',
+               authorityText:'/admin/settings:R',
+               id:'3-2',
+               icon:'fa-camera-retro',
+               path:'/organization-config',
+               name:'organizationConfig',
+               components:'organizationalRole',
+               comName:'组织管理'
+             },{
+               title:'USER_CONFIG',
+               authorityText:'/admin/user/auth:R',
+               id:'3-3',
+               icon:'fa-camera-retro',
+               path:'/user-config',
+               name:'userConfig',
+               components:'userList',
+               comName:'用户列表'
+             },{
+               title:'REVENUE_COST',
+               authorityText:'/accounting/subject:R',
+               id:'3-4',
+               icon:'fa-camera-retro',
+               path:'/revenue-cost-class',
+               name:'revenueCostClass',
+               components:'subjectsClass',
+               comName:'科目设置'
+             },{
+               title:'CARGO_GOODS',
+               authorityText:'',
+               id:'3-5',
+               icon:'fa-camera-retro',
+               path:'/cargo-goods-class',
+               name:'cargoGoodsClass',
+               components:'goodsClass',
+               comName:'货物品类'
+             }
+           ],
+           id:'3',
+           icon:'fa-camera-retro',
+           path:null
+         },{
              title:'C_A_P',
+             authorityText:'/node/productAndChannel:R',
              children:[
-                {
-                  title:'C_M',
-                  id:'1-1',
-                  icon:'fa-camera-retro',
-                  path:'/channel-management',
-                  name:'channelManagement'
-                },
+
                 {
                   title:'P_M',
+                  authorityText:'/product:R',
                   id:'1-2',
                   icon:'fa-camera-retro',
                   path:'/product-management',
                   name:'productManagement'
-                }
+                },
+               {
+                 title:'C_M',
+                 authorityText:'/product/channel:R',
+                 id:'1-1',
+                 icon:'fa-camera-retro',
+                 path:'/channel-management',
+                 name:'channelManagement'
+               },
+               {
+                 title:'Q_M',
+                 authorityText:'/product/channel:R',
+                 id:'1-3',
+                 icon:'fa-camera-retro',
+                 path:'/quote-manager',
+                 name:'quoteManager'
+               }
              ],
              id:'1',
              icon:'fa-camera-retro',
@@ -92,94 +157,62 @@ import {mapState,mapMutations} from 'vuex'
           //    icon:'fa-camera-retro',
           //    path:null
           //  },
-           {
-             title:'BASIC_CONFIG',
-             children:[
-                {
-                  title:'BASIC_CONFIG',
-                  id:'3-1',
-                  icon:'fa-camera-retro',
-                  path:'/basic-config',
-                  name:'basicConfig'
-                },
-                {
-                  title:'VENDORS_CONFIG',
-                  id:'3-2',
-                  icon:'fa-camera-retro',
-                  path:'/vendors-config',
-                  name:'vendorsConfig',
-                  components:'selectVentors',
-                  comName:'供应商列表'
-                },{
-                  title:'ORG_CONFIG',
-                  id:'3-3',
-                  icon:'fa-camera-retro',
-                  path:'/organization-config',
-                  name:'organizationConfig',
-                  components:'organizationalRole',
-                  comName:'组织管理'
-                },{
-                  title:'USER_CONFIG',
-                  id:'3-4',
-                  icon:'fa-camera-retro',
-                  path:'/user-config',
-                  name:'userConfig',
-                  components:'userList',
-                  comName:'用户列表'
-                },{
-                  title:'REVENUE_COST',
-                  id:'3-5',
-                  icon:'fa-camera-retro',
-                  path:'/revenue-cost-class',
-                  name:'revenueCostClass',
-                  components:'subjectsClass',
-                  comName:'收益成本分类账科目'
-                },{
-                  title:'CARGO_GOODS',
-                  id:'3-6',
-                  icon:'fa-camera-retro',
-                  path:'/cargo-goods-class',
-                  name:'cargoGoodsClass',
-                  components:'goodsClass',
-                  comName:'货物品类结构'
-                }
-             ],
-             id:'3',
-             icon:'fa-camera-retro',
-             path:null
-           },{
-             title:'ORDER_MANAGEMENT',
-             children:[
-                {
-                  title:'ORDER_LIST',
-                  id:'4-1',
-                  icon:'fa-camera-retro',
-                  path:'/order-management',
-                  name:'orderManagement'
-                }
-             ],
-             id:'4',
-             icon:'fa-camera-retro',
-             path:null
-           },{
+{
              title:'CUSTOMER_MANAGEMENT',
+             authorityText:'/node/customer:R',
              children:[
                 {
                   title:'CUSTOMER_LIST',
+                  authorityText:'/business/customer:R',
                   id:'5-1',
                   icon:'fa-camera-retro',
                   path:'/customer-management',
-                  name:'customerManagement'
+                  name:'customerManagement',
+                  components:'selectCustomer',
+                  comName:'客户列表'
+                },
+                {
+                  title:'CONTRACT_MANAGEMENT',
+                  authorityText:'/business/agreement:R',
+                  id:'5-2',
+                  icon:'fa-camera-retro',
+                  path:'/contract-management',
+                  name:'contractManagement',
+                },{
+                  title:'EXCHANGE_TABLE',
+                  authorityText:'/product/product-quotations:R',
+                  id:'5-3',
+                  icon:'fa-camera-retro',
+                  path:'/exchange-table',
+                  name:'exchangeTable',
                 }
              ],
              id:'5',
              icon:'fa-camera-retro',
              path:null
            },{
+             title:'ORDER_MANAGEMENT',
+             authorityText:'/node/order:R',
+             children:[
+               {
+                 title:'ORDER_LIST',
+                 authorityText:'/business:R',
+                 id:'4-1',
+                 icon:'fa-camera-retro',
+                 path:'/order-management',
+                 name:'orderManagement'
+               }
+             ],
+             id:'4',
+             icon:'fa-camera-retro',
+             path:null
+           },{
              title:'CUSTOMER_SERVICE',
+             authorityText:'/node/customerService:R',
              children:[
                 {
                   title:'EX_HANDLING',
+                  authorityText:'/business/customer/care:R',
                   id:'6-1',
                   icon:'fa-camera-retro',
                   path:'/exception-handling',
@@ -187,6 +220,7 @@ import {mapState,mapMutations} from 'vuex'
                 },
                 {
                   title:'T_R',
+                  authorityText:'/common/settings/standardState:R',
                   id:'6-2',
                   icon:'fa-camera-retro',
                   path:'/t-r',
@@ -198,15 +232,18 @@ import {mapState,mapMutations} from 'vuex'
              path:null
            },{
              title:'FINANCIAL_MANAGEMENT',
+             authorityText:'',
              children:[
                 {
                   title:'BILL_RECEIVABLER',
+                  authorityText:'',
                   id:'7-1',
                   icon:'fa-camera-retro',
                   path:'/channel-management',
                   name:'channelManagement'
                 },{
                   title:'BILL_PAYABLE',
+                  authorityText:'',
                   id:'7-2',
                   icon:'fa-camera-retro',
                   path:'/channel-management',
@@ -216,14 +253,55 @@ import {mapState,mapMutations} from 'vuex'
              id:'7',
              icon:'fa-camera-retro',
              path:null
+           },{
+             title:'VENDORS_MANAGEMENT',
+             authorityText:'/node/vendor:R',
+             children:[
+                {
+                  title:'VENDORS_CONFIG',
+                  authorityText:'/business/vendor:R',
+                  id:'8-1',
+                  icon:'fa-camera-retro',
+                  path:'/vendors-config',
+                  name:'vendorsConfig',
+                  components:'selectVentors',
+                  comName:'供应商列表'
+                },{
+                  title:'COST_TABLE',
+                  authorityText:'/business/cost-statements:R',
+                  id:'8-2',
+                  icon:'fa-camera-retro',
+                  path:'/cost-table',
+                  name:'costTable',
+                }
+             ],
+             id:'8',
+             icon:'fa-camera-retro',
+             path:null
+           },{
+             title:'FIDLE_CONFIG',
+             authorityText:'/node/interfaceConfig:R',
+             children:[
+                {
+                  title:'FIDLE_LIST',
+                  authorityText:'/common/rule/code:R',
+                  id:'9-1',
+                  icon:'fa-camera-retro',
+                  path:'/fidle-config',
+                  name:'fidleConfig'
+                },
+             ],
+             id:'9',
+             icon:'fa-camera-retro',
+             path:null
            }
-           
+
          ],
-         isShowArr:{}
+         isShowMenu:{}
       };
     },
     computed: {
-      ...mapState('home',['iconType','userInfo','isShowMenu']),
+      ...mapState('home',['iconType']),
       menu(){
         return this.$t('menu')
       }
@@ -270,32 +348,30 @@ import {mapState,mapMutations} from 'vuex'
             })
           })
         },
-       
+
     },
     mounted() {
       this.getPath()
-      this.$nextTick(function () {
-          this.isShowArr = this.isShowMenu
-          console.log( '4' in this.isShowArr, this.isShowMenu ,'this.isShowArr')
-        })
+      let isShowMenu = JSON.parse( sessionStorage.getItem('isShowMenu') )
+      isShowMenu && ( this.isShowMenu = isShowMenu )
     },
     watch: {
        '$route':'getPath',
-       
+
     },
 
   }
 
 </script>
 <style lang='stylus' scoped>
- .menu 
+ .menu
    height calc(100vh - 115px)
    overflow-y scroll
  .menu >>> .el-menu
-   
+
    width 270px
    border-right none
-   .el-submenu__icon-arrow 
+   .el-submenu__icon-arrow
      -webkit-transition: -webkit-transform .1s !important
      transition: -webkit-transform .1s !important
      transition: transform .1s !important
@@ -304,23 +380,23 @@ import {mapState,mapMutations} from 'vuex'
      transition: transform .1s
      -webkit-transform .1s !important
      padding 2px 0
-   .el-submenu__title 
+   .el-submenu__title
     -webkit-transition: border-color .1s,background-color .1s,color .1s
     transition: border-color .1s,background-color .1s,color .1s
     -webkit-box-sizing: border-box
     box-sizing: border-box
-    i  
+    i
       color #fff !important
-   
-   .el-submenu__title , .el-submenu .el-menu-item 
+
+   .el-submenu__title , .el-submenu .el-menu-item
      height 45px !important
      line-height 45px !important
-   
-     
+
+
  .menu-span
-   padding 0 30px 0 5px  
+   padding 0 30px 0 5px
    max-height 180px
 
-  
+
 
 </style>

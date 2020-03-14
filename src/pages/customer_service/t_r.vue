@@ -36,6 +36,7 @@
 
 <script>
 import {mapState,mapActions,mapMutations} from 'vuex'
+import {Timeline,TimelineItem,Card} from 'element-ui'
 import {KecButton , KecForm ,KecScroll }  from '@/common/components'
   export default {
     name:'t_r',
@@ -50,7 +51,10 @@ import {KecButton , KecForm ,KecScroll }  from '@/common/components'
     components: {
         KecButton ,
         KecForm,
-        KecScroll
+        KecScroll,
+        'el-timeline':Timeline,
+        'el-timeline-item':TimelineItem,
+        'el-card':Card
     },
 
     computed: {

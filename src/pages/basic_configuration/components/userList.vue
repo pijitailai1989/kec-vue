@@ -90,10 +90,11 @@ import KecUser from './addUser'
            },
            lastWidth:'',
            tableHeader:{
-             userName:{"title":'用户名','slot':false},
-             organizationShortName:{"title":'组织部门','slot':false},
-             mainRoleShortName:{"title":'部门角色','slot':false},
+             userName:{"title":'用户名','slot':false,'sort':'ZH'},
+             organizationShortName:{"title":'组织部门','slot':false,'sort':'ZH'},
+             mainRoleShortName:{"title":'部门角色','slot':false,'sort':'ZH'},
              email:{"title":'邮件','slot':false},
+             loginStatus:{"title":'类型','slot':false,'sort':'ZH'},
              createTime:{"title":'创建时间','slot':false},
              
            },
@@ -123,11 +124,12 @@ import KecUser from './addUser'
 
     mounted() {
       this.loadOrganizationQueryAll()
+      this.loadGetCustomerInfo()
       this.mountFunc(10,1)
     },
 
     methods: {
-        ...mapActions('basic',['loadGetUsers','loadOrganizationQueryAll','loadDeleteUser']),
+        ...mapActions('basic',['loadGetUsers','loadOrganizationQueryAll','loadDeleteUser','loadGetCustomerInfo']),
         ...mapMutations('basic',['setUserInfo','selectUserId','selectMainRoleId','selectRoleIds']),
         ...mapMutations('home',['pushBreadcrumbArr']),
         activeFunc(index) {
@@ -152,7 +154,16 @@ import KecUser from './addUser'
           name && (data.userName = name)
           _.loadGetUsers(data).then(success => {
             let {content,totalElements} = _.getUsers;
-            _.usersList = content || [] ;
+            if(content && content.length){
+               _.usersList = content.map(item=>{
+                 item['loginStatus'] = item['canLogin'] ? '可登录' : '不可登入'
+                 return item ;
+               })
+            }else{
+               _.usersList = [] ;
+            }
+            
+
             _.total = totalElements ;
           })
         },

@@ -1,24 +1,15 @@
 <template>
   <kec-scroll :numbers="179" class="flexs columns a-center">
     <div class="flexs kec-btn j-end" ref="box" style="width:100%">
-      <el-popover
-        placement="left-start"
-        width="360"
-        v-model="addVisible"
-        :disabled="newShow"
-        trigger="click">
-        <kec-status @close="closeFunc" type="addVisible" :serviceId="selectItem?selectItem.serviceId:null"></kec-status>
-        <kec-button :disabled="newShow" slot="reference" text="添加二级货态" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
-      </el-popover>
-      <el-popover
-        placement="left-start"
-        width="420"
-        v-model="changeVisible"
-        :disabled="selectItem===null"
-        trigger="click">
-        <kec-status @close="closeFunc" type="changeVisible" :item="selectItem"></kec-status>
-        <kec-button :disabled="selectItem===null" slot="reference" text="货态设置" icon="fa-pencil" background="#17A2B8" color="#fff"></kec-button>
-      </el-popover>
+      
+        <kec-button-click :disabled="newShow" slot="reference" text="添加二级货态" 
+        @click="dislogFunC('添加二级货态',!dialogVisible,'addVisible')" 
+        icon="fa-plus" background="#ED6D01" color="#fff"></kec-button-click>
+      
+        <kec-button-click :disabled="selectItem===null" slot="reference" 
+        @click="dislogFunC('货态设置',!dialogVisible,'changeVisible')"
+        text="货态设置" icon="fa-pencil" background="#17A2B8" color="#fff"></kec-button-click>
+      
       <el-popover
         placement="left-start"
         width="160"
@@ -35,11 +26,11 @@
     </div>
     <div class="kec-content">
         <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
-          <div class="padd" style="min-width:149px">编码</div>
-          <div class="padd" style="min-width:60px">排序</div>
-          <div class="padd" style="min-width:150px">中文名称</div>
-          <div class="padd" style="min-width:160px">英文名称</div>
-          <div class="padd" style="min-width:120px">服务类型</div>
+          <div-sort class="padd" style="min-width:149px" @clickSort="sortFunc" :sortType="{a:'code',b:'ZH'}">编码</div-sort>
+          <div-sort class="padd" style="min-width:60px" @clickSort="sortFunc" :sortType="{a:'seq',b:'1-9'}">排序</div-sort>
+          <div-sort class="padd" style="min-width:150px" @clickSort="sortFunc" :sortType="{a:'name',b:'ZH'}">中文名称</div-sort>
+          <div-sort class="padd" style="min-width:160px" @clickSort="sortFunc" :sortType="{a:'nameEn',b:'ZH'}">英文名称</div-sort>
+          <div-sort class="padd" style="min-width:120px" @clickSort="sortFunc" :sortType="{a:'serviceName',b:'ZH'}">服务类型</div-sort>
           <div class="padd flx" style="min-width:81px">描述</div>
           <div class="padd" style="min-width:100px">状态</div>
         </div>
@@ -47,7 +38,7 @@
           <el-table
               class="scrollbar"
               ref="singleTable"
-              :data="standardStateList"
+              :data="tableData"
               :header-cell-style="{
                 fontWeight:'bold',
                 height:'38px',
@@ -104,13 +95,22 @@
           </el-table>
         </kec-scroll>
     </div>
+    <component :is="componentName" 
+    :dialogVisible="dialogVisible" 
+    @close="cancelFunc" 
+    :text="textItem"
+    :item="types==='changeVisible'?selectItem:null"
+    :type="types"
+    :serviceId="types==='addVisible'?selectItem.serviceId:null"
+    ></component>
   </kec-scroll>
 </template>
 
 <script>
 import {mapState,mapActions,mapMutations} from 'vuex'
-import {KecButton , KecTable ,KecScroll }  from '@/common/components'
-import KecStatus from './addStatus' 
+import {sortCompare } from '@/utils/fun'
+import {KecButton , KecTable ,KecScroll,KecSort,KecButtonClick }  from '@/common/components'
+import KecStatus from './cargoDialog' 
   export default {
     name:'cargoStatus',
     props:[''],
@@ -121,39 +121,12 @@ import KecStatus from './addStatus'
            changeVisible:false,
            selectIndex:null,
            selectItem:null,
-           tableData: [{
-            id: 1,
-            date: '100',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-            id: 2,
-            date: '200',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄'
-            }, {
-            id: 3,
-            date: '300',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄',
-            children: [{
-                id: 31,
-                date: '301',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                id: 32,
-                date: '302',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1519 弄'
-            }]
-            }, {
-            id: 4,
-            date: '400',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-            }],
-            currentRow: null
+           tableData: [],
+           currentRow: null,
+           componentName:'KecStatus',
+           textItem:'',
+           dialogVisible:false,
+           types:''
       };
     },
 
@@ -161,7 +134,9 @@ import KecStatus from './addStatus'
         KecButton ,
         KecTable,
         KecStatus,
-        KecScroll
+        KecScroll,
+        DivSort:KecSort,
+        KecButtonClick
     },
 
     computed: {
@@ -175,6 +150,7 @@ import KecStatus from './addStatus'
          }
          return bool
       },
+      
       delShow(){
         const _ = this ;
         let bool = true ;
@@ -188,20 +164,38 @@ import KecStatus from './addStatus'
     beforeMount() {},
 
     mounted() {
-      this.loadGetStandardState()
+      this.loadGetStandardState().then(success=>{
+           this.tableData = this.standardStateList
+      })
+      this.loadGetChargeItemAll()
     },
 
     methods: {
         ...mapActions('basic',['loadGetStandardState','loadDeleteStandardState','loadPutUpdateStatus']),
+        ...mapActions('customer',['loadGetChargeItemAll']),
         handleCurrentChange(val){
           this.selectItem = val ;
         },
-        closeFunc(data){
+        dislogFunC(text,bool,type) {
+          this.textItem = text ;
+          this.dialogVisible = bool ;
+          this.types = type ;
+        },
+        sortFunc(type){
+             let {a,b} = type ;
+             const _this = this ;
+              _this.tableData = sortCompare(_this.tableData,a,b)
+        },
+        cancelFunc(data){
           this.$refs.singleTable.setCurrentRow();
+          this.dialogVisible = false ;
+          this.types = ''
           this.selectIndex = null ;
           this.selectItem = null ;
           if(data.bool) {
-            this.loadGetStandardState()
+            this.loadGetStandardState().then(success=>{
+            this.tableData = this.standardStateList
+            })
           }
           if(data.type){
               this[data.type] = false ;
@@ -209,14 +203,18 @@ import KecStatus from './addStatus'
         },
         changeStatusFunc(status,id){
           this.loadPutUpdateStatus([id,status]).then(success=> {
-                   this.loadGetStandardState()
+                   this.loadGetStandardState().then(success=>{
+                        this.tableData = this.standardStateList
+                    })
 
                    this.$message( {
                     message: success,
                     type: 'success'
                    });
                 }).catch(error=> {
-                   this.loadGetStandardState()
+                   this.loadGetStandardState().then(success=>{
+                          this.tableData = this.standardStateList
+                      })
                    this.$message( {
                     message: error,
                     type: 'error'
@@ -226,7 +224,9 @@ import KecStatus from './addStatus'
         delFunc(id){
           
             this.loadDeleteStandardState([id]).then(success=> {
-                   this.loadGetStandardState()
+                   this.loadGetStandardState().then(success=>{
+                        this.tableData = this.standardStateList
+                    })
 
                    this.$message( {
                     message: success,

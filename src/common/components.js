@@ -13,6 +13,8 @@ import KecCalendars from './components/calendars.vue'
 import KecWork from './components/workstatus.vue'
 import KecScroll from './components/scrolls.vue'
 import KecTree from './components/trees.vue'
+import KecSort from './components/sorts.vue'
+import KecDrag from './components/drags.vue'
 
 export { 
          KecButton,
@@ -29,7 +31,8 @@ export {
          KecCalendars,
          KecWork,
          KecScroll,
-         KecTree
-
+         KecTree,
+         KecSort,
+         KecDrag
         };
 

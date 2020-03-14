@@ -61,7 +61,13 @@ export default {
       userRoleLists:[],
       permissionIds:[],
       codeRuleData:{},
-      vendorStateList:[]
+      vendorStateList:[],
+      codeRuleObJ:{},
+      chargeItemList:{},
+      customerInfoList:[],
+      productByCustomerList:[],
+      accountObjectList:[],
+      queryItemList:[]
     }
   },
   getters: {
@@ -290,6 +296,9 @@ export default {
     [types.GET_FIND_ROUTER_PATH_LIST](state,body){
       state.routerPathList = body || [];
     },
+    [types.GET_CHARGE_ITEM](state,body){
+      state.chargeItemList = body || [];
+    },
     [types.GET_PERMISSON_ROLE](state,body){
       let {permissionList} = state;
       
@@ -321,6 +330,10 @@ export default {
       })
       state.codeRuleData = body || {};
     },
+    [types.CODE_QUERY](state,body){
+      
+      state.codeRuleObJ = body || {};
+    },
     [types.QUERY_BY_VENDOR_ID](state,body){
       let arr = body ;
       if(arr && arr.length){
@@ -335,8 +348,36 @@ export default {
       }
       state.vendorStateList = arr || [];
     },
+    [types.GET_CUSTOMER_INFO](state,body){
+      
+      state.customerInfoList = body || {};
+    },
+    [types.GET_PRODUCT_BY_CUSTOMER](state,body){
+      
+      state.productByCustomerList = body || [];
+    },
+    [types.GET_ACCOUNT_OBJECT](state,body){
+      
+      state.accountObjectList = body || [];
+    },
+    [types.GET_QUERY_ITEM](state,body){
+      
+      state.queryItemList = body || [];
+    },
   },
   actions: {
+    loadGetQueryItem({commit},payload){
+      return getPromiseAction (api.getQueryItem(payload),commit,types.GET_QUERY_ITEM)
+    },
+    loadGetAccountObject({commit},payload){
+      return getPromiseAction (api.getAccountObject(payload),commit,types.GET_ACCOUNT_OBJECT)
+    },
+    loadGetProductByCustomer({commit},payload){
+      return getPromiseAction (api.getProductByCustomer(payload),commit,types.GET_PRODUCT_BY_CUSTOMER)
+    },
+    loadGetCustomerInfo({commit},payload){
+      return getPromiseAction (api.getCustomerInfo(payload),commit,types.GET_CUSTOMER_INFO)
+    },
     loadQueryByVendorId({commit},payload){
       return getPromiseAction (api.queryByVendorId(payload),commit,types.QUERY_BY_VENDOR_ID)
     },
@@ -353,11 +394,20 @@ export default {
     loadCodeQueryPage({commit},payload){
       return getPromiseAction (api.codeQueryPage(payload),commit,types.CODE_QUERY_PAGE)
     },
+    loadCodeQuery({commit},payload){
+      return getPromiseAction (api.codeQuery(payload),commit,types.CODE_QUERY)
+    },
     loadCodeCreate({commit},payload){
       return getPromiseActionNoMutations (api.codeCreate(payload))
     },
     loadCodeUpdate({commit},payload){
       return getPromiseActionNoMutations (api.codeUpdate(payload))
+    },
+    loadBindRelation({commit},payload){
+      return getPromiseActionNoMutations (api.bindRelation(payload))
+    },
+    loadReleaseRelation({commit},payload){
+      return getPromiseActionNoMutations (api.releaseRelation(payload))
     },
     loadCodeDelete({commit},payload){
       return getPromiseActionNoMutations (api.codeDelete(payload))
@@ -491,7 +541,9 @@ export default {
     loadDeleteServiceType({commit},payload){
       return getPromiseActionNoMutations (api.deleteServiceType(payload))
     },
-    
+    loadGetChargeItem({commit},payload){
+      return getPromiseAction (api.getChargeItem(payload),commit,types.GET_CHARGE_ITEM)
+    },
     loadCreateChargeItem({commit},payload){
       return getPromiseActionNoMutations (api.createChargeItem(payload))
     },

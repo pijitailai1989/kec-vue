@@ -1,34 +1,47 @@
 <template>
   <div class="row">
     
+    <!-- <div class="col-sm-12">
+        <kec-form text="收费项名称" crosswise width="80px">
+         <template #input>
+           <el-input v-model="payload.name" placeholder="" size="medium"></el-input>
+         </template>
+        </kec-form>
+    </div> -->
     <div class="col-sm-12">
-        <kec-form text="服务类型">
+        <kec-form text="服务类型" crosswise width="80px">
           <template #input>
-            <el-select v-model="serverId" disabled placeholder="" size="medium" style="width:100%">
+            <el-select v-model="payload.serviceTypeCode" placeholder="" size="medium" style="width:100%">
               <el-option
                 v-for="item in serverList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
+                :key="item.code"
+                :label="item.text"
+                :value="item.code">
               </el-option>
             </el-select>
           </template>
         </kec-form>
     </div>
     <div class="col-sm-12">
-        <kec-form text="收费项名称">
+        <kec-form text="计费方向" crosswise width="80px">
          <template #input>
-           <el-input v-model="payload.name" placeholder="" size="medium"></el-input>
+           <div style="padding:7px 0 3px 0">
+             
+             <el-radio-group v-model="payload.receiptsDirection" :disabled="type ==='changeVisible'" @change="changeReceiptsFunc">
+              <el-radio :label="false" >应付</el-radio>
+              <el-radio :label="true">应收</el-radio>
+            </el-radio-group>
+           </div>
          </template>
         </kec-form>
     </div>
     <div class="col-sm-12">
-        <kec-form text="科目项名称">
+        <kec-form text="科目项名称" crosswise width="80px">
          <template #input>
-           <el-select v-model="payload.chargeSubjectId" @change="changeItemFunc" filterable placeholder="" size="medium" style="width:100%">
+           <el-select v-model="payload.chargeSubjectId"  :disabled="type ==='changeVisible'" @change="changeItemFunc" filterable placeholder="" size="medium" style="width:100%">
               <el-option
-                v-for="item in subjectItemList"
-                :key="item.id"
+                v-for="(item,index) in list"
+                :key="index"
                 :label="item.name"
                 :value="item.id">
               </el-option>
@@ -37,18 +50,46 @@
         </kec-form>
     </div>
     <div class="col-sm-12">
-        <kec-form text="科目项编号">
+        <kec-form text="科目项编号" crosswise width="80px">
          <template #input>
            <el-input v-model="payload.chargeSubjectPath" disabled placeholder="" size="medium"></el-input>
          </template>
         </kec-form>
     </div>
     <div class="col-sm-12">
-        <kec-form text="收费单位">
+        <kec-form text="计费依据" crosswise width="80px">
          <template #input>
-           <el-select v-model="payload.unitId" placeholder="" size="medium" style="width:100%">
+           <el-select v-model="payload.accountingType" placeholder="" size="medium" style="width:100%">
               <el-option
-                v-for="item in unitsList"
+                v-for="item in accountObjectList"
+                :key="item.code"
+                :label="item.text"
+                :value="item.code">
+              </el-option>
+            </el-select>
+         </template>
+        </kec-form>
+    </div>
+    <div class="col-sm-12">
+        <kec-form text="计费纬度" crosswise width="80px">
+         <template #input>
+           <el-select v-model="payload.accountingDimension" @change="changeAccountFunc" placeholder="" size="medium" style="width:100%">
+              <el-option
+                v-for="item in unitsTypeList"
+                :key="item.code"
+                :label="item.text"
+                :value="item.code">
+              </el-option>
+            </el-select>
+         </template>
+        </kec-form>
+    </div>
+    <div class="col-sm-12">
+        <kec-form text="计费单位" crosswise width="80px">
+         <template #input>
+           <el-select v-model="payload.unitId" placeholder="" :disabled="payload.accountingDimension===null" size="medium" style="width:100%">
+              <el-option
+                v-for="item in unitsClassList[payload.accountingDimension]"
                 :key="item.id"
                 :label="item.code"
                 :value="item.id">
@@ -57,6 +98,7 @@
          </template>
         </kec-form>
     </div>
+    
     <div class="col-sm-12 flexs kec-btn">
        <kec-button 
        @click.native="clickConfirm" 
@@ -74,7 +116,6 @@ import {KecForm, KecButton }  from '@/common/components'
   export default {
     name:'unit',
     props:{
-      serverId:Number,
       type:String,
       item:Object
     },
@@ -85,8 +126,14 @@ import {KecForm, KecButton }  from '@/common/components'
            name:'',
            chargeSubjectPath:'',
            chargeSubjectId:null,
-           unitId:''
-        }
+           serviceTypeCode:null,
+           receiptsDirection:false,
+           unitId:'',
+           accountingType:null,
+           accountingDimension:null,
+           
+        },
+        list:[]
       };
     },
 
@@ -96,32 +143,51 @@ import {KecForm, KecButton }  from '@/common/components'
     },
 
     computed: {
-      ...mapState('basic',['serverList','unitsList','unitsClassList','subjectItemList']),
+      ...mapState('basic',['queryItemList','serverList','unitsList','unitsClassList','subjectItemList','accountObjectList','unitsTypeList','unitsClassList']),
       
     },
 
     beforeMount() {},
 
-    mounted() {},
+    mounted() {
+      this.type==='addVisible' && this.changeReceiptsFunc(false)
+      console.log(1111111111)
+    },
 
     methods: {
-      ...mapActions('basic',['loadCreateChargeItem','loadModifyChargeItem']),
+      ...mapActions('basic',['loadCreateChargeItem','loadModifyChargeItem','loadGetQueryItem']),
       closeData(){
         this.payload={
            id:null,
            name:'',
            chargeSubjectPath:'',
            chargeSubjectId:null,
-           unitId:''
+           serviceTypeCode:null,
+           receiptsDirection:false,
+           unitId:'',
+           accountingType:null,
+           accountingDimension:null
         }
+      },
+      changeAccountFunc(){
+        this.payload.unitId = ''
+      },
+      changeReceiptsFunc(val,bool){
+        if(!bool){
+          this.payload.chargeSubjectId = null;
+          this.payload.chargeSubjectPath = '';
+        }
+        this.loadGetQueryItem([val]).then(success=>{
+                   this.list = this.queryItemList
+                })
       },
       clickConfirm() {
         const _this = this ;
-        let {name,chargeSubjectId,unitId,chargeSubjectPath,id} = _this.payload ;
-        let data = {id:_this.serverId}
+        let {name,chargeSubjectId,unitId,chargeSubjectPath,id,serviceTypeCode,receiptsDirection,accountingType,accountingDimension} = _this.payload ;
+        let data = {}
         switch(_this.type){
           case 'addVisible':
-                data.chargeItems = {name,chargeSubjectId,unitId}
+                data = {chargeSubjectId,unitId,serviceTypeCode,receiptsDirection,accountingType,accountingDimension}
                 _this.loadCreateChargeItem(data).then(success=>{
                    this.$emit('close',{type:this.type,bool:true})
                    this.closeData()
@@ -137,7 +203,7 @@ import {KecForm, KecButton }  from '@/common/components'
                 })
                 break;
           case 'changeVisible':
-                data.chargeItems = {name,chargeSubjectId,unitId,id}
+                data = {chargeSubjectId,unitId,id,serviceTypeCode,receiptsDirection,accountingType,accountingDimension}
                 _this.loadModifyChargeItem(data).then(success=>{
                    this.$emit('close',{type:this.type,bool:true})
                    this.closeData()
@@ -176,9 +242,14 @@ import {KecForm, KecButton }  from '@/common/components'
           handler:function(val){
             if(val){
                let data = JSON.parse(JSON.stringify(val) );
-               let {unitId,chargeSubjectPath,chargeSubjectId,id,name} = data ;
-               this.payload = {unitId,chargeSubjectPath,chargeSubjectId,id,name}
-               console.log(this.payload,'this.payload')
+               let {unitId,chargeSubjectPath,chargeSubjectId,id,name,serviceTypeCode,
+               receiptsDirection,accountingObject,accountingWay,ledgerSubject} = data ;
+               this.payload = {unitId,chargeSubjectPath,chargeSubjectId,id,name,serviceTypeCode,
+               receiptsDirection,
+               accountingType:accountingObject ? accountingObject.code : null,
+               accountingDimension:accountingWay ? accountingWay.code : null}
+              //  this.type && this.changeReceiptsFunc(receiptsDirection,true)
+              this.list.push(ledgerSubject)
             }
             
           }

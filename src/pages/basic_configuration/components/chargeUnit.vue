@@ -70,6 +70,7 @@ import KecUnit from './addUnit'
            addVisible:false,
            changeVisible:false,
            letWidth:{
+             
              "0":"50px",
              "1":"120px",
              "2":"120px",
@@ -79,13 +80,14 @@ import KecUnit from './addUnit'
            lastWidth:'',
            tableHeader:{
              id:{"title":'id','slot':false},
-             chName:{"title":'中文名','slot':false},
-             enName:{"title":'英文名','slot':false},
+             chName:{"title":'中文名','slot':false,'sort':'ZH'},
+             enName:{"title":'英文名','slot':false,'sort':'ZH'},
              code:{"title":'符号单位','slot':false},
-             unitType:{"title":'单位类型','slot':false},
+             unitType:{"title":'单位类型','slot':false,'sort':'ZH'},
              description:{"title":'描述','slot':false}
              
            },
+           unitsLists:[],
            selectIndex:null,
            selectItem:null
       };
@@ -105,33 +107,49 @@ import KecUnit from './addUnit'
     beforeMount() {},
 
     mounted() {
-      this.loadChargeUnits()
+      this.loadChargeUnit()
       this.loadUnitTypes()
     },
 
     methods: {
         ...mapActions('basic',['loadChargeUnits','loadDelChargeUnit','loadUnitTypes']),
+        loadChargeUnit(){
+            const _ = this ;
+            _.loadChargeUnits().then(success=>{
+              _.unitsLists = _.unitsList.map(item=>{
+                item['unitTypeText'] = item['unitType']['text']
+                item['unitTypeCode'] = item['unitType']['code']
+                return item
+              })
+              })
+        },
         activeFunc(index) {
           this.selectIndex = index ;
+          
         },
         activeItem(item){
-          this.selectItem = item ;
+          let { id,code,
+           description,
+           enName,
+           chName,
+           unitTypeCode} = item ;
+          this.selectItem = {id,code,
+           description,
+           enName,
+           chName,
+           unitTypeCode};
         },
         closeFunc(data){
           this.selectIndex = null ;
           this.selectItem = null ;
-          if(data.bool) {
-            this.loadChargeUnits()
-          }
-          if(data.type){
-              this[data.type] = false ;
-          } 
+          data.bool && this.loadChargeUnit()
+          data.type && (this[data.type] = false)
         },
         delFunc(){
           if(this.selectIndex!==null) {
             this.loadDelChargeUnit({data:{id:this.selectItem.id}}).then(success=> {
                    this.selectIndex = null ;
-                   this.loadChargeUnits()
+                   this.loadChargeUnit()
                    this.$message( {
                     message: success,
                     type: 'success'
