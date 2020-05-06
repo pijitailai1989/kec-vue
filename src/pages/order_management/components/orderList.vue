@@ -1,7 +1,7 @@
 <template>
  <div>
     <div class="flexs kec-btn btn-fun a-center">
-      <kec-form crosswise text="产品" width="50px">
+      <kec-form crosswise text="产品" width="40px">
         <template #input>
           <el-select v-model="productCode" clearable size="medium" filterable placeholder="" style="width:100px">
             <el-option
@@ -13,7 +13,7 @@
           </el-select>
         </template>
       </kec-form>
-      <kec-form crosswise text="订单状态" width="80px">
+      <kec-form crosswise text="订单状态" width="70px">
         <template #input>
           <el-select v-model="stateId" clearable size="medium" filterable placeholder="" style="width:100px">
             <el-option
@@ -25,7 +25,7 @@
           </el-select>
         </template>
       </kec-form>
-      <kec-form crosswise text="客户" width="50px">
+      <kec-form crosswise text="客户" width="40px">
         <template #input>
           <el-select v-model="customerId" clearable size="medium" filterable placeholder="" style="width:100px">
             <el-option
@@ -37,9 +37,20 @@
           </el-select>
         </template>
       </kec-form>
-      <kec-form crosswise text="日期" width="50px">
+      <kec-form crosswise text="订单号码" width="70px">
+        <template #input>
+         <el-input v-model="orderNum" placeholder="" size="medium"></el-input>
+        </template>
+      </kec-form>
+      <kec-form crosswise text="参考号" width="50px">
+        <template #input>
+          <el-input v-model="referenceNumber" placeholder="" size="medium"></el-input>
+        </template>
+      </kec-form>
+      <kec-form crosswise text="日期" width="40px">
         <template #input>
           <el-date-picker
+           size="medium"
             v-model="times"
             type="daterange"
             range-separator="~"
@@ -50,11 +61,12 @@
           </el-date-picker>
         </template>
       </kec-form>
-      <el-button size="medium" style="margin:0 0 4px 5px"  @click.native="funcSearch(productCode,stateId,customerId,startDate,endDate)">查询</el-button>
+      <el-button size="medium" style="margin:0 0 4px 5px" 
+      @click.native="funcSearch(productCode,stateId,customerId,startDate,endDate,orderNum,referenceNumber)">查询</el-button>
     </div>
-    <kec-scroll :numbers="259" class="list">
+    <kec-scroll :numbers="239" class="list">
         <div class="flexs kec-btn j-end a-center">
-         <el-dropdown @command="selectCommand">
+         <!-- <el-dropdown @command="selectCommand">
             
             <span class="el-dropdown-link">
               模板导出<i class="el-icon-arrow-down el-icon--right"></i>
@@ -65,10 +77,10 @@
             </el-dropdown-menu>
          </el-dropdown>
          <kec-button-click 
-         text="订单导入" icon="fa-file-excel-o" background="#67c23a" @click="eqitFunc('importEexDialog')" color="#fff"></kec-button-click>
+         text="订单导入" icon="fa-file-excel-o" background="#67c23a" @click="eqitFunc('importEexDialog')" color="#fff"></kec-button-click> -->
          <kec-button-click :disabled="selectIndex===null" 
          text="修改订单" icon="fa-pencil" @click="eqitFunc('orderDialog')" background="#17A2B8" color="#fff"></kec-button-click>
-         <el-popover
+         <!-- <el-popover
           placement="left-start"
           width="160"
           :disabled="selectIndex===null"
@@ -80,11 +92,11 @@
           </div>
           <kec-button slot="reference"
             :disabled="selectIndex===null" text="删除订单" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
-        </el-popover>
+        </el-popover> -->
         </div>
         <div class="kec-content">
             <kec-table 
-            height="339px"
+            height="319px"
             :tableHeader="tableHeader" 
             :lastWidth="lastWidth" 
             :tableData="order_list" 
@@ -93,7 +105,10 @@
             @active-item="activeItem"
             @active-index="activeFunc">
                 <template v-slot:operation="slotProps">
-                <kec-button text="面单地址" @click.native="urlFunc(slotProps.item.labelUrl)" background="#8EB9F5" color="#fff"></kec-button>
+                
+                <el-button type="info" 
+                 size="mini"
+                @click.native="urlFunc(slotProps.item.labelUrl)" plain>面单地址</el-button>
                 </template>
                 <template v-slot:default="slotProps">
                 {{slotProps.item}}
@@ -141,23 +156,32 @@ import axios from '@/http/config'
            changeVisible:false,
            order_list:[],
            letWidth:{
+             0:'200px',
+             1:'120px',
+             2:'120px',
+             3:'200px',
+             4:'140px',
+             6:'100px'
            },
            lastWidth:'100px',
            tableHeader:{
-             orderNum:{"title":'订单跟踪号','slot':false,'sort':'OTHER'},
-             channelCode:{"title":'产品编码','slot':false,'sort':'OTHER'},
-             salePlatform:{"title":'客户参考号','slot':false,'sort':'OTHER'},
+             orderNum:{"title":'订单跟踪号','slot':false,'sort':'ZH'},
+             productCode:{"title":'产品编码','slot':false,'sort':'OTHER'},
+             channelCode:{"title":'渠道编码','slot':false,'sort':'OTHER'},
+             referenceNumber:{"title":'客户参考号','slot':false,'sort':'OTHER'},
              orderDate:{"title":'预报时间','slot':false},
              customerName:{"title":'客户','slot':false,'sort':'ZH'}
            },
            selectIndex:null,
            selectItem:null,
-           PageSize:8,
+           PageSize:15,
            PageNum:1,
            total:null,
            stateId:null,
            productCode:null,
            customerId:null,
+           orderNum:'',
+           referenceNumber:'',
            componentName:'orderDialog',
            selectItem:null,
            dialogVisible:false,
@@ -189,11 +213,14 @@ import axios from '@/http/config'
       this.loadGetQueryLevelTwo()
       this.loadGetProductBrief()
       this.loadGetCustomerBrief()
+      this.loadGetTags({pageSize:10000,pageNumber:1}) 
     },
 
     methods: {
         ...mapActions('order',['loadGetOrders','loadGetQueryLevelTwo','loadGetProductBrief','loadGetCustomerBrief','loadDeleteOrders']),
         ...mapMutations('order',['setOrderInfo']),
+        ...mapActions('basic',['loadGetTags']),
+        
         handleCurrentChange(page){
           this.PageNum = page ;
           this.mountFunc(this.PageSize,page)
@@ -214,14 +241,14 @@ import axios from '@/http/config'
 
           window.location.href = url + hrefStr ;
         },
-        funcSearch(productCode,stateId,customerId,startDate,endDate){
-          this.mountFunc(this.PageSize,1,productCode,stateId,customerId,startDate,endDate)
+        funcSearch(productCode,stateId,customerId,startDate,endDate,orderNum,referenceNumber){
+          this.mountFunc(this.PageSize,1,productCode,stateId,customerId,startDate,endDate,orderNum,referenceNumber)
         },
         changeTime(tiem){
            this.startDate = formatDate( tiem[0],'yyyy-MM-dd')
            this.endDate = formatDate(tiem[1],'yyyy-MM-dd')
         },
-        mountFunc(size,num,productCode,stateId,customerId,startDate,endDate){
+        mountFunc(size,num,productCode,stateId,customerId,startDate,endDate,orderNum,referenceNumber){
           const _ = this ;
           let data = {
             pageSize:size,
@@ -232,9 +259,17 @@ import axios from '@/http/config'
           stateId && ( data['stateId'] = stateId )
           startDate && ( data['startDate'] = startDate )
           endDate && ( data['endDate'] = endDate )
+          orderNum && ( data['orderNum'] = orderNum )
+          referenceNumber && ( data['referenceNumber'] = referenceNumber )
           _.loadGetOrders(data).then(success => {
             let {content,totalElements} = _.orderList;
-            _.order_list = content ;
+            
+            _.order_list = content.map(item=>{
+              let {aPackage:{referenceNumber},product:{code}} = item 
+              item['referenceNumber'] = referenceNumber ;
+              item['productCode'] = code ;
+              return item ;
+            }) ;
             _.total = totalElements ;
           })
         },

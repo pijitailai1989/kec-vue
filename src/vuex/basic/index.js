@@ -67,7 +67,8 @@ export default {
       customerInfoList:[],
       productByCustomerList:[],
       accountObjectList:[],
-      queryItemList:[]
+      queryItemList:[],
+      relationList:[]
     }
   },
   getters: {
@@ -123,7 +124,7 @@ export default {
       const arr = state.workDays ;
       let {index,months,value} = data;
       arr[months-1][index]['value'] = value === 0 ? 1 : 0 ;
-      state.workDays = arr ;
+      state.workDays = arr || [];
     },
     [types.GET_WORKDAYS](state,body){
       let arr = body.days ;
@@ -364,8 +365,15 @@ export default {
       
       state.queryItemList = body || [];
     },
+    [types.GET_COMPARATIVE_RELATION](state,body){
+      
+      state.relationList = body || [];
+    },
   },
   actions: {
+    loadGetComparativeRelation({commit},payload){
+      return getPromiseAction (api.getComparativeRelation(payload),commit,types.GET_COMPARATIVE_RELATION)
+    },
     loadGetQueryItem({commit},payload){
       return getPromiseAction (api.getQueryItem(payload),commit,types.GET_QUERY_ITEM)
     },

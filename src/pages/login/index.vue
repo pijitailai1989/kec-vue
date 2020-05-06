@@ -4,7 +4,7 @@
       <login-header></login-header>
     </div>
     <div class="content">
-      <login-login></login-login>
+      <component :is="componentName" class="content"></component>
     </div>
     <div class="copyright" :style="{background:themeColor.copy_background_color}">
        <span :style="{color:themeColor.copy_text_color}">@ 2019 Kerry Logistics Network Limited. All Rights Reserved</span>
@@ -16,24 +16,45 @@
 import {mapState} from 'vuex'
 import loginHeader from './components/header'
 import loginLogin from './components/login'
+import reset from './components/reset'
   export default {
     name:'login',
     props:[''],
     components:{
       loginHeader,
-      loginLogin
+      loginLogin,
+      reset
     },
     data () {
       return {
-
+        componentName:'loginLogin'
       };
     },
     computed: {
       ...mapState('home',['themeColor']),
     },
-    methods: {
+    mounted(){
+      let{hash,query} = this.$route ;
+      this.getFun(hash,query)
     },
-  
+    methods: {
+      getFun(hash,query){
+         if(hash==='#email'|| query.userName){
+          this.componentName = 'reset'
+         }else{
+          this.componentName = 'loginLogin'
+         }
+      }
+    },
+    watch:{
+      $route: {
+        handler: function(val, oldVal){
+          let {hash,query} = val ;
+          this.getFun(hash,query)
+        },
+        deep: true
+      }
+    }
 
   }
 

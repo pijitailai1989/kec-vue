@@ -14,7 +14,7 @@
           </template>
         </kec-form>
     </div>
-    <div ref="boxWork" class="contents flexs rows j-start">
+    <div ref="boxWork" class="contents flexs rows j-start" v-show="workDays.length>=1">
         <div class="workday" v-for="(item,index) in workDays" :key="item.index">
            <kec-calendars :width="calendarsWidth" :fontsize="13" :itemDays="item" :years="years" :months="index+1"></kec-calendars>
         </div>

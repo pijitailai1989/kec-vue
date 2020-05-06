@@ -1,7 +1,6 @@
 <template>
-    <kec-dialog 
-      boxWidth="960px"
-      boxTop="12vh"
+    <kec-drag
+      boxWidth="960px" client
       v-if="dialogVisible"
       >
       <template v-slot:title>
@@ -9,8 +8,8 @@
       </template>
       <template v-slot:btn>
         <div class="flexs j-end">
-           <kec-button-click :loading="loading" @click="clickConfirm(payload)" text="储存" icon="fa-floppy-o" background="#28A745" color="#fff">
-
+           <kec-button-click :loading="loading" @click="clickConfirm(payload)" text="保存" 
+           icon="fa-floppy-o" background="#28A745" color="#fff">
            </kec-button-click>
            <kec-button @click.native="cancel" text="取消" icon="fa-undo" background="#6C757D" color="#fff"></kec-button>
         </div>
@@ -20,8 +19,8 @@
           <div class="col-sm-12">
               <kec-tabs 
                 style="margin-top:10px"
-                height="400px" 
-                :titleList="['产品规格','货物属性','服务分区','渠道与价格']"
+                height="360px" 
+                :titleList="['产品规格','货物属性','服务分区','资源组配置']"
                 @change="tabsFunc"
                 >
                   <template>
@@ -36,13 +35,13 @@
           </div>
         </div>
       </template>
-    </kec-dialog>
+    </kec-drag>
 </template>
 
 <script>
 import {mapState,mapActions} from 'vuex'
-import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick}  from '@/common/components'
-import serverDivision from './serverDivision'
+import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecDrag}  from '@/common/components'
+import serverDivision from './serverDivisions'
 import channelsPrice from './channelsPrice'
 import productStandard from './productStandard'
 import goodsAttribute from './goodsAttribute'
@@ -62,7 +61,7 @@ import goodsAttribute from './goodsAttribute'
          payload:{
            "categoryTagSet":[],
            "weightTagSet":[],
-           "servicePartitionList":[],
+           "servicePartitions":[],
            "channelList":[]
          },
          loading:false
@@ -78,7 +77,8 @@ import goodsAttribute from './goodsAttribute'
         channelsPrice,
         serverDivision,
         goodsAttribute,
-        productStandard
+        productStandard,
+        KecDrag
     },
 
     computed: {
@@ -112,7 +112,7 @@ import goodsAttribute from './goodsAttribute'
           this.payload={
            "categoryTagSet":[],
            "weightTagSet":[],
-           "servicePartitionList":[],
+           "servicePartitions":[],
            "channelList":[]
          }
         },
@@ -169,31 +169,21 @@ import goodsAttribute from './goodsAttribute'
             this.payload.channelList = arr ;
 
         },
-        serverData(data){
-            let arr = JSON.parse( JSON.stringify(data.servicePartitionList) )
+        serverData(datas){
+            let arr = JSON.parse( JSON.stringify(datas) )
             let list = []
             arr.forEach(item=>{
-              let { coverMatchMode,excludeMathMode,partitionName,id,partitionMethodCode,
-                    subdivisionsId,attrTagsId} = item ;
-              let subdivisions = [],attrTags = [];
-              if(subdivisionsId.length){
-                subdivisionsId.forEach(el=>{
-                  let data = {id:el}
-                  subdivisions.push(data)
-                })
-              }
-              if(attrTagsId.length){
-                attrTagsId.forEach(el=>{
-                  let data = {id:el}
-                  attrTags.push(data)
-                })
-              }
-              let data = {coverMatchMode,excludeMathMode,partitionName,id,
-                          partitionMethod:partitionMethodCode,subdivisions,attrTags};
+              let {id,tagIds,isArrive} = item ;
+              let arrs = []
+              tagIds.forEach(todo=>{
+                 let date ={id:todo}
+                 arrs.push(date)
+              })
+              let data = {id,tags:arrs,isArrive};
               list.push(data)
             })
             
-            this.payload.servicePartitionList =  list;
+            this.payload.servicePartitions =  list;
         },
         productData(data){
             this.payload["code"]=data.code

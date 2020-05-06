@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="btn-fun flexs j-end">
-        <kec-button text="新增渠道" 
+        <kec-button text="新增资源组合" 
         icon="fa-plus" 
-        @click.native="dislogFunC('新增渠道',!dialogVisible,'ChannelDialog')" 
+        @click.native="dislogFunC('新增资源组合',!dialogVisible,'ChannelDialog')" 
         background="#F18A33" 
         color="#fff"></kec-button>
-        <kec-button-click text="修改渠道" 
+        <kec-button-click text="编辑" 
         icon="fa-pencil" 
         :disabled="selectIndex===null"  
-        @click="dislogFunC('修改渠道',!dialogVisible,'ChannelDialog','eqit')" 
+        @click="dislogFunC('编辑',!dialogVisible,'ChannelDialog','eqit')" 
         background="#17A2B8" 
         color="#fff"></kec-button-click>
         <!-- <kec-button text="编辑成本" icon="fa-trash-o" background="#17A2B8" color="#fff"></kec-button>
@@ -34,7 +34,7 @@
           <template v-slot:default="slotProps">
             {{slotProps.item}}
           </template>
-          <template v-slot:vendorProducts="slotProps">
+          <template v-slot:vendorProduct="slotProps">
                   <div class="flexs columns">
                     <el-tag class="pr" type="info" size="small" v-for="(item,i) of slotProps.item" :key="i">{{item.name}}</el-tag>
                   </div>
@@ -66,13 +66,13 @@ import ShareDialog from './shareDialog'
            lastWidth:'',
            tableHeader:{
              id:{"title":'id','slot':false},
-             channelCode:{"title":'渠道编码','slot':false,'sort':'ZH'},
-             channelName:{"title":'渠道名称','slot':false,'sort':'ZH'},
-             vendorProducts:{"title":'供应商产品','slot':true},
-             averageCostWeight:{"title":'成本','slot':false},
-             averageCostVolume:{"title":'平均成本','slot':false},
-             grossProfit:{"title":'毛利','slot':false},
-             useTime:{"title":'时效','slot':false}
+            //  channelCode:{"title":'渠道编码','slot':false,'sort':'ZH'},
+             channelName:{"title":'备注','slot':false,'sort':'ZH'},
+             vendorProduct:{"title":'供应商产品','slot':true},
+            //  averageCostWeight:{"title":'成本','slot':false},
+            //  averageCostVolume:{"title":'平均成本','slot':false},
+            //  grossProfit:{"title":'毛利','slot':false},
+            //  useTime:{"title":'时效','slot':false}
            },
            selectItem:null,
            selectIndex:null,

@@ -1,7 +1,7 @@
 <template>
   <div class="kec-content">
           <kec-table 
-           height="419px"
+           height="356"
            :tableHeader="tableHeader" 
            :lastWidth="lastWidth" 
            :tableData="tableData" 

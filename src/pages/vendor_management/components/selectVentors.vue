@@ -103,6 +103,7 @@ import KecSupplier from './addSupplier'
       this.loadChargeUnits()
       this.loadQueryServerTypes()
       this.loadCountryQueryAll()
+      this.loadGetBillCycles()
     },
 
     methods: {
@@ -116,6 +117,7 @@ import KecSupplier from './addSupplier'
         'loadChargeUnits']
         ),
         ...mapMutations('basic',['selectVentorsId','setVentorsInfo']),
+        ...mapActions('vendor',['loadGetBillCycles']),
         ...mapMutations('home',['pushBreadcrumbArr']),
         activeFunc(index) {
           this.selectIndex = index ;

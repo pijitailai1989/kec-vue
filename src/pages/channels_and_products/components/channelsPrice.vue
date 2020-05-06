@@ -7,7 +7,7 @@
         v-model="addVisible"
         trigger="click">
         <add-channel @close="closeFunc" type="addVisible"></add-channel>
-        <kec-button slot="reference" text="新增渠道" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
+        <kec-button slot="reference" text="新增资源组合" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
       </el-popover>
       <!-- <el-popover
         placement="bottom-end"
@@ -29,12 +29,12 @@
               <el-button type="primary" size="mini" @click.native="delItem(selectIndex)">确定</el-button>
             </div>
         <kec-button :disabled="selectIndex===null" slot="reference"
-        text="刪除渠道" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+        text="删除资源组合" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
       </el-popover>
     </div>
     <div class="kec-content">
           <kec-table 
-           height="419px"
+           height="276"
            :tableHeader="tableHeader" 
            :lastWidth="lastWidth" 
            :tableData="tableData" 
@@ -73,12 +73,13 @@ import addChannel from './addChannel'
            },
            lastWidth:'',
            tableHeader:{
-             id:{"title":'渠道编号','slot':false},
-             channelCode:{"title":'渠道代码','slot':false},
-             averageCostWeight:{"title":'平均成本','slot':false},
-             averageCostVolume:{"title":'平均成本','slot':false},
-             grossProfit:{"title":'毛利','slot':false},
-             useTime:{"title":'时效','slot':false}
+             id:{"title":'ID','slot':false},
+             channelName:{"title":'备注','slot':false},
+             channelCode:{"title":'资源组编号','slot':false},
+             a:{"title":'供应商产品','slot':false},
+            //  averageCostVolume:{"title":'平均成本','slot':false},
+            //  grossProfit:{"title":'毛利','slot':false},
+            //  useTime:{"title":'时效','slot':false}
             },
             selectIndex:null,
             selectItem:null,
@@ -127,7 +128,7 @@ import addChannel from './addChannel'
             const result = this.tableData.find( ( el ) => el.id === data.data.id );
             if(result){
                this.$message( {
-                    message: '渠道已经被添加!',
+                    message: '资源组已经被添加!',
                     type: 'warning'
                    });
             }else{

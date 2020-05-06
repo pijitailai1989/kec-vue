@@ -1,7 +1,7 @@
 <template>
   <div>
     <kec-page-header 
-      :textArray="['报价汇率表','报价列表']" 
+      :textArray="['报价管理','报价列表']" 
       @click="tabsFunC"
       :nameComponent="{1:'exchangeList'}">
     </kec-page-header>

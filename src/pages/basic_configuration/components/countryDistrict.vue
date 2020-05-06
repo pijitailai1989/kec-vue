@@ -95,7 +95,7 @@ import KecCountry from './addCountry'
            },
            selectIndex:null,
            selectItem:null,
-           PageSize:10,
+           PageSize:20,
            PageNum:1,
            total:null
       };

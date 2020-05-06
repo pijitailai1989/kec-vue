@@ -162,7 +162,6 @@ import {KecForm, KecButton ,KecDialog}  from '@/common/components'
                productId,
                description
                 } = payload
-
                _.payload.productId = productId ;
 
             } 

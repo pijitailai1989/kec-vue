@@ -41,7 +41,7 @@
     
     <div class="kec-content">
           <kec-table 
-           height="221px"
+           height="260px"
            :tableHeader="tableHeader" 
            :lastWidth="lastWidth" 
            :tableData="usersList" 
@@ -94,14 +94,14 @@ import KecUser from './addUser'
              organizationShortName:{"title":'组织部门','slot':false,'sort':'ZH'},
              mainRoleShortName:{"title":'部门角色','slot':false,'sort':'ZH'},
              email:{"title":'邮件','slot':false},
-             loginStatus:{"title":'类型','slot':false,'sort':'ZH'},
+             loginStatus:{"title":'界面登录','slot':false,'sort':'ZH'},
              createTime:{"title":'创建时间','slot':false},
              
            },
            selectIndex:null,
            selectItem:null,
            usersList:[],
-           PageSize:10,
+           PageSize:20,
            PageNum:1,
            userName:'',
            total:null
@@ -125,7 +125,7 @@ import KecUser from './addUser'
     mounted() {
       this.loadOrganizationQueryAll()
       this.loadGetCustomerInfo()
-      this.mountFunc(10,1)
+      this.mountFunc(20,1)
     },
 
     methods: {
@@ -139,7 +139,7 @@ import KecUser from './addUser'
           this.selectItem = item
         },
         searchFunc(name){
-          this.mountFunc(10,1,name)
+          this.mountFunc(20,1,name)
         },
         handleCurrentChange(page){
           this.PageNum = page ;
@@ -156,7 +156,7 @@ import KecUser from './addUser'
             let {content,totalElements} = _.getUsers;
             if(content && content.length){
                _.usersList = content.map(item=>{
-                 item['loginStatus'] = item['canLogin'] ? '可登录' : '不可登入'
+                 item['loginStatus'] = item['isCanLogin'] ? '允许' : '禁止'
                  return item ;
                })
             }else{

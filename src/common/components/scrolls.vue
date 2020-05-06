@@ -1,5 +1,5 @@
 <template>
-  <div class="scrolls scrollbar" :style="{height:tabsShow=='show'?`calc( 100vh - 44px - ${numbers}px )`:`calc( 100vh - ${numbers}px )`}">
+  <div class="scrolls scrollbar" :style="{height:maxHeightVal}">
      <slot></slot>
   </div>
 </template>
@@ -9,7 +9,7 @@ import {mapState} from 'vuex'
   export default {
     name:'scrolls',
     props:{
-        numbers:Number
+        numbers:[Number,String]
     },
     data () {
       return {
@@ -21,6 +21,19 @@ import {mapState} from 'vuex'
 
     computed: {
         ...mapState('home',['tabsShow']),
+        maxHeightVal: function(){
+          const _ = this ;
+          let types = typeof(_.numbers) ;
+          if(types == 'string'){
+            return _.numbers +'px'
+          }else{
+            if(_.tabsShow === 'show'){
+              return `calc( 100vh - 44px - ${_.numbers}px )` ;
+            }else{
+              return `calc( 100vh - ${_.numbers}px )`
+            }
+          }
+      }
     },
 
     beforeMount() {},

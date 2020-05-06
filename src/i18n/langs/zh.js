@@ -7,10 +7,10 @@ export default {
         "ORDER_LIST":"订单列表",
         "ORDER_MANAGEMENT":"订单管理",
         "CREATE_ORDER":"创建订单",
-        "C_A_P":"产品渠道",
-        "C_M":"渠道管理",
+        "C_A_P":"产品资源",
+        "C_M":"资源组合",
         "P_M":"产品管理",
-        "Q_M":"报价管理",
+        "Q_M":"产品定价",
         "STATE_M":"状态管理",
         "BASIC_INFO":"基础信息",
         "LOGISTICS_P":"物流流程",
@@ -20,7 +20,7 @@ export default {
         "ORG_CONFIG":"组织角色",
         "USER_CONFIG":"用户管理",
         "REVENUE_COST":"科目设置",
-        "CARGO_GOODS":"货物品配置",
+        "CARGO_GOODS":"品类设置",
         "CUSTOMER_MANAGEMENT":"客户管理",
         "VENDORS_MANAGEMENT":"供应商管理",
         "CUSTOMER_LIST":"客户配置",
@@ -32,8 +32,10 @@ export default {
         "T_R":"轨迹查询",
         "FIDLE_CONFIG":"接口配置",
         "FIDLE_LIST":"附加字段列表",
-        "CONTRACT_MANAGEMENT":"合同管理",
+        "CONTRACT_MANAGEMENT":"产品协议",
         "EXCHANGE_TABLE":"报价管理",
-        "COST_TABLE":"成本费率"
+        "COST_TABLE":"成本费率",
+        "RECE_BILL":"应收账单",
+        "COPE_BILL":"应付账单"
     }
 }

@@ -27,8 +27,9 @@
     </div>
     <div class="kec-content">
         <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
-          <div-sort class="padd" style="width:120px" @clickSort="sortFunc" :sortType="{a:'countryName',b:'ZH'}">国家编码</div-sort>
+          <div-sort class="padd" style="width:119px" @clickSort="sortFunc" :sortType="{a:'countryCode',b:'ZH'}">国家编码</div-sort>
           <div-sort class="padd" style="width:120px" @clickSort="sortFunc" :sortType="{a:'schemaName',b:'ZH'}">方案名称</div-sort>
+          <div class="padd" style="width:100px">分区类型</div>
           <div class="padd flx">分区名</div>
 
         </div>
@@ -57,10 +58,20 @@
               >
               </el-table-column>
               <el-table-column
-              prop="partitionSchemaName"
+              prop="schemaName"
               width="120"
               label=""
               >
+              </el-table-column>
+              <el-table-column
+              label=""
+              width="100"
+              >
+              <template slot-scope="scope">
+                  <div class="flexs">
+                    {{scope.row.partitionType==='sale'?'销售方案 ':'供应商方案'}}
+                  </div>
+                </template>
               </el-table-column>
               <el-table-column
               label=""
@@ -94,7 +105,7 @@
 import {mapState,mapActions,mapMutations} from 'vuex'
 import {sortCompare } from '@/utils/fun'
 import {KecButton , KecTable ,KecScroll ,KecButtonClick,KecForm,KecSort}  from '@/common/components'
-import addPartition from './addPartition' 
+import addPartition from './addPartitions' 
   export default {
     name:'servicePartition',
     props:[''],
@@ -113,7 +124,7 @@ import addPartition from './addPartition'
            idsList:[],
            routerPath:'',
            itemObj:null,
-           PageSize:10,
+           PageSize:20,
            PageNum:1,
            total:null
       };
@@ -234,12 +245,12 @@ import addPartition from './addPartition'
  .kec-btn  
    padding 5px        
  .kec-content  
-   width calc(100vw - 295px)
+   width calc(100vw - 290px)
    padding 1px
    position relative
  .tableHeader 
    height 38px 
-   width calc(100vw - 297px)
+   width calc(100vw - 292px)
    border-radius 3px
    position absolute
    top 0  
@@ -259,9 +270,9 @@ import addPartition from './addPartition'
      min-width 100px
  @media screen and ( max-width: 1024px ) 
   .kec-content  
-   width calc(100vw - 25px)
+   width calc(100vw - 20px)
   .tableHeader 
-   width calc(100vw - 27px)
+   width calc(100vw - 22px)
  .pr+.pr  
      margin-left 2px
 </style>

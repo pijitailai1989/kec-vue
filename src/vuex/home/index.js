@@ -103,16 +103,15 @@ export default {
     [types.POST_LOGIN](state,body){
       state.userInfo = body || {};
       if(body){
-         let obj = {}
+         let obj = {'/home':5}
          let {permissions,token} = body ;
          sessionStorage.setItem('token',token)
          sessionStorage.setItem('userInfo',JSON.stringify(body))
          if(permissions.length){
             permissions.forEach(el => {
                  let index = el.lastIndexOf(":R")
-                 if(index !== -1){
-                  obj[el] = true ;
-                 }
+                 let key = el.slice(0,index)
+                 if(index !== -1) obj[key] = index 
             })
          }
          state.isShowMenu = obj ;
@@ -127,6 +126,12 @@ export default {
     },
     loadPostLogout({commit},payload){
       return getPromiseActionNoMutations (api.postLogout(payload))
+    },
+    loadPostResetPassword({commit},payload){
+      return getPromiseActionNoMutations (api.postResetPassword(payload))
+    },
+    loadPutResetPassword({commit},payload){
+      return getPromiseActionNoMutations (api.putResetPassword(payload))
     },
   }
 }

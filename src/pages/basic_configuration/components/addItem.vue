@@ -38,7 +38,8 @@
     <div class="col-sm-12">
         <kec-form text="科目项名称" crosswise width="80px">
          <template #input>
-           <el-select v-model="payload.chargeSubjectId"  :disabled="type ==='changeVisible'" @change="changeItemFunc" filterable placeholder="" size="medium" style="width:100%">
+           <el-select v-model="payload.chargeSubjectId"  :disabled="type ==='changeVisible'" 
+           @change="changeItemFunc" filterable placeholder="" size="medium" style="width:100%">
               <el-option
                 v-for="(item,index) in list"
                 :key="index"
@@ -114,7 +115,7 @@
 import {mapState,mapActions,mapMutations} from 'vuex'
 import {KecForm, KecButton }  from '@/common/components'
   export default {
-    name:'unit',
+    name:'item',
     props:{
       type:String,
       item:Object
@@ -151,7 +152,6 @@ import {KecForm, KecButton }  from '@/common/components'
 
     mounted() {
       this.type==='addVisible' && this.changeReceiptsFunc(false)
-      console.log(1111111111)
     },
 
     methods: {

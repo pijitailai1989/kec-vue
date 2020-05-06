@@ -1,7 +1,7 @@
 <template>
   <div>
     <kec-page-header 
-      :textArray="['合同管理','合同列表']" 
+      :textArray="['报价协议','协议列表']" 
       @click="tabsFunC"
       :nameComponent="{1:'contractList'}">
     </kec-page-header>

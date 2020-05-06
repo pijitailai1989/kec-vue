@@ -84,8 +84,8 @@ import KecItem from './addItem'
            tableHeader:{
             //  name:{"title":'收费项名称','slot':false,'sort':'ZH'},
              serviceTypeText:{"title":'服务类型名称','slot':false,'sort':'ZH'},
-             chargeSubjectPath:{"title":'科目项编号','slot':false,'sort':'OTHER'},
-             chargeSubjectName:{"title":'科目项名称','slot':false,'sort':'ZH'},
+             ledgerSubjectNumber:{"title":'科目项编号','slot':false,'sort':'ZH'},
+             ledgerSubjectName:{"title":'科目项名称','slot':false,'sort':'ZH'},
              accountingObjectText:{"title":'计费依据','slot':false},
              accountingWayText:{"title":'计费纬度','slot':false},
              receiptsDirection:{"title":'计费方向','slot':true},
@@ -94,7 +94,7 @@ import KecItem from './addItem'
            },
            selectIndex:null,
            selectItem:null,
-           PageSize:10,
+           PageSize:20,
            PageNum:1,
            total:null
       };
@@ -141,9 +141,10 @@ import KecItem from './addItem'
               content.forEach(el=>{
                 el['unitCode'] = el['chargeUnit']['code']
                 el['unitId'] = el['chargeUnit']['id']
-                el['chargeSubjectName'] = el['ledgerSubject']['name']
-                el['chargeSubjectId'] = el['ledgerSubject']['id']
-                el['chargeSubjectPath'] = el['ledgerSubject']['path']
+                // el['chargeSubjectName'] = el['ledgerSubject']['name']
+                // el['chargeSubjectId'] = el['ledgerSubject']['id']
+                // el['chargeSubjectPath'] = el['ledgerSubject']['path']
+                el['chargeSubjectPath'] = el['ledgerSubjectNumber']
                 el['serviceTypeText'] = el['serviceType']['text']
                 el['accountingObjectText'] = el['accountingObject'] && el['accountingObject']['text']
                 el['accountingWayText'] = el['accountingWay'] && el['accountingWay']['text']

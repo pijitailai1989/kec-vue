@@ -57,8 +57,7 @@
                 fontWeight:'bold',
                 height:'38px',
                 color:'#fff',
-                padding:'0',
-                background:themeColor.content_border_color
+                padding:'0'
               }"
               :cell-style="{
                 borderRight:'1px solid #EBEEF5',
@@ -180,7 +179,7 @@ import KecAllocationList from './allocationList'
            dialogVisible:false,
            componentName:'KecCode',
            textItem:'',
-           PageSize:8,
+           PageSize:15,
            PageNum:1,
            code:'',
            total:null,

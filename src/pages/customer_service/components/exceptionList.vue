@@ -162,7 +162,7 @@ import exceptionReply from './exceptionReply'
 
     mounted() {
       this.mountFunc(this.PageSize,this.PageNum)
-      this.loadGetTags()
+      this.loadGetTags({pageSize:10000,pageNumber:1})
     },
 
     methods: {

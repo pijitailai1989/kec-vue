@@ -68,12 +68,12 @@
                     </template>
                     </kec-form>
                 </div>
-                <!-- <div class="col-sm-6">
-                    <kec-form crosswise text="类型" width="80px">
+                <div class="col-sm-6">
+                    <kec-form crosswise text="账单周期" width="80px">
                     <template #input>
-                      <el-select v-model="payload.venderTypeCode" filterable placeholder="" style="width:100%">
+                      <el-select v-model="payload.billCycle" filterable placeholder="" style="width:100%">
                         <el-option
-                          v-for="item in vendorTypeList"
+                          v-for="item in cyclesList"
                           :key="item.code"
                           :label="item.text"
                           :value="item.code">
@@ -81,7 +81,7 @@
                       </el-select>
                     </template>
                     </kec-form>
-                </div> -->
+                </div>
             </div>
           </template>
         </kec-form>
@@ -208,7 +208,8 @@ import {KecForm, KecButton }  from '@/common/components'
                  "addrLine": "",
                  "postCode": "",
                  "province": "",
-                 "vendorCode":null
+                 "vendorCode":null,
+                 "billCycle":null
                 }
         
       }
@@ -220,7 +221,9 @@ import {KecForm, KecButton }  from '@/common/components'
     },
 
     computed: {
-      ...mapState('basic',['currencyList','countryList','countryCodeList','vendorTypeList'])
+      ...mapState('basic',['currencyList','countryList','countryCodeList','vendorTypeList']),
+      ...mapState('vendor',['cyclesList'])
+
     },
 
     beforeMount() {},
@@ -251,7 +254,8 @@ import {KecForm, KecButton }  from '@/common/components'
                  "addrLine": "",
                  "postCode": "",
                  "province": "",
-                 "vendorCode":null
+                 "vendorCode":null,
+                 "billCycle":null
         }
       },
       clickConfirm() {

@@ -48,6 +48,48 @@ export function formateDate(date) {
     return y + '-' + m + '-' + d ;
 }
 
+export function toMoney(data){
+    var str = data.toFixed(2) + ''
+    var newStr = "";
+    var count = 0;
+    
+    if(str.indexOf(".")==-1){
+     for(var i=str.length-1;i>=0;i--){
+      if(count % 3 == 0 && count != 0){
+       newStr = str.charAt(i) + "," + newStr;
+      }else{
+       newStr = str.charAt(i) + newStr;
+      }
+      count++;
+     }
+     str = newStr + ".00"; 
+    }
+    else
+    {
+     for(var i = str.indexOf(".")-1;i>=0;i--){
+      if(count % 3 == 0 && count != 0){
+       newStr = str.charAt(i) + "," + newStr;
+      }else{
+       newStr = str.charAt(i) + newStr; 
+      }
+      count++;
+     }
+     str = newStr + (str + "00").substr((str + "00").indexOf("."),3);
+    }
+    return str
+ }
+
+export function isNumber(val){
+
+    var regPos = /^\d+(\.\d+)?$/; 
+    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/;
+    if(regPos.test(val) || regNeg.test(val)){
+        return true;
+    }else{
+        return false;
+    }
+
+}
 
 export function formatDate(date, fmt) {
     if (/(y+)/.test(fmt)) {
@@ -88,16 +130,16 @@ export function sortCompare(data,type,fn){
     }
     switch(fn) {
         case '1-9':
-            index != -1 && data.sort((a, b)=> a[type] - b[type]);
-            index == -1 && data.sort((a, b)=> b[type] - a[type]);
+            index != -1 && arr.sort((a, b)=> a[type]?a[type] - b[type]:0-0);
+            index == -1 && arr.sort((a, b)=> b[type]?b[type] - a[type]:0-0);
            break;
         case 'ZH':
-            index != -1 && data.sort((a, b)=> a[type].localeCompare(b[type], 'zh'));
-            index == -1 && data.sort((a, b)=> b[type].localeCompare(a[type], 'zh'));
+            index != -1 && arr.sort((a, b)=> a[type]?a[type].localeCompare(b[type], 'zh'):''.localeCompare('', 'zh'));
+            index == -1 && arr.sort((a, b)=> b[type]?b[type].localeCompare(a[type], 'zh'):''.localeCompare('', 'zh'));
            break;
         default:
-            index == -1 && arr.sort((a, b) => a[type].charCodeAt(0) - b[type].charCodeAt(0));
-            index != -1 && arr.sort((a, b) => b[type].charCodeAt(0) - a[type].charCodeAt(0));
+            index == -1 && arr.sort((a, b) => a[type]?a[type].charCodeAt(0) - b[type].charCodeAt(0):''.charCodeAt(0) - ''.charCodeAt(0));
+            index != -1 && arr.sort((a, b) => b[type]?b[type].charCodeAt(0) - a[type].charCodeAt(0):''.charCodeAt(0) - ''.charCodeAt(0));
            break;
    } 
    return arr

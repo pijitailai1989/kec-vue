@@ -45,9 +45,12 @@
       </div>
     </div>
     <div class="col-sm-6" v-show="booleanShow">
+         
         <kec-form :text="goodsType==='eqit'?'编辑属性':'新建属性'" bold="bold">
          <template #input>
+           
            <div class="borders col-sm-12">
+             <kec-scroll :numbers="317">
                 <div class="col-sm-10 col-sm-offset-1" v-show="goodsType!=='parent'">
                   <kec-form text="路径">
                       <template #input>
@@ -64,7 +67,7 @@
                 </div>
                 <div class="col-sm-10 col-sm-offset-1">
                     <kec-form 
-                    :text="payload.type==='SKU' || goodsType==='newGoods'?'货品名称':'类品名称'">
+                    :text="payload.type==='SKU' || goodsType==='newGoods'?'SKU名称':'品类名称'">
                       <template #input>
                         <el-input v-model="payload.name" placeholder="" size="small"></el-input>
                       </template>
@@ -115,6 +118,28 @@
                       </template>
                     </kec-form>
                 </div>
+                <div class="col-sm-10 col-sm-offset-1 mars">
+                    <kec-form text="标签">
+                      <template #input>
+                        <el-select
+                                                style="width:100%"
+                                                v-model="payload.tagIds"
+                                                multiple
+                                                size="small"
+                                                filterable
+                                                allow-create
+                                                default-first-option
+                                                placeholder="">
+                                                <el-option
+                                                  v-for="item in tagTypeClass[0]"
+                                                  :key="item.id"
+                                                  :label="item.tagName"
+                                                  :value="item.id">
+                                                </el-option>
+                                              </el-select>
+                      </template>
+                    </kec-form>
+                </div>
                 <div class="col-sm-10 col-sm-offset-1">
                     <kec-form text="描述">
                     <template #input>
@@ -128,7 +153,7 @@
                     </template>
                     </kec-form>
                 </div>
-                
+                </kec-scroll>
                 <div class="flexs col-sm-10 col-sm-offset-1 mar">
                  <kec-button-click 
                  :loading="loading"
@@ -140,6 +165,7 @@
                  </kec-button-click>
                 </div>
            </div>
+           
          </template>
         </kec-form>
     </div>
@@ -177,7 +203,8 @@ import {KecForm, KecButton ,KecScroll,KecButtonClick }  from '@/common/component
             "parentId":null,
             "type":'',
             "path":'',
-            "id":null
+            "id":null,
+            "tagIds":[]
         },
         booleanShow:false,
         goodsType:'',
@@ -193,13 +220,14 @@ import {KecForm, KecButton ,KecScroll,KecButtonClick }  from '@/common/component
     },
 
     computed: {
-      ...mapState('basic',['categoryList','unitsList','unitsClassList']),
+      ...mapState('basic',['categoryList','unitsList','unitsClassList','tagTypeClass']),
     },
 
     beforeMount() {},
 
     mounted() {
        this.loadCategoryQueryParent()
+       this.mountFunc(10000,1)
     },
 
     methods: {
@@ -209,8 +237,18 @@ import {KecForm, KecButton ,KecScroll,KecButtonClick }  from '@/common/component
       'loadCategoryCreate',
       'loadCategoryUpdate',
       'loadSkuCreate',
-      'loadSkuUpdate'
+      'loadSkuUpdate',
+      'loadGetTags'
       ]),
+      mountFunc(size,num){
+          const _ = this ;
+          let data = {
+            pageSize:size,
+            pageNumber:num
+          }
+          
+          _.loadGetTags(data) ;
+        },
       handleNodeClick(data){
         
         this.goodsType = 'eqit' ;
@@ -229,6 +267,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonClick }  from '@/common/component
         // this.payload.unit = data.unit
         this.payload.path = data.path
         this.payload.id = data.id
+        this.payload.tagIds = data.tagIds
 
         
       },
@@ -247,7 +286,8 @@ import {KecForm, KecButton ,KecScroll,KecButtonClick }  from '@/common/component
             "parentId":null,
             "type":'',
             "path":'',
-            "id":null
+            "id":null,
+            "tagIds":[]
         },
         this.booleanShow = false ;
         this.goodsType = '' ;
@@ -267,6 +307,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonClick }  from '@/common/component
         this.payload.length = null ;
         this.payload.width = null ; 
         this.payload.height = null ;
+        this.payload.tagIds = [] ;
         // this.payload.unit = data.unit
         this.booleanShow = true ;
         this.goodsType = type ;
@@ -286,12 +327,13 @@ import {KecForm, KecButton ,KecScroll,KecButtonClick }  from '@/common/component
              unit,
              type,
              path,
+             tagIds,
              id
              } = this.payload ;
         this.loading = true ;
         let data ={}
         if(this.goodsType ==='newGoods'){
-           data = {name,number,categoryId,description,weight,length,width,height,unit,hsCode}
+           data = {name,number,categoryId,tagIds,description,weight,length,width,height,unit,hsCode}
            this.loadSkuCreate(data).then(success=>{
                    this.loadCategoryQueryParent()
                    this.closeData()
@@ -308,7 +350,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonClick }  from '@/common/component
                 })
         }else if(this.goodsType ==='eqit'){
            if(type==='SKU'){
-             data = {name,number,id,description,weight,length,width,height,unit,hsCode}
+             data = {name,number,id,description,weight,length,width,height,unit,hsCode,tagIds}
              this.loadSkuUpdate(data).then(success=>{
                    this.loadCategoryQueryParent()
                    this.closeData()
@@ -324,7 +366,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonClick }  from '@/common/component
                    });
                 })
            }else{
-                data = {name,number,id,description}
+                data = {name,number,id,description,tagIds}
                 this.loadCategoryUpdate(data).then(success=>{
                    this.loadCategoryQueryParent()
                    this.closeData()
@@ -343,7 +385,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonClick }  from '@/common/component
         
            
         }else{
-           data = {name,number,parentId,description}
+           data = {name,number,parentId,description,tagIds}
            this.loadCategoryCreate(data).then(success=>{
                    this.loadCategoryQueryParent()
                    this.closeData()

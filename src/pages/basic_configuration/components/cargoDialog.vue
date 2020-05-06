@@ -1,6 +1,6 @@
 <template>
     <kec-drag 
-      boxWidth="500px"
+      boxWidth="500px" client
       v-show="dialogVisible"
       >
       <template v-slot:title>
@@ -153,7 +153,6 @@ import {KecForm, KecButton ,KecDrag}  from '@/common/components'
         }
       },
       clickConfirm() {
-        console.log(111111111111111)
         const _this = this ;
         let { code,description,name,nameEn,seq,status,id,serviceId ,chargeItemIds} = _this.payload ;
         let data = {}
@@ -210,7 +209,7 @@ import {KecForm, KecButton ,KecDrag}  from '@/common/components'
             if(val){
                let payload = JSON.parse(JSON.stringify(val) );
                let { code,description,name,nameEn,serviceId,seq,status,id,chargeItemIds } = payload
-
+               console.log(this.chargeItemList,'chargeItemList')
                _.payload = {code,description: description || '',name,nameEn:nameEn || '',serviceId,seq,status,id,chargeItemIds}
 
             } 

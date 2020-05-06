@@ -185,7 +185,6 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
           this.id = id ;
           this.payload = aPackage
           // this.payload = JSON.parse( JSON.stringify(aPackage) )
-          console.log(val,'val')
         }
       }
     }

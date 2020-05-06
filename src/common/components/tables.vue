@@ -2,7 +2,7 @@
    <div style="position:relative">
     <div class="tables scrollbar" 
       :style="{
-       maxHeight:tabsShow=='show'?`calc( 100vh - 44px - ${height} )`:`calc( 100vh - ${height} )`,
+       maxHeight:maxHeightVal,
        overflowY:'auto'
       }">
       <div ref="tableHeader" class="table-th flexs" :style="{background:themeColor.content_border_color,
@@ -16,7 +16,7 @@
           <span>{{item['title']}}</span>
           <i class="fa fa-sort" @click="sortEvent(key,item['sort'])" v-if="item['sort']"></i>
           </div>
-          <div class="flexs a-center j-center" :style="{'width':lastWidth}" v-if="lastWidth">操作</div>
+          <div class="flexs a-center j-center" :style="{'width':lastWidth}" v-if="lastWidth">{{lastText?lastText:'操作'}}</div>
       </div>
       <div class="table-tr" :style="{'font-size':font,'padding-top':clientHeight+'px'}" v-if="tableDatas.length>0">
           <ul v-for="(item,index) in tableDatas" :key="index" 
@@ -39,9 +39,8 @@
           </ul>
       </div>
       <div class="flexs a-center j-center sky" v-else>
-          <div style="padding:30px 0 10px 0" class="flexs a-center j-center columns">
-            <i class="iconfont icon-zhaobudaojieguo" style="font-size:40px;color:#ccc"></i>
-            <span style="font-size:14px;color:#ccc">No Data</span>
+          <div style="padding:60px 0 20px 0" class="flexs a-center j-center columns">
+            <span style="font-size:14px;color:#909399">暂无数据</span>
           </div>
       </div>
     </div>
@@ -60,18 +59,32 @@ import {sortCompare } from '@/utils/fun'
        letWidth:Object,
        tableHeader:Object,
        lastWidth:String,
-       height:String
+       lastText:String,
+       height: [String,Number]
     },
     data () {
       return {
          active_index:null,
-         clientHeight:38,
+         clientHeight:36,
          tableDatas:[],
          sortArr:[]
       };
     },
     computed: {
       ...mapState('home',['themeColor','tabsShow']),
+      maxHeightVal: function(){
+          const _ = this ;
+          let index = _.height.indexOf('px') ;
+          if(index == -1){
+            return _.height+'px'
+          }else{
+            if(_.tabsShow === 'show'){
+              return `calc( 100vh - 44px - ${_.height} )` ;
+            }else{
+              return `calc( 100vh - ${_.height} )`
+            }
+          }
+      }
     },
     methods:{
         clickItemUl(index,item) {
@@ -84,7 +97,7 @@ import {sortCompare } from '@/utils/fun'
         handleResize(){
           let tableHeader = this.$refs.tableHeader ;
           if(tableHeader.clientHeight != this.clientWidth){
-             this.clientHeight = tableHeader.clientHeight ;
+             this.clientHeight = tableHeader.clientHeight || 36;
           }
         },
         sortFunc(key){
@@ -98,7 +111,7 @@ import {sortCompare } from '@/utils/fun'
     mounted() {
       window.addEventListener('resize', this.handleResize)
       let tableHeader = this.$refs.tableHeader ;
-        this.clientHeight = tableHeader.clientHeight || 38;
+        this.clientHeight = tableHeader.clientHeight || 36;
     },
     destroyed () {
        window.removeEventListener('resize', this.handleResize)
@@ -131,7 +144,7 @@ import {sortCompare } from '@/utils/fun'
    border-radius 3px 
    border-bottom 1px solid #EBEEF5 
    .sky 
-     background #F9F9F9
+     background #FFF
    .five  
      flex-grow 1  
      flex 1  

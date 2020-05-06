@@ -27,9 +27,8 @@
       <template>
          <kec-scroll class="flexs columns a-center row">
             <div class="flexs kec-btn j-between a-center col-sm-12" style="width:100%"> 
-                 <kec-form text="基本信息">
-                    <template #input>
-                      <div class="row borders err">
+                 
+                      <div class="row">
                           <div class="col-sm-12">
                               <kec-form crosswise text="供应商产品名称" width="120px">
                                 <template #input>
@@ -44,7 +43,7 @@
                                 </template>
                               </kec-form>
                           </div>
-                          <div class="col-sm-12">
+                          <div class="col-sm-12" v-show="types==='add'">
                               <kec-form text="服务类型" width="120px" crosswise>
                                 <template #input>
                                   <el-select filterable v-model="payload.serviceTypeId" placeholder="" style="width:100%">
@@ -58,17 +57,54 @@
                                 </template>
                               </kec-form>
                           </div>
-                          <div class="col-sm-12">
+                          <div class="col-sm-12" v-show="types==='eqit'">
+                              <kec-form text="服务类型" width="120px" crosswise>
+                                <template #input>
+                                  <el-input disabled v-model="payload.serviceTypeText" ></el-input>
+                                </template>
+                              </kec-form>
+                          </div>
+                          <div class="col-sm-12" v-show="types==='add'">
+                              <kec-form text="分区方案" width="120px" crosswise>
+                                <template #input>
+                                  <el-select filterable v-model="payload.schemaName" @change="schemaNameSelect" placeholder="" style="width:100%">
+                                    <el-option
+                                      v-for="(item,index) in schemasList"
+                                      :key="item.schemaName"
+                                      :label="item.schemaName"
+                                      :value="index">
+                                    </el-option>
+                                  </el-select>
+                                </template>
+                              </kec-form>
+                          </div>
+                          <div class="col-sm-12" v-show="types==='eqit'">
+                              <kec-form text="分区方案" width="120px" crosswise>
+                                <template #input>
+                                  <el-input disabled v-model="payload.schemaName"></el-input>
+                                </template>
+                              </kec-form>
+                          </div>
+                          <div class="col-sm-12" v-show="types==='add'">
                               <kec-form text="服务分区" width="120px" crosswise>
                                 <template #input>
-                                  <el-select filterable v-model="payload.partitionSchemaId" placeholder="" style="width:100%">
+                                  <el-select filterable 
+                                  :disabled="tableRole.length==0"
+                                  v-model="payload.servicePartitionId" placeholder="" style="width:100%">
                                     <el-option
                                       v-for="item in tableRole"
                                       :key="item.id"
-                                      :label="item.schemaName"
+                                      :label="item.partitionName"
                                       :value="item.id">
                                     </el-option>
                                   </el-select>
+                                </template>
+                              </kec-form>
+                          </div>
+                          <div class="col-sm-12" v-show="types==='eqit'">
+                              <kec-form text="服务分区" width="120px" crosswise>
+                                <template #input>
+                                  <el-input disabled v-model="payload.partitionName"></el-input>
                                 </template>
                               </kec-form>
                           </div>
@@ -96,8 +132,6 @@
                           </div>
                           
                       </div>
-                    </template>
-                  </kec-form>
             </div>
           </kec-scroll>
       </template>
@@ -128,7 +162,10 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
             enabled:false,
             serviceTypeId:null,
             vendorProductCode:null,
-            partitionSchemaId:null
+            servicePartitionId:null,
+            partitionName:'',
+            schemaName:'',
+            serviceTypeText:'',
          },
          tableRole:[]
          
@@ -170,16 +207,23 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                 enabled:false,
                 serviceTypeId:null,
                 vendorProductCode:null,
-                partitionSchemaId:null
+                servicePartitionId:null,
+                partitionName:'',
+                schemaName:'',
+                serviceTypeText:'',
             }
+        },
+        schemaNameSelect(val){
+             this.payload.servicePartitionId = null ;
+             this.tableRole = this.schemasList[val]['partitionList']
         },
         clickConfirm(type){
            const _this = this ;
            _this.loading = true ;
-           let {name,description,serviceTypeId,id,enabled,vendorProductCode,partitionSchemaId} = this.payload ;
+           let {name,description,serviceTypeId,id,enabled,vendorProductCode,servicePartitionId} = this.payload ;
            let data = {}
            if(type==='add'){
-                data = {name,description,serviceTypeId,vendorId:_this.ventorsId,vendorProductCode,partitionSchemaId} ;
+                data = {name,description,serviceTypeId,vendorId:_this.ventorsId,vendorProductCode,servicePartitionId} ;
                 _this.loadPostVendorProducts(data).then(success=>{
                       _this.$emit('closeFunc',true)
                       _this.loading = false ;
@@ -196,7 +240,7 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                     })
               
            }else{
-             data = {name,description,serviceTypeId,vendorId:_this.ventorsId,id,enabled,vendorProductCode,partitionSchemaId} ;
+             data = {name,description,id,enabled,vendorProductCode} ;
              
              _this.loadPutVendorProducts(data).then(success=>{
                   _this.$emit('closeFunc',true)
@@ -229,21 +273,26 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                 enabled:false,
                 serviceTypeId:null,
                 vendorProductCode:null,
-                partitionSchemaId:null
+                servicePartitionId:null,
+                partitionName:'',
+                schemaName:'',
+                serviceTypeText:'',
             }
            if( val === 'eqit'){
-             let {id,name,description,enabled,serviceTypeCode,vendorProductCode,partitionSchemaId} = _.item ;
-             _.payload = {id,name,description,enabled,serviceTypeId:serviceTypeCode,vendorProductCode,partitionSchemaId}
+             let {id,name,description,enabled,serviceTypeCode,vendorProductCode,servicePartitionId,
+             partitionName,schemaName,serviceTypeText} = _.item ;
+             _.payload = {id,name,description,enabled,serviceTypeId:serviceTypeCode,vendorProductCode,
+             servicePartitionId,partitionName,schemaName,serviceTypeText}
            }
-           let {content,totalElements} = _.schemasList;
-              if(content && content.length){
-                _.tableRole = content.map(item=>{
-                    return item
-                })
+          //  let {content,totalElements} = _.schemasList;
+          //     if(content && content.length){
+          //       _.tableRole = content.map(item=>{
+          //           return item
+          //       })
                 
-              }else{
-                _.tableRole = []
-              }
+          //     }else{
+          //       _.tableRole = []
+          //     }
         }
       }
     },

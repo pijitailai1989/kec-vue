@@ -1,13 +1,13 @@
 <template>
   <div class="row">
     <div class="col-sm-12">
-        <kec-form text="渠道">
+        <kec-form text="资源组合">
          <template #input>
            <el-select v-model="channelId" placeholder="" @change="changeId" size="medium" style="width:100%">
               <el-option
                 v-for="item in channelsList"
                 :key="item.id"
-                :label="item.channelCode"
+                :label="item.channelName+' ( '+item.channelCode+' )'"
                 :value="item.id">
               </el-option>
             </el-select>

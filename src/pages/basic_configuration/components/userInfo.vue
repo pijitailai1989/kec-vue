@@ -36,7 +36,7 @@
                 <div class="col-sm-6">
                     <kec-form crosswise text="关联客户" width="80px">
                     <template #input>
-                      <el-select v-model="payload.customerCode" filterable placeholder="" style="width:100%">
+                      <el-select v-model="payload.customerCode" clearable filterable placeholder="" style="width:100%">
                         <el-option
                           v-for="item in customerInfoList"
                           :key="item.id"
@@ -47,21 +47,7 @@
                     </template>
                     </kec-form>
                 </div>
-                <div class="col-sm-6">
-                    <kec-form crosswise text="类型" width="80px">
-                    <template #input>
-                      <div class="col-sm-12 borders flexs" style="padding:8px">
-                           <el-switch
-                              v-model="payload.canLogin"
-                              active-color="#13ce66"
-                              inactive-text="可登录用户界面"
-                              inactive-color="#ccc">
-                            </el-switch>
-                      </div>
-                       
-                    </template>
-                    </kec-form>
-                </div>
+                
                 <div class="col-sm-6">
                     <kec-form crosswise text="主要角色" width="80px">
                     <template #input>
@@ -94,7 +80,22 @@
                 <div class="col-sm-6">
                     <kec-form crosswise text="创建时间" width="80px">
                     <template #input>
-                      <el-input disabled v-model="payload.webSite" placeholder=""></el-input>
+                      <el-input disabled v-model="payload.createTime" placeholder=""></el-input>
+                    </template>
+                    </kec-form>
+                </div>
+                <div class="col-sm-6">
+                    <kec-form crosswise>
+                    <template #input>
+                      <div class="col-sm-12 flexs j-center" style="padding:8px">
+                           <el-switch
+                              v-model="payload.isCanLogin"
+                              active-color="#13ce66"
+                              inactive-text="是否可登录界面"
+                              inactive-color="#ccc">
+                            </el-switch>
+                      </div>
+                       
                     </template>
                     </kec-form>
                 </div>
@@ -129,7 +130,8 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
                  "mainRoleId": null,
                  "tokenTimeout": "",
                  "customerCode":null,
-                 "canLogin": false
+                 "isCanLogin": true,
+                 "createTime":""
                 }
         
       }
@@ -168,14 +170,17 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
                  "mainRoleId": null,
                  "tokenTimeout": "",
                  "customerCode":null,
-                 "canLogin": false
+                 "isCanLogin": true,
+                 "createTime":""
         }
       },
       clickConfirm() {
         const _this = this ;
         if(!_this.payload.userName) return
-        let {userName,id,email,mainRoleId,organizationId,tokenTimeout,customerCode,canLogin} = _this.payload
-        let data = {userName,id,email,mainRoleId,organizationId,tokenTimeout,customerCode,canLogin}
+        let {userName,id,email,mainRoleId,organizationId,tokenTimeout,customerCode,isCanLogin,password} = _this.payload
+
+        let data = {userName,id,email,mainRoleId,organizationId,tokenTimeout,customerCode,isCanLogin}
+            password && ( data['password'] = password )
         _this.loadUpdateUser(data).then(success=>{
             this.setUserInfo(_this.payload)
             this.selectMainRoleId(mainRoleId)
@@ -197,7 +202,6 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
         
         const _ = this ;
         let info = JSON.parse(JSON.stringify(val) ) ;
-
         let {
           createTime
           ,email
@@ -208,7 +212,7 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
           ,organizationName
           ,tokenTimeout
           ,userName
-          ,canLogin
+          ,isCanLogin
           ,customerCode
         } = info ;
         organizationId && this.loadQueryByOrgId([organizationId]) ;
@@ -222,7 +226,8 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
           ,organizationName
           ,tokenTimeout
           ,userName
-          ,canLogin:canLogin?canLogin:null
+          ,isCanLogin:isCanLogin?isCanLogin:null
+          ,password:''
           ,customerCode:customerCode?customerCode:null
 
         }

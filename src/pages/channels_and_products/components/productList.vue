@@ -112,6 +112,7 @@ import ShareDialog from './shareDialog'
       'loadProducts',
       'loadGetTags']),
       ...mapActions('channels',['loadGetProductTypes']),
+      ...mapActions('vendor',['loadGetPartitionSchemasAll']),
       ...mapMutations('basic',['setProductsInfo','setProductsId','setDestination','setDestinationShow']),
       
       activeFunc(index) {
@@ -159,11 +160,13 @@ import ShareDialog from './shareDialog'
             pageSize:size,
             pageNumber:num
           }
+          
           _.loadGetTags(data) ;
         },
     
     },
     mounted(){
+      this.loadGetPartitionSchemasAll({partitionType:"sale"})
       this.loadChannelGetChannels()
       this.loadPaymentMethods()
       this.loadDictionaryCURRENCY()

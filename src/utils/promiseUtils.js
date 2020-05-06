@@ -12,13 +12,9 @@ export function getPromiseAction( p , commit , mutationType ){
             }
         }, error => {
             
-            return reject(
-                {code:0,message:`数据加载失败，请重试,${error}`}
-            )
+            return reject(error)
         }).catch( error => {
-            return reject(
-                {code:0,message:`数据请求异常，请重试,${error}`}
-            )
+            return reject(error)
         })
     })
     return promise ;
@@ -35,14 +31,9 @@ export function getPromiseActionNoMutations(p){
                 return reject(message)
             }
         }, error => {
-            return reject(
-                
-                {code:0,message:`数据加载失败，请重试,${error}`}
-            )
+            return reject(error)
         }).catch( error => {
-            return reject(
-                {code:0,message:`数据请求异常，请重试,${error}`}
-            )
+            return reject(error)
         })
     })
     return promise ;

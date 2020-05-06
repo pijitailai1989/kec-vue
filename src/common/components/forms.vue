@@ -2,7 +2,7 @@
   <div class="forms" :class="[crosswise?'flexs':'']">
       <label 
        :class="[star==='star'?'star':'',crosswise?'a-center j-end':'']" 
-       :style="{fontWeight:bold,display:crosswise?'flex':'',width:crosswise?width:''}">{{text}}</label>
+       :style="{fontWeight:bold,display:crosswise?'flex':'',width:crosswise?width:''}" v-show="text">{{text}}</label>
       <div style="flex:1"><slot name="input"></slot></div>
   </div>
 </template>

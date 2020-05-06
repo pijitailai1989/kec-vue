@@ -64,7 +64,9 @@
                 <div class="col-sm-6">
                     <kec-form crosswise text="客户编码" width="80px">
                     <template #input>
-                      <el-input v-model="payload.customerCode" placeholder="" size="medium"></el-input>
+                      <el-input-number v-model="payload.customerCode" 
+                      :controls="false" :min="1" :max="999999" style="width:100%"
+                      placeholder="" size="medium"></el-input-number>
                     </template>
                     </kec-form>
                 </div>

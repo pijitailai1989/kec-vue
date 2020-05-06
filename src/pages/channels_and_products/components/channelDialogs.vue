@@ -1,6 +1,6 @@
 <template>
     <kec-dialog 
-      boxWidth="1100px"
+      boxWidth="900px"
       boxTop="12vh"
       v-show="dialogVisible"
       >
@@ -17,13 +17,13 @@
         <div class="row">
           <div class="col-sm-12 flexs a-center p2">
              <div class="col-sm-1 text bold flexs j-end">
-                渠道名称
+                备注
              </div>
              <div class="col-sm-3">
                 <el-input v-model="payload.channelName" placeholder="" size="medium"></el-input>
              </div>
-             <div class="col-sm-1 text bold flexs j-end">
-                渠道编码
+             <div class="col-sm-2 text bold flexs j-end">
+                资源组编号
              </div>
              <div class="col-sm-3">
                 <el-input v-model="payload.channelCode" placeholder="" size="medium"></el-input>
@@ -41,21 +41,21 @@
                       <div class="col-sm-3 text bold">
                           选择服务
                       </div>
-                      <div class="col-sm-3 text bold">
+                      <div class="col-sm-4 text bold">
                           选择服务商
                       </div>
-                      <div class="col-sm-3 text bold">
+                      <div class="col-sm-4 text bold">
                           选择服务商产品
                       </div>
                       <!-- <div class="col-sm-2 text bold">
                           选择分区
                       </div> -->
-                      <div class="col-sm-1 text bold">
+                      <!-- <div class="col-sm-1 text bold">
                           操作时效
                       </div>
                       <div class="col-sm-1 text bold">
                           成本
-                      </div>
+                      </div> -->
                       <div class="col-sm-1 text bold">
                           删除
                       </div>
@@ -79,19 +79,19 @@
                                   </el-option>
                                 </el-select>
                             </div>
-                            <div class="col-sm-3 flexs">
+                            <div class="col-sm-4 flexs">
                                 <el-select v-model="item.vendorId" 
                                 @change="selectVendor(item.vendorId,index,true)" 
                                 placeholder="请选择" size="medium" style="width:90%">
                                   <el-option
                                     v-for="em in item.selectArr"
                                     :key="em.id"
-                                    :label="em.companyName"
+                                    :label="em.name"
                                     :value="em.id">
                                   </el-option>
                                 </el-select>
                             </div>
-                            <!-- <div class="col-sm-2 flexs">
+                            <div class="col-sm-4 flexs">
                                 <el-select v-model="item.vendorProductId" 
                                 @change="selectPartition(item.vendorProductId,index,true)"
                                 placeholder="请选择" size="medium" style="width:90%">
@@ -102,8 +102,8 @@
                                     :value="em.id">
                                   </el-option>
                                 </el-select>
-                            </div> -->
-                            <div class="col-sm-3 flexs">
+                            </div>
+                            <!-- <div class="col-sm-3 flexs">
                                 <el-select v-model="item.partitionId" placeholder="请选择" size="medium" style="width:90%">
                                   <el-option
                                     v-for="em in item.selectArrss"
@@ -112,13 +112,13 @@
                                     :value="em.id">
                                   </el-option>
                                 </el-select>
-                            </div>
-                            <div class="col-sm-1 text">
+                            </div> -->
+                            <!-- <div class="col-sm-1 text">
                                 {{item.text}}小时
                             </div>
                             <div class="col-sm-1 text">
                                 {{item.text}}小时
-                            </div>
+                            </div> -->
                             <div class="col-sm-1">
                                <span style="padding:5px 10px" @click="delItemFunc(index)">
                                  <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -137,14 +137,14 @@
                </div>
              </div>
           </div>
-          <div class="col-sm-12 p2">
+          <!-- <div class="col-sm-12 p2">
              <div class="col-sm-offset-8 col-sm-2 text">
                 渠道时效：4小时
              </div>
              <div class="col-sm-2 text">
                 渠道成本：50/件
              </div>
-          </div>
+          </div> -->
         </div>
       </template>
     </kec-dialog>
@@ -184,7 +184,8 @@ import vuedraggable from 'vuedraggable';
           selectIndex:null,
           upShow:true,
           downShow:true,
-          pushIndex:null
+          pushIndex:null,
+          vendorProductLists:[]
 
       };
     },
@@ -263,30 +264,24 @@ import vuedraggable from 'vuedraggable';
                 "selectArrss":[]
               }
           ] 
-          if(data && data.vendorProducts && data.vendorProducts.length){
+          if(data && data.vendorProduct && data.vendorProduct.length){
             arr = []
-            let arr1 = data.servicePartitionSet
-            let arr2 = data.vendorProducts
-            arr2.forEach( (item,index)=>{
-                item['servicePartition'] = arr1[index].servicePartition ;
-            })
+            let arr2 = data.vendorProduct
             arr2.forEach( (el,index)=>{
               
-              let{serviceTypeCode,id,partitionSchema,vendor,servicePartition} = el
+              let{serviceTypeCode,id,vendorId} = el
               
               this.selectServerType(serviceTypeCode,index)
-              vendor && this.selectVendor(vendor.id,index)
-              this.selectPartition(id,index)
               let data = {
                 "serviceTypeId":serviceTypeCode,
-                "vendorId":vendor && vendor.id,
-                "vendorProductId":id,
-                "partitionId":servicePartition.id
+                "vendorId":vendorId,
+                "vendorProductId":id
               }
               arr.push(data)
             })
           }
           this.payload["channelServiceNodes"] = arr ;
+
          
         },
         selectClick(index){
@@ -334,7 +329,7 @@ import vuedraggable from 'vuedraggable';
         },
         selectServerType(id,index,bool){
            this.loadGetVendorsByServiceType(['getVendorsByServiceType',id]) ;
-
+           
            if(bool){
               this.$set(this.payload.channelServiceNodes[index],'vendorId', null )
               this.$set(this.payload.channelServiceNodes[index],'vendorProductId', null )
@@ -343,26 +338,26 @@ import vuedraggable from 'vuedraggable';
         },
         selectVendor(id,index,bool){
            const _ = this ;
-           _.loadGetVendorProducts([id]).then(success=>{
-             let arr = _.payload.channelServiceNodes;
-             let serviceTypeCode = arr[index]['serviceTypeId']
-             let arrays = []
-             if(_.vendorProductList && _.vendorProductList.length){
-               _.vendorProductList.forEach(el=>{
-                 if(el.serviceTypeCode==serviceTypeCode){
-                     arrays.push(el)
-                 }
-               })
-             }
-              _.$set(arr[index], 'selectArrs', arrays)
-              
-           })
+          
+            let arr = _.payload.channelServiceNodes;
+            let vendorProduct = arr[index]['selectArr'].find(item=>{return item.id == id})
+            
+            let arrays = vendorProduct && vendorProduct['vendorProductsIdAndName']
+            if(arrays){
+                  arrays.forEach(item=>{
+                    item['id'] = parseInt(item['id'])
+                  })
+                  _.$set(arr[index], 'selectArrs', arrays)
+            }
+            
+            
            if(bool){
               _.$set(_.payload.channelServiceNodes[index],'vendorProductId', null );
-              _.$set(this.payload.channelServiceNodes[index],'partitionId', null )
+              _.$set(_.payload.channelServiceNodes[index],'partitionId', null )
            } 
         },
         selectPartition(id,index,bool){
+          return
            const _ = this ;
            _.loadGetServicePartitions([id]).then(success=>{
              let arr = _.payload.channelServiceNodes;
@@ -441,18 +436,21 @@ import vuedraggable from 'vuedraggable';
         deep:true,
         handler:function(val){
           const _ = this ;
-
+          
           if(val !==null){
             let obj = JSON.parse(JSON.stringify(val))
             let arr = _.payload.channelServiceNodes;
             let {serviceId,vendors} = obj ;
+            if(arr.length){
+               arr.forEach( (el,index)=>{
+                if(serviceId==el.serviceTypeId){
+                  _.$set(el, 'selectArr', vendors)
+                  _.selectVendor(el.vendorId,index)
+                }
+              })
+              _.setVendorsList(null)
+            }
             
-            arr.forEach( (el,index)=>{
-              if(serviceId==el.serviceTypeId){
-                _.$set(el, 'selectArr', vendors)
-              }
-            })
-            _.setVendorsList(null)
           }
            
         }

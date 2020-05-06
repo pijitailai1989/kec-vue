@@ -17,7 +17,8 @@ export default {
       quotationsList:[],
       chargeItemList:[],
       costByProductList:[],
-      examineList:[]
+      examineList:[],
+      agreementList:[]
     }
   },
   getters: {
@@ -71,6 +72,9 @@ export default {
     },
     [types.GET_EXAMINE_LOG](state,body){
       state.examineList = body || [];
+    },
+    [types.GET_AGREEMENT_QUOTATIONS](state,body){
+      state.agreementList = body || [];
     },
   },
   actions: {
@@ -134,6 +138,17 @@ export default {
 
     loadPutInvestAccount({commit},payload){
       return getPromiseActionNoMutations (api.putInvestAccount(payload))
+    },
+
+    loadGetAgreementQuotations({commit},payload){
+      return getPromiseAction (api.getAgreementQuotations(payload),commit,types.GET_AGREEMENT_QUOTATIONS)
+    },
+
+    loadPostAgreementQuotations({commit},payload){
+      return getPromiseActionNoMutations (api.postAgreementQuotations(payload))
+    },
+    loadPutAgreementQuotations({commit},payload){
+      return getPromiseActionNoMutations (api.putAgreementQuotations(payload))
     },
   }
 }

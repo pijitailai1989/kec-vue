@@ -1,7 +1,6 @@
 <template>
-    <kec-dialog 
-      boxWidth="960px"
-      boxTop="12vh"
+    <kec-drag 
+      boxWidth="960px" client
       v-show="dialogVisible"
       >
       <template v-slot:title>
@@ -23,7 +22,7 @@
                 style="margin-top:10px"
                 height="400px" 
                 :indexs="indexss"
-                :titleList="['订单基本信息','发件人','收件人','货物信息']"
+                :titleList="['订单基本信息','发件人','收件人','货物信息','标签信息']"
                 @change="tabsFunc"
                 >
                   <template>
@@ -32,20 +31,22 @@
                       <cargo-info v-show="componentName==='cargoInfo'"></cargo-info>
                       <addresser v-show="componentName==='addresser'"></addresser>
                       <recipients v-show="componentName==='recipients'"></recipients>
+                      <tag-info v-show="componentName==='tagInfo'"></tag-info>
                     </div>
                   </template>
                 </kec-tabs>
           </div>
         </div>
       </template>
-    </kec-dialog>
+    </kec-drag>
 </template>
 
 <script>
 import {mapState,mapActions} from 'vuex'
-import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick}  from '@/common/components'
+import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecDrag}  from '@/common/components'
 import orderInfo from './orderInfo'
 import cargoInfo from './cargoInfo'
+import tagInfo from './tagInfo'
 import addresser from './addresser'
 import recipients from './recipients'
   export default {
@@ -81,7 +82,9 @@ import recipients from './recipients'
         orderInfo,
         recipients,
         addresser,
-        cargoInfo
+        cargoInfo,
+        tagInfo,
+        KecDrag
     },
 
     computed: {
@@ -103,7 +106,7 @@ import recipients from './recipients'
             this.$emit('closeFunc',true)
         },
         tabsFunc(index) {
-            let arr = ['orderInfo','addresser','recipients','cargoInfo'] ;
+            let arr = ['orderInfo','addresser','recipients','cargoInfo','tagInfo'] ;
             this.componentName = arr[index] ;
         },
         clickConfirm(data){

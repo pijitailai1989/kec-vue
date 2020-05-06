@@ -9,10 +9,14 @@ export default {
       partitionsList:[],
       productTypeList:[],
       productPartitionsList:[],
+      productPartitionsItem:{},
       countryPartitionList:{
         countryList:[],
         partitionList:[]
-      }
+      },
+      productPricesList:[],
+      productPrices:{},
+      chargeItemsList:[]
     }
   },
   getters: {
@@ -30,8 +34,11 @@ export default {
     },
 
     [types.GET_PRODUCT_QUOTETION](state,body){
-      
-      state.productPartitionsList = body || [];
+      let arr = body || [];
+      state.productPartitionsList = arr
+    },
+    [types.GET_PRODUCT_QUOTETION_ID](state,body){
+      state.productPartitionsItem = body || {}
     },
     [types.GET_COUNTRY_PARTITION](state,body){
       
@@ -39,6 +46,18 @@ export default {
         countryList:[],
         partitionList:[]
       };
+    },
+    [types.GET_PRODUCT_PRICES](state,body){
+      
+      state.productPricesList = body || [];
+    },
+    [types.POST_PRODUCT_PRICES](state,body){
+      
+      state.productPrices = body || {};
+    },
+    [types.GET_CHARGE_ITEMS](state,body){
+      
+      state.chargeItemsList = body || [];
     },
   },
   actions: {
@@ -53,6 +72,9 @@ export default {
     loadGetProductQuotation({commit},payload){
       return getPromiseAction (api.getProductQuotation(payload),commit,types.GET_PRODUCT_QUOTETION)
     },
+    loadGetProductQuotationId({commit},payload){
+      return getPromiseAction (api.getProductQuotationId(payload),commit,types.GET_PRODUCT_QUOTETION_ID)
+    },
     loadGetCountryPartition({commit},payload){
       return getPromiseAction (api.getCountryPartition(payload),commit,types.GET_COUNTRY_PARTITION)
     },
@@ -61,6 +83,29 @@ export default {
     },
     loadPutProductQuotation({commit},payload){
       return getPromiseActionNoMutations (api.putProductQuotation(payload))
+    },
+
+    loadGetProductPrices({commit},payload){
+      return getPromiseAction (api.getProductPrices(payload),commit,types.GET_PRODUCT_PRICES)
+    },
+    loadPostProductPrices({commit},payload){
+      return getPromiseAction (api.postProductPrices(payload),commit,types.POST_PRODUCT_PRICES)
+    },
+    loadPutProductPrices({commit},payload){
+      return getPromiseActionNoMutations (api.putProductPrices(payload))
+    },
+    loadPutProductPricesItem({commit},payload){
+      return getPromiseActionNoMutations (api.putProductPricesItem(payload))
+    },
+    
+    loadGetChargeItems({commit},payload){
+      return getPromiseAction (api.getChargeItems(payload),commit,types.GET_CHARGE_ITEMS)
+    },
+    loadDeleteProductPricesPrice({commit},payload){
+      return getPromiseActionNoMutations (api.deleteProductPricesPrice(payload))
+    },
+    loadPostProductPricesPrice({commit},payload){
+      return getPromiseActionNoMutations (api.postProductPricesPrice(payload))
     },
     
   }

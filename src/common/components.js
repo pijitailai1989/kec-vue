@@ -15,6 +15,7 @@ import KecScroll from './components/scrolls.vue'
 import KecTree from './components/trees.vue'
 import KecSort from './components/sorts.vue'
 import KecDrag from './components/drags.vue'
+import KecDelPopover from './components/delPopover.vue'
 
 export { 
          KecButton,
@@ -33,6 +34,7 @@ export {
          KecScroll,
          KecTree,
          KecSort,
-         KecDrag
+         KecDrag,
+         KecDelPopover
         };
 

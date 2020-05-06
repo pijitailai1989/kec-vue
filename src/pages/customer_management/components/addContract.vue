@@ -20,11 +20,11 @@
       <div class="row">
           
           <div class="col-sm-12">
-              <kec-form text="合同属性">
+              <kec-form text="协议属性">
                 <template #input>
                      <div  class="col-sm-12 borders" style="margin-bottom:5px">
                         <!-- <div class="col-sm-8">
-                            <kec-form text="合同编号" width="70px" crosswise>
+                            <kec-form text="协议编号" width="70px" crosswise>
                             <template #input>
                               <el-input v-model="payload.input" placeholder="" :disabled="type==='changeVisible'"></el-input>
                             </template>
@@ -121,12 +121,18 @@
                         <div class="col-sm-4">
                             <kec-form text="账单周期" width="70px" crosswise>
                             <template #input>
-                              <el-input v-model="payload.paymentPeriod" 
-                              :disabled="disableds" placeholder=""></el-input>
+                              <el-select v-model="payload.billCycle" :disabled="disableds" filterable placeholder="" style="width:100%">
+                                <el-option
+                                  v-for="item in cyclesList"
+                                  :key="item.code"
+                                  :label="item.text"
+                                  :value="item.code">
+                                </el-option>
+                              </el-select>
                             </template>
                             </kec-form>
                         </div>
-                        <div class="col-sm-4">
+                        <!-- <div class="col-sm-4">
                             <kec-form text="初始账单日" width="70px" crosswise>
                             <template #input>
                               <div class="flexs">
@@ -140,7 +146,7 @@
                                 </div>
                             </template>
                             </kec-form>
-                        </div>
+                        </div> -->
                         <div class="col-sm-4">
                             <kec-form text="生效日期" width="70px" crosswise>
                             <template #input>
@@ -261,10 +267,10 @@
               </kec-form>
           </div>
           <div class="col-sm-12" style="margin-top:5px" v-show="type==='changeVisible'">
-              <kec-form text="合同日志">
+              <kec-form text="协议日志">
               <template #input>
                   <kec-table 
-                  height="600px"
+                  height="200"
                   :tableHeader="tableHeader" 
                   :tableData="list" 
                   :letWidth="letWidth">
@@ -272,7 +278,7 @@
                       {{slotProps.item}}
                       </template>
                       <template v-slot:type="slotProps">
-                        {{slotProps.item==='first'?'合同初审':'合同复审'}}
+                        {{slotProps.item==='first'?'协议初审':'协议复审'}}
                       </template>
                       <template v-slot:examineAction="slotProps">
                         {{slotProps.item== 3 ?'审核成功':'审核驳回'}}
@@ -305,7 +311,7 @@ import {formateDate} from '@/utils/fun'
         payload:{
           id:null,
           currency:null,
-          paymentPeriod:null,
+          billCycle:null,
           startPaymentDate:null,
           effectiveDate:null,
           productId:null,
@@ -344,6 +350,7 @@ import {formateDate} from '@/utils/fun'
 
     computed: {
       ...mapState('basic',['customerList','currencyList','countryList']),
+      ...mapState('vendor',['cyclesList']),
       ...mapState('customer',['agreementQueryPage','SALES','SERVICE','productLists','examineList']),
       disableds(){
         const _ = this ;
@@ -366,7 +373,7 @@ import {formateDate} from '@/utils/fun'
         this.payload={
             id:null,
             currency:null,
-            paymentPeriod:null,
+            billCycle:null,
             startPaymentDate:null,
             effectiveDate:null,
             productId:null,
@@ -388,7 +395,7 @@ import {formateDate} from '@/utils/fun'
       clickConfirm() {
         const _this = this ;
         let { currency
-              ,paymentPeriod
+              ,billCycle
               ,startPaymentDate
               ,effectiveDate
               ,productId
@@ -405,9 +412,8 @@ import {formateDate} from '@/utils/fun'
         switch(_this.type){
           case 'addVisible':
                 data = {
-                  startPaymentDate:startPaymentDate && formateDate(startPaymentDate),
                   effectiveDate:effectiveDate && formateDate(effectiveDate),
-                paymentPeriod
+                billCycle
                 ,currency
                 ,productId
                 ,customerId
@@ -436,7 +442,7 @@ import {formateDate} from '@/utils/fun'
                 data = {
                   startPaymentDate:startPaymentDate && formateDate(startPaymentDate),
                   effectiveDate:effectiveDate && formateDate(effectiveDate),
-                paymentPeriod
+                billCycle
                 ,currency
                 ,productId
                 ,customerId
@@ -481,7 +487,7 @@ import {formateDate} from '@/utils/fun'
             if(val){
               let payload = JSON.parse(JSON.stringify(val) );
               
-              let {customerId,productId,paymentPeriod
+              let {customerId,productId,billCycle
               ,startPaymentDate
               ,effectiveDate
               ,examineStatus
@@ -498,7 +504,7 @@ import {formateDate} from '@/utils/fun'
 
               this.payload = {
               currency:currency?currency:null
-              ,paymentPeriod
+              ,billCycle
               ,startPaymentDate
               ,effectiveDate
               ,examineStatus

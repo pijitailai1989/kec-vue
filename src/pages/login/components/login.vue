@@ -1,5 +1,5 @@
 <template>
-  <div class="content-login flexs a-center j-center">
+  <div class="content-login flexs columns a-center j-center">
     <div class="form-login">
        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
          <el-form-item label="账号" prop="userName">
@@ -9,16 +9,20 @@
            <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
          </el-form-item>
          <el-form-item>
-           <el-button type="warning" @click="submitForm('ruleForm',ruleForm)">提交</el-button>
+           <el-button type="warning" @click="submitForm('ruleForm',ruleForm)">登录</el-button>
            <el-button @click="resetForm('ruleForm')" type="warning" plain>重置</el-button>
          </el-form-item>
        </el-form>
+       <div class="flexs j-end">
+          <el-link :underline="false" type="danger" href="#/login#email">忘记密码？</el-link>
+        </div>
     </div>
+    
   </div>
 </template>
 
 <script>
-import {Form,FormItem} from 'element-ui'
+import {Form,FormItem,Link} from 'element-ui'
 import { mapState ,mapActions,mapMutations} from 'vuex';
   export default {
     name:'loginlogin',
@@ -59,7 +63,12 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
     },
     components: {
         'el-form':Form ,
-        'el-form-item':FormItem
+        'el-form-item':FormItem,
+        'el-link':Link
+    },
+    mounted(){
+      sessionStorage.clear()
+      localStorage.clear()
     },
     methods: {
       ...mapActions('home',['loadPostLogin']),

@@ -68,12 +68,12 @@
                     </template>
                     </kec-form>
                 </div>
-                <!-- <div class="col-sm-6">
-                    <kec-form crosswise text="类型" width="80px">
+                <div class="col-sm-6">
+                    <kec-form crosswise text="账单周期" width="80px">
                     <template #input>
-                      <el-select v-model="payload.venderTypeCode" filterable placeholder="" style="width:100%">
+                      <el-select v-model="payload.billCycle" filterable placeholder="" style="width:100%">
                         <el-option
-                          v-for="item in vendorTypeList"
+                          v-for="item in cyclesList"
                           :key="item.code"
                           :label="item.text"
                           :value="item.code">
@@ -81,7 +81,7 @@
                       </el-select>
                     </template>
                     </kec-form>
-                </div> -->
+                </div>
             </div>
           </template>
         </kec-form>
@@ -204,7 +204,8 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
                  "addrLine": "",
                  "postCode": "",
                  "province": "",
-                 "vendorCode":null
+                 "vendorCode":null,
+                 "billCycle":null
                 }
         
       }
@@ -218,6 +219,7 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
 
     computed: {
       ...mapState('basic',['ventorsInfo','currencyList','countryCodeList','countryList','vendorTypeList']),
+      ...mapState('vendor',['cyclesList'])
     },
 
     beforeMount() {},
@@ -251,7 +253,8 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
                  "addrLine": "",
                  "postCode": "",
                  "province": "",
-                 "vendorCode":null
+                 "vendorCode":null,
+                 "billCycle":null
         }
       },
       clickConfirm() {
@@ -290,6 +293,7 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
           vendorCode,
           currency,
           vendorType,
+          billCycle,
           address:{
                   country:{code},
                   subdivision,
@@ -312,6 +316,7 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
            webSite,
            currency,
            countryCode:code,
+           billCycle,
           //  venderTypeCode:vendorType?vendorType.code:null,
            subdivisionId:subdivision?subdivision.id:null,
            state,

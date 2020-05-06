@@ -230,7 +230,6 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
 
       },
       handleNodeClick(data){
-        console.log(data,'data')
         this.closeIdFunc()
          this.closeData()
          this.payload = {

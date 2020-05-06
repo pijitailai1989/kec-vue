@@ -31,19 +31,19 @@
         <div class="flexs j-end" style="padding:5px">
             
             <kec-button 
-            text="新建合同" icon="fa-plus" 
+            text="新建协议" icon="fa-plus" 
             background="#ED6D01" 
             @click.native="buttonFunc('addVisible',null)"
             color="#fff"></kec-button>
             <kec-button-click 
             :disabled="selectIndex===null"
-            text="修改合同" icon="fa-pencil" 
+            text="修改协议" icon="fa-pencil" 
             background="#17A2B8" 
             @click="buttonFunc('changeVisible',selectItem)"
             color="#fff"></kec-button-click>
             <kec-button-click 
             :disabled="selectIndex===null || selectItem.examineStatus !== 1"
-            text="合同审核" icon="fa-gavel" 
+            text="协议审核" icon="fa-gavel" 
             background="#41A813" 
             @click="buttonFunc('contractApprove',selectItem)"
             color="#fff"></kec-button-click>
@@ -120,7 +120,7 @@ import contractApprove from './contractApprove'
            lastWidth:'',
            tableHeader:{
              id:{"title":'ID','slot':false,'sort':'1-9'},
-             code:{"title":'服务合同号','slot':false},
+             code:{"title":'服务协议号','slot':false},
              customerCode:{"title":'客户编号','slot':false,'sort':'OTHER'},
              customercompanyName:{"title":'客户名称','slot':false,'sort':'ZH'},
              customerType:{"title":'客户类','slot':false},
@@ -134,7 +134,7 @@ import contractApprove from './contractApprove'
            selectIndex:null,
            selectItem:null,
            selectItems:null,
-           PageSize:10,
+           PageSize:14,
            PageNum:1,
            total:null,
            orderNum:null,
@@ -161,6 +161,7 @@ import contractApprove from './contractApprove'
     computed: {
       ...mapState('customer',['agreementQueryPage','SALES','SERVICE']),
       
+      
     },
 
     beforeMount() {},
@@ -172,11 +173,13 @@ import contractApprove from './contractApprove'
       this.loadGetUsersByRoleCodeSERVICE()
       this.loadCountryQueryAll()
       this.loadDictionaryCURRENCY()
+      this.loadGetBillCycles()
     },
 
     methods: {
         ...mapActions('customer',['loadPostAgreementQueryPage','loadGetUsersByRoleCodeSALES','loadGetUsersByRoleCodeSERVICE']),
         ...mapActions('basic',['loadCustomerQueryAll','loadCountryQueryAll','loadDictionaryCURRENCY']),
+        ...mapActions('vendor',['loadGetBillCycles']),
         handleCurrentChange(page){
           this.PageNum = page ;
           this.mountFunc(this.PageSize,page)
@@ -184,22 +187,22 @@ import contractApprove from './contractApprove'
         searchFunc(){
           
           this.searchBool = true ;
-          this.mountFunc(5,1)
+          this.mountFunc(14,1)
         },
         buttonFunc(types,item){
           this.types = types ;
           this.dialogVisible = true ;
           if(types === 'addVisible') {
-            this.textItem = '新建合同'
+            this.textItem = '新建协议'
             this.componentName = 'KecContract'
             this.selectItems = null
           }else if(types === 'changeVisible'){
-            this.textItem = '修改合同'
+            this.textItem = '修改协议'
             this.componentName = 'KecContract'
             this.selectItems = item
           }else{
             this.componentName = 'contractApprove'
-            this.textItem = '合同审核'
+            this.textItem = '协议审核'
             
             this.$nextTick(()=>{
                this.selectItems = item

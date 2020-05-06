@@ -92,7 +92,7 @@ import KecLabel from './addLabel'
            },
            selectIndex:null,
            selectItem:null,
-           PageSize:10,
+           PageSize:20,
            PageNum:1,
            total:null
       };
@@ -114,10 +114,11 @@ import KecLabel from './addLabel'
     mounted() {
       this.mountFunc(this.PageSize,this.PageNum)
       this.loadEnumsTagTypes()
+      this.loadGetComparativeRelation()
     },
 
     methods: {
-        ...mapActions('basic',['loadGetTags','loadDeleteTags','loadEnumsTagTypes']),
+        ...mapActions('basic',['loadGetTags','loadDeleteTags','loadEnumsTagTypes','loadGetComparativeRelation']),
         handleCurrentChange(page){
           this.PageNum = page ;
           this.mountFunc(this.PageSize,page)

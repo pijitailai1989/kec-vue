@@ -1,7 +1,7 @@
 <template>
   <div>
     <kec-page-header 
-      :textArray="['渠道管理','渠道列表']" 
+      :textArray="['资源组合','资源组合列表']" 
       @click="tabsFunC"
       :nameComponent="{1:'ChannelList'}">
     </kec-page-header>

@@ -8,7 +8,7 @@ import './assets/css/animate.css'
 import './assets/iconfonts/iconfont.css'
 import './assets/font-awesome/css/font-awesome.min.css'
 import store from './vuex/store'
-import { Input , Select,Option ,Button ,Checkbox,Table,Tabs,TabPane,
+import { Input , Select,Option ,Button ,Checkbox,Table,Tabs,TabPane,InputNumber,
   TableColumn,Popover,Radio,RadioGroup,Tooltip,Dropdown,DropdownMenu,DropdownItem,Tag,
   Menu,Submenu,MenuItem,Breadcrumb,BreadcrumbItem,Tree,Message,Pagination,DatePicker,Switch
 } from "element-ui";
@@ -18,7 +18,9 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'default-passive-events'
 import VueCookies from 'vue-cookies'
 import {checkParam , checkSubmit} from './directive'
+
 Vue.use(Input)
+Vue.use(InputNumber)
 Vue.use(Select)
 Vue.use(Switch)
 Vue.use(Option)
@@ -48,7 +50,24 @@ Message.install = function (Vue, options) {
   Vue.prototype.$message = Message
 }
 Vue.use(Message)
-
+router.beforeEach((to, from, next) => {
+  
+  let {path,meta:{authority}} = to 
+  if(path === '/login') {
+    next()
+  } else {
+    let isShowMenu = JSON.parse( sessionStorage.getItem('isShowMenu') ) ;
+    let bool = authority in isShowMenu ;
+    bool ? next() : setTimeout(()=>{ next('/login') },2000) 
+    !bool && (
+      Message({
+        showClose: true,
+        message: '无权限访问该页面，请您重新登陆！',
+        type: 'warning'
+      })
+    )
+  }
+})
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 // Vue.use(VueCookies)

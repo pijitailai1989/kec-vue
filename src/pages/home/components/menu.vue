@@ -51,11 +51,11 @@ import {mapState,mapMutations} from 'vuex'
          routerPath:'',
          menuList:[           {
            title:'BASIC_CONFIG',
-           authorityText:'/node/commonSetting:R',
+           authorityText:'/node/commonSetting',
            children:[
              {
                title:'BASIC_CONFIG',
-               authorityText:'/common/settings:R',
+               authorityText:'/common/settings',
                id:'3-1',
                icon:'fa-camera-retro',
                path:'/basic-config',
@@ -63,7 +63,7 @@ import {mapState,mapMutations} from 'vuex'
              },
              {
                title:'ORG_CONFIG',
-               authorityText:'/admin/settings:R',
+               authorityText:'/admin/settings',
                id:'3-2',
                icon:'fa-camera-retro',
                path:'/organization-config',
@@ -72,7 +72,7 @@ import {mapState,mapMutations} from 'vuex'
                comName:'组织管理'
              },{
                title:'USER_CONFIG',
-               authorityText:'/admin/user/auth:R',
+               authorityText:'/admin/user/auth',
                id:'3-3',
                icon:'fa-camera-retro',
                path:'/user-config',
@@ -81,7 +81,7 @@ import {mapState,mapMutations} from 'vuex'
                comName:'用户列表'
              },{
                title:'REVENUE_COST',
-               authorityText:'/accounting/subject:R',
+               authorityText:'/accounting/subject',
                id:'3-4',
                icon:'fa-camera-retro',
                path:'/revenue-cost-class',
@@ -90,13 +90,13 @@ import {mapState,mapMutations} from 'vuex'
                comName:'科目设置'
              },{
                title:'CARGO_GOODS',
-               authorityText:'',
+               authorityText:'/accounting/subject',
                id:'3-5',
                icon:'fa-camera-retro',
                path:'/cargo-goods-class',
                name:'cargoGoodsClass',
                components:'goodsClass',
-               comName:'货物品类'
+               comName:'品类设置'
              }
            ],
            id:'3',
@@ -104,12 +104,12 @@ import {mapState,mapMutations} from 'vuex'
            path:null
          },{
              title:'C_A_P',
-             authorityText:'/node/productAndChannel:R',
+             authorityText:'/node/productAndChannel',
              children:[
 
                 {
                   title:'P_M',
-                  authorityText:'/product:R',
+                  authorityText:'/product',
                   id:'1-2',
                   icon:'fa-camera-retro',
                   path:'/product-management',
@@ -117,7 +117,7 @@ import {mapState,mapMutations} from 'vuex'
                 },
                {
                  title:'C_M',
-                 authorityText:'/product/channel:R',
+                 authorityText:'/product/channel',
                  id:'1-1',
                  icon:'fa-camera-retro',
                  path:'/channel-management',
@@ -125,7 +125,7 @@ import {mapState,mapMutations} from 'vuex'
                },
                {
                  title:'Q_M',
-                 authorityText:'/product/channel:R',
+                 authorityText:'/product/channel',
                  id:'1-3',
                  icon:'fa-camera-retro',
                  path:'/quote-manager',
@@ -159,11 +159,11 @@ import {mapState,mapMutations} from 'vuex'
           //  },
 {
              title:'CUSTOMER_MANAGEMENT',
-             authorityText:'/node/customer:R',
+             authorityText:'/node/customer',
              children:[
                 {
                   title:'CUSTOMER_LIST',
-                  authorityText:'/business/customer:R',
+                  authorityText:'/business/customer',
                   id:'5-1',
                   icon:'fa-camera-retro',
                   path:'/customer-management',
@@ -173,18 +173,26 @@ import {mapState,mapMutations} from 'vuex'
                 },
                 {
                   title:'CONTRACT_MANAGEMENT',
-                  authorityText:'/business/agreement:R',
+                  authorityText:'/business/agreement',
                   id:'5-2',
                   icon:'fa-camera-retro',
                   path:'/contract-management',
                   name:'contractManagement',
                 },{
                   title:'EXCHANGE_TABLE',
-                  authorityText:'/product/product-quotations:R',
+                  authorityText:'/product/product-quotations',
                   id:'5-3',
                   icon:'fa-camera-retro',
                   path:'/exchange-table',
                   name:'exchangeTable',
+                },
+                {
+                  title:'RECE_BILL',
+                  authorityText:'/product/product-quotations',
+                  id:'5-4',
+                  icon:'fa-camera-retro',
+                  path:'/receivable-bill',
+                  name:'receivableBill',
                 }
              ],
              id:'5',
@@ -192,11 +200,11 @@ import {mapState,mapMutations} from 'vuex'
              path:null
            },{
              title:'ORDER_MANAGEMENT',
-             authorityText:'/node/order:R',
+             authorityText:'/node/order',
              children:[
                {
                  title:'ORDER_LIST',
-                 authorityText:'/business:R',
+                 authorityText:'/business',
                  id:'4-1',
                  icon:'fa-camera-retro',
                  path:'/order-management',
@@ -208,11 +216,11 @@ import {mapState,mapMutations} from 'vuex'
              path:null
            },{
              title:'CUSTOMER_SERVICE',
-             authorityText:'/node/customerService:R',
+             authorityText:'/node/customerService',
              children:[
                 {
                   title:'EX_HANDLING',
-                  authorityText:'/business/customer/care:R',
+                  authorityText:'/business/customer/care',
                   id:'6-1',
                   icon:'fa-camera-retro',
                   path:'/exception-handling',
@@ -220,7 +228,7 @@ import {mapState,mapMutations} from 'vuex'
                 },
                 {
                   title:'T_R',
-                  authorityText:'/common/settings/standardState:R',
+                  authorityText:'/common/settings/standardState',
                   id:'6-2',
                   icon:'fa-camera-retro',
                   path:'/t-r',
@@ -255,11 +263,11 @@ import {mapState,mapMutations} from 'vuex'
              path:null
            },{
              title:'VENDORS_MANAGEMENT',
-             authorityText:'/node/vendor:R',
+             authorityText:'/node/vendor',
              children:[
                 {
                   title:'VENDORS_CONFIG',
-                  authorityText:'/business/vendor:R',
+                  authorityText:'/business/vendor',
                   id:'8-1',
                   icon:'fa-camera-retro',
                   path:'/vendors-config',
@@ -268,11 +276,18 @@ import {mapState,mapMutations} from 'vuex'
                   comName:'供应商列表'
                 },{
                   title:'COST_TABLE',
-                  authorityText:'/business/cost-statements:R',
+                  authorityText:'/business/cost-statements',
                   id:'8-2',
                   icon:'fa-camera-retro',
                   path:'/cost-table',
                   name:'costTable',
+                },{
+                  title:'COPE_BILL',
+                  authorityText:'/product/product-quotations',
+                  id:'8-3',
+                  icon:'fa-camera-retro',
+                  path:'/cope-bill',
+                  name:'copeBill',
                 }
              ],
              id:'8',
@@ -280,11 +295,11 @@ import {mapState,mapMutations} from 'vuex'
              path:null
            },{
              title:'FIDLE_CONFIG',
-             authorityText:'/node/interfaceConfig:R',
+             authorityText:'/node/interfaceConfig',
              children:[
                 {
                   title:'FIDLE_LIST',
-                  authorityText:'/common/rule/code:R',
+                  authorityText:'/common/rule/code',
                   id:'9-1',
                   icon:'fa-camera-retro',
                   path:'/fidle-config',

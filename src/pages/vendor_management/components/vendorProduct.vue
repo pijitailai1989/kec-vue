@@ -177,14 +177,15 @@ import addProduct from './addProduct'
     mounted() {
       this.loadQueryServerTypes()
       this.loadGetVendorProducts([this.ventorsId])
-      this.loadGetPartitionSchemas({pageSize:100,pageNumber:1})
+      // this.loadGetPartitionSchemas({pageSize:100,pageNumber:1})
+      this.loadGetPartitionSchemasAll()
     },
 
     methods: {
-        ...mapActions('vendor',['loadGetVendorProducts','loadPutVendorProducts','loadGetPartitionSchemas']),
+        ...mapActions('vendor',['loadGetVendorProducts','loadPutVendorProducts','loadGetPartitionSchemas','loadGetPartitionSchemasAll']),
         ...mapActions('basic',['loadQueryServerTypes']),
         checkRole(id,name,description,serviceTypeId,enabled,vendorProductCode,partitionSchemaId,ventorsId,index){
-             let data = {name,description,serviceTypeId,id,enabled,vendorId:ventorsId,vendorProductCode,partitionSchemaId} ;
+             let data = {name,description,id,enabled,vendorProductCode} ;
              this.loadPutVendorProducts(data).then(success=>{
                   
                   this.$message( {

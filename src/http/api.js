@@ -84,11 +84,17 @@ const postProducts = data => http({ methods:'post' ,url:`/product/products`,data
 const putProducts = data => http({ methods:'put' ,url:`/product/products`,data}) //修改产品
 const deleteProducts = data => http({ methods:'delete' ,url:`/product/products`,data}) //删除产品
 
-const categoryQueryParent = data => http({ methods:'get' ,url:`/common/settings/category/queryParent`,data}) //查找所有分类
-const categoryCreate = data => http({ methods:'post' ,url:`/common/settings/category/create`,data}) //创建分类接口
-const skuCreate = data => http({ methods:'post' ,url:`/common/settings/sku/create`,data}) //创建SKU接口
-const categoryUpdate = data => http({ methods:'put' ,url:`/common/settings/category/update`,data}) //  更新分类接口
-const skuUpdate = data => http({ methods:'put' ,url:`/common/settings/sku/update`,data}) //  修改SKU接口
+// const categoryQueryParent = data => http({ methods:'get' ,url:`/common/settings/category/queryParent`,data}) //查找所有分类
+// const categoryCreate = data => http({ methods:'post' ,url:`/common/settings/category/create`,data}) //创建分类接口
+// const skuCreate = data => http({ methods:'post' ,url:`/common/settings/sku/create`,data}) //创建SKU接口
+// const categoryUpdate = data => http({ methods:'put' ,url:`/common/settings/category/update`,data}) //  更新分类接口
+// const skuUpdate = data => http({ methods:'put' ,url:`/common/settings/sku/update`,data}) //  修改SKU接口
+
+const categoryQueryParent = data => http({ methods:'get' ,url:`/common/settings/category`,data}) //查找所有分类
+const categoryCreate = data => http({ methods:'post' ,url:`/common/settings/category`,data}) //创建分类接口
+const skuCreate = data => http({ methods:'post' ,url:`/common/settings/sku`,data}) //创建SKU接口
+const categoryUpdate = data => http({ methods:'put' ,url:`/common/settings/category`,data}) //  更新分类接口
+const skuUpdate = data => http({ methods:'put' ,url:`/common/settings/sku`,data}) //  修改SKU接口
 
 const enumsTagTypes = data => http({ methods:'get' ,url:`/common/settings/enums/tagTypes`,data}) //查询所有的便签类型
 const partitionMethods = data => http({ methods:'get' ,url:`/common/settings/enums/partitionMethods`,data}) //查询所有的分区方法
@@ -195,6 +201,7 @@ const getExamineLog = data => http({ methods:'get' ,url:`/business/agreement/exa
 
 const getLocations = data => http({ methods:'get' ,url:`/common/settings/location/locations`,data}) //分页查询地点
 const getPartitionSchemas = data => http({ methods:'get' ,url:`/common/settings/PartitionSchemas`,data}) //分页查询分区
+const getPartitionSchemasAll = data => http({ methods:'get' ,url:`/common/settings/PartitionSchemas/all`,data}) //全部查询分区
 const postPartitionSchemas = data => http({ methods:'post' ,url:`/common/settings/PartitionSchemas`,data}) //新增供应商分区
 const putPartitionSchemas = data => http({ methods:'put' ,url:`/common/settings/PartitionSchemas`,data}) //修改供应商分区
 const deletePartitionSchemas = data => http({ methods:'delete' ,url:`/common/settings/PartitionSchemas`,data}) // 删除供应商分区
@@ -206,13 +213,72 @@ const putSubmit = data => http({ methods:'put' ,url:`/business/cost-statements/s
 const getServicePartitions = data => http({ methods:'get' ,url:`/common/settings/ServicePartitions`,data}) //通过供应商产品的id查询对应的所有分区 
 const getProductTypes = data => http({ methods:'get' ,url:`/common/settings/enums/ProductTypes`,data}) //产品类型 
 
-const getProductQuotation = data => http({ methods:'get' ,url:`/product/product-quotations`,data}) //报价单_查询单个
+const getProductQuotation = data => http({ methods:'get' ,url:`/product/product-quotations/list`,data}) //报价单_查询单个列表
+const getProductQuotationId = data => http({ methods:'get' ,url:`/product/product-quotations`,data}) //报价单_查询单个
 const getCountryPartition = data => http({ methods:'get' ,url:`/product/product-quotations/country-and-partition`,data}) //报价单_查询单个产品所有报价表的国家和分区
 const postProductQuotation = data => http({ methods:'post' ,url:`/product/product-quotations`,data}) //报价单_增加单个
 const putProductQuotation = data => http({ methods:'put' ,url:`/product/product-quotations`,data}) //报价单_集体修改
 
+const getAgreementQuotations = data => http({ methods:'get' ,url:`/product/agreement-quotations`,data}) //合同报价表_
+const postAgreementQuotations = data => http({ methods:'post' ,url:`/product/agreement-quotations`,data}) //合同报价表_增加单个
+const putAgreementQuotations = data => http({ methods:'put' ,url:`/product/agreement-quotations`,data}) //合同报价表_修改单个
+
+const getBillCycles = data => http({ methods:'get' ,url:`/common/settings/enums/bill-cycles`,data}) //应付账单_查_账单周期
+const getApBills = data => http({ methods:'get' ,url:`/accounting/ap-bills`,data}) //应付账单_增_手工增加一个账单 
+const getApBillsItems = data => http({ methods:'get' ,url:`/accounting/ap-bills/items`,data}) //应付账单_查_通过账单id下载详单
+const postApBills = data => http({ methods:'post' ,url:`/accounting/ap-bills`,data}) //应付账单_查_通过VendorID
+const getArBills = data => http({ methods:'get' ,url:`/accounting/ar-bills`,data}) //应付账单_查_通过VendorID
+const getArBillsItems = data => http({ methods:'get' ,url:`/accounting/ar-bills/items`,data}) //应付账单_查_通过账单id下载详单
+const postArBills = data => http({ methods:'post' ,url:`/accounting/ar-bills`,data}) //应付账单_查_通过VendorID
+const putArBills = data => http({ methods:'put' ,url:`/accounting/ar-bills`,data}) //刷新账单_查_通过VendorID
+
+const getProductPrices = data => http({ methods:'get' ,url:`/product/product-prices`,data}) //梯度报价_查_通过PriceId 
+const postProductPrices = data => http({ methods:'post' ,url:`/product/product-prices`,data}) //梯度报价_增 
+const putProductPrices = data => http({ methods:'put' ,url:`/product/product-prices`,data}) //梯度报价_改
+const putProductPricesItem = data => http({ methods:'put' ,url:`/product/product-prices/item`,data}) //报价_改
+const getComparativeRelation = data => http({ methods:'get' ,url:`/common/settings/enums/comparative-relation`,data}) //查询所有的比较关系
+
+const postProductPricesPrice = data => http({ methods:'post' ,url:`/product/product-prices/price`,data}) //价目_增加
+const deleteProductPricesPrice = data => http({ methods:'delete' ,url:`/product/product-prices/price`,data}) //价目_删除
+const getChargeItems = data => http({ methods:'get' ,url:`/common/settings/chargeItems`,data}) //价目_科目项
+
+const postCostStatementsPrice = data => http({ methods:'post' ,url:`/business/cost-statements/price`,data}) //成本项_增加
+const deleteCostStatementsPrice = data => http({ methods:'delete' ,url:`/business/cost-statements/price`,data}) //成本项_删除
+
+const postResetPassword = data => http({ methods:'post' ,url:`/auth/resetPassword`,data}) //忘记密码_发起 
+const putResetPassword = data => http({ methods:'put' ,url:`/auth/resetPassword`,data}) //忘记密码_修改
 export default {
+    postResetPassword,
+    putResetPassword,
+
+    postCostStatementsPrice,
+    deleteCostStatementsPrice,
+    
+    postProductPricesPrice,
+    deleteProductPricesPrice,
+    getChargeItems,
+    
+    getProductPrices,
+    postProductPrices,
+    putProductPrices,
+    putProductPricesItem,
+    getComparativeRelation,
+    
+    getBillCycles,
+    getApBills,
+    getApBillsItems,
+    postApBills,
+    getArBills,
+    getArBillsItems,
+    postArBills,
+    putArBills,
+    
+    getAgreementQuotations,
+    postAgreementQuotations,
+    putAgreementQuotations,
+    
     getProductQuotation,
+    getProductQuotationId,
     getCountryPartition,
     postProductQuotation,
     putProductQuotation,
@@ -226,6 +292,7 @@ export default {
 
     getLocations,
     getPartitionSchemas,
+    getPartitionSchemasAll,
     postPartitionSchemas,
     putPartitionSchemas,
     deletePartitionSchemas,
