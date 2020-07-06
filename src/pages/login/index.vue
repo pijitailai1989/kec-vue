@@ -7,7 +7,7 @@
       <component :is="componentName" class="content"></component>
     </div>
     <div class="copyright" :style="{background:themeColor.copy_background_color}">
-       <span :style="{color:themeColor.copy_text_color}">@ 2019 Kerry Logistics Network Limited. All Rights Reserved</span>
+       <span :style="{color:themeColor.copy_text_color}">@ {{copyTime}} Kerry Logistics Network Limited. All Rights Reserved</span>
     </div>
   </div>
 </template>
@@ -17,6 +17,7 @@ import {mapState} from 'vuex'
 import loginHeader from './components/header'
 import loginLogin from './components/login'
 import reset from './components/reset'
+import { formatDate } from '@/utils/fun'
   export default {
     name:'login',
     props:[''],
@@ -27,7 +28,8 @@ import reset from './components/reset'
     },
     data () {
       return {
-        componentName:'loginLogin'
+        componentName:'loginLogin',
+        copyTime:formatDate( new Date(),'yyyy' )
       };
     },
     computed: {

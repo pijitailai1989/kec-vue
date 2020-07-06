@@ -20,7 +20,7 @@
     <div class="col-sm-6">
         <kec-form text="起运国家">
          <template #input>
-           <el-select v-model="payload.shippingCountryCode" :disabled="productsInfo?true:false" filterable placeholder="" size="medium" style="width:100%">
+           <el-select v-model="payload.shippingCountryCode" filterable placeholder="" size="medium" style="width:100%">
               <el-option
                 v-for="item in countryList"
                 :key="item.code"
@@ -32,9 +32,17 @@
         </kec-form>
     </div>
     <div class="col-sm-6">
-        <kec-form text="目的国家">
+        <kec-form text="目的地区/国家">
           <template #input>
-            <el-select v-model="payload.destinationCountryCode" @change="changeCountryCode" :disabled="productsInfo?true:false || destinationShow" filterable placeholder="" size="medium" style="width:100%">
+            <!-- <el-select v-model="payload.destinationCountryCode" @change="changeCountryCode" :disabled="productsInfo?true:false || destinationShow" filterable placeholder="" size="medium" style="width:100%">
+              <el-option
+                v-for="item in countryList"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code">
+              </el-option>
+            </el-select> -->
+            <el-select v-model="payload.destinationCountryCode" @change="changeCountryCode" filterable placeholder="" size="medium" style="width:100%">
               <el-option
                 v-for="item in countryList"
                 :key="item.code"

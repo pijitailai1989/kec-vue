@@ -16,8 +16,8 @@
       <template>
         <div class="row">
           <div class="col-sm-12 flexs a-center p2">
-             <div class="col-sm-1 text bold flexs j-end">
-                备注
+             <div class="col-sm-2 text bold flexs j-end">
+                资源组合名称
              </div>
              <div class="col-sm-3">
                 <el-input v-model="payload.channelName" placeholder="" size="medium"></el-input>
@@ -269,11 +269,11 @@ import vuedraggable from 'vuedraggable';
             let arr2 = data.vendorProduct
             arr2.forEach( (el,index)=>{
               
-              let{serviceTypeCode,id,vendorId} = el
+              let{serviceTypeId,id,vendorId} = el
               
-              this.selectServerType(serviceTypeCode,index)
+              this.selectServerType(serviceTypeId,index)
               let data = {
-                "serviceTypeId":serviceTypeCode,
+                "serviceTypeId":serviceTypeId,
                 "vendorId":vendorId,
                 "vendorProductId":id
               }

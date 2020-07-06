@@ -288,6 +288,20 @@ import {mapState,mapMutations} from 'vuex'
                   icon:'fa-camera-retro',
                   path:'/cope-bill',
                   name:'copeBill',
+                },{
+                  title:'COPE_F',
+                  authorityText:'/product/product-quotations',
+                  id:'8-4',
+                  icon:'fa-camera-retro',
+                  path:'/home',
+                  name:'copeBill',
+                },{
+                  title:'COPE_L',
+                  authorityText:'/product/product-quotations',
+                  id:'8-5',
+                  icon:'fa-camera-retro',
+                  path:'/cost-entry',
+                  name:'costEntry',
                 }
              ],
              id:'8',

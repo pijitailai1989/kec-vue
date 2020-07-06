@@ -79,7 +79,7 @@
          <kec-button-click 
          text="订单导入" icon="fa-file-excel-o" background="#67c23a" @click="eqitFunc('importEexDialog')" color="#fff"></kec-button-click> -->
          <kec-button-click :disabled="selectIndex===null" 
-         text="修改订单" icon="fa-pencil" @click="eqitFunc('orderDialog')" background="#17A2B8" color="#fff"></kec-button-click>
+         text="修改订单" icon="fa-pencil" @click="eqitFunc('orderDialog',selectItem.id)" background="#17A2B8" color="#fff"></kec-button-click>
          <!-- <el-popover
           placement="left-start"
           width="160"
@@ -160,15 +160,13 @@ import axios from '@/http/config'
              1:'120px',
              2:'120px',
              3:'200px',
-             4:'140px',
-             6:'100px'
            },
            lastWidth:'100px',
            tableHeader:{
              orderNum:{"title":'订单跟踪号','slot':false,'sort':'ZH'},
              productCode:{"title":'产品编码','slot':false,'sort':'OTHER'},
              channelCode:{"title":'渠道编码','slot':false,'sort':'OTHER'},
-             referenceNumber:{"title":'客户参考号','slot':false,'sort':'OTHER'},
+            //  referenceNumber:{"title":'客户参考号','slot':false,'sort':'OTHER'},
              orderDate:{"title":'预报时间','slot':false},
              customerName:{"title":'客户','slot':false,'sort':'ZH'}
            },
@@ -217,13 +215,15 @@ import axios from '@/http/config'
     },
 
     methods: {
-        ...mapActions('order',['loadGetOrders','loadGetQueryLevelTwo','loadGetProductBrief','loadGetCustomerBrief','loadDeleteOrders']),
+        ...mapActions('order',['loadGetOrders','loadGetQueryLevelTwo','loadGetOrdersInfo',
+        'loadGetProductBrief','loadGetCustomerBrief','loadDeleteOrders']),
         ...mapMutations('order',['setOrderInfo']),
         ...mapActions('basic',['loadGetTags']),
         
         handleCurrentChange(page){
           this.PageNum = page ;
-          this.mountFunc(this.PageSize,page)
+          const _ = this ;
+          this.mountFunc(_.PageSize,_.PageNum,_.productCode,_.stateId,_.customerId,_.startDate,_.endDate,_.orderNum,_.referenceNumber)
         },
         selectCommand(type){
           let url = axios.defaults.baseURL ;
@@ -265,9 +265,9 @@ import axios from '@/http/config'
             let {content,totalElements} = _.orderList;
             
             _.order_list = content.map(item=>{
-              let {aPackage:{referenceNumber},product:{code}} = item 
-              item['referenceNumber'] = referenceNumber ;
-              item['productCode'] = code ;
+              // let {aPackage:{referenceNumber},product:{code}} = item 
+              // item['referenceNumber'] = referenceNumber ;
+              // item['productCode'] = code ;
               return item ;
             }) ;
             _.total = totalElements ;
@@ -286,14 +286,15 @@ import axios from '@/http/config'
           this.componentName = 'orderDialog'
           data && this.mountFunc(this.PageSize,1)
         },
-        eqitFunc(str){
+        eqitFunc(str,id){
            this.componentName = str ; 
            if(str === 'orderDialog'){
-              this.setOrderInfo(this.selectItem)
+              // this.setOrderInfo(this.selectItem)
+              this.loadGetOrdersInfo([id])
               this.textItem = '修改订单'
            }else{
               this.textItem = '订单导入'
-              this.setOrderInfo(null)
+              // this.setOrderInfo(null)
            }
            this.dialogVisible = true
            
@@ -304,13 +305,14 @@ import axios from '@/http/config'
         },
         delFunc(){
           let {length} = this.order_list ;
+          const _ = this ;
           if(this.selectIndex!==null) {
             this.loadDeleteOrders({data:{id:this.selectItem.id}}).then(success=> {
                    this.selectIndex = null ;
                    if(length == 1){
                      this.PageNum >=2 && this.PageNum -- ;
                    }
-                   this.mountFunc(this.PageSize,this.PageNum)
+           _.mountFunc(_.PageSize,_.PageNum,_.productCode,_.stateId,_.customerId,_.startDate,_.endDate,_.orderNum,_.referenceNumber)
                    this.$message( {
                     message: success,
                     type: 'success'

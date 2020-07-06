@@ -33,7 +33,7 @@
                   </template>
                 </kec-form>
 
-                <kec-form crosswise text="服务分区" width="80px">
+                <!-- <kec-form crosswise text="服务分区" width="80px">
                   <template #input>
                     <el-select v-model="id" disabled
                      size="medium" 
@@ -46,7 +46,7 @@
                       </el-option>
                     </el-select>
                   </template>
-                </kec-form>
+                </kec-form> -->
               
               <!-- <kec-button-click :disabled="!vendorProductId" @click="clickConfirms(vendorProductId)" text="查询" style="width:60px"
                background="#17A2B8" color="#fff"></kec-button-click> -->
@@ -107,7 +107,7 @@
                               </template>
                             </kec-form>
                             </div>
-                            <div class="col-sm-7 flexs a-center" style="height:36px">
+                            <div class="col-sm-3 flexs a-center" style="height:36px">
                             <kec-form crosswise text="状态 :" width="80px" v-show="tabsIndex==0">
                               <template #input>
                                 <div class="flexs a-center">
@@ -120,6 +120,21 @@
                                 <div class="flexs a-center">
                                     <span>{{examineStatusString?examineStatusString:'无'}}</span>
                                 </div>
+                              </template>
+                            </kec-form>
+                            </div>
+                            <div class="col-sm-6">
+                            <kec-form crosswise text="分区方案" width="70px">
+                              <template #input>
+                                     <el-select v-model="statementsData.schemaIds" 
+                                      clearable multiple placeholder="" size="medium" style="width:100%">
+                                        <el-option
+                                        v-for="item in schemasList"
+                                        :key="item.id"
+                                        :label="item.schemaName"
+                                        :value="item.id">
+                                        </el-option>
+                                      </el-select>
                               </template>
                             </kec-form>
                             </div>
@@ -202,6 +217,15 @@
                                   }"
                                   style="width:100%">
                                   <el-table-column
+                                  label="序号"
+                                  width="50">
+                                  <template slot-scope="scope">
+                                     <div class="flexs j-center">
+                                       <span>{{statementsData.content.length - scope.$index}}</span>
+                                     </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
                                   prop="offerType"
                                   label="报价方式"
                                   width="121">
@@ -222,7 +246,31 @@
                                   width="100">
                                     
                                   </el-table-column>
-                                  
+                                  <el-table-column
+                                  prop="standardStateName"
+                                  label="货态">
+                                  </el-table-column>
+                                  <el-table-column
+                                  prop="tagName"
+                                  label="适用标签"
+                                  width="110">
+                                    <template slot-scope="scope">
+                                      <el-popover
+                                        v-show="scope.row.tagName.length>0"
+                                        placement="right"
+                                        width="300"
+                                        trigger="hover">
+                                        <div>
+                                          <el-tag class="pr" type="info" size="small" 
+                                          v-for="(name,i) of scope.row.tagName" 
+                                          :key="i">{{name}}</el-tag>
+                                        </div>
+                                        <el-tag class="pr ell" type="info" slot="reference" size="small">
+                                          {{scope.row.tagName[0]}}
+                                        </el-tag>
+                                      </el-popover>
+                                    </template>
+                                  </el-table-column>
                                   <el-table-column
                                   prop="chargeItemName"
                                   label="收费项">
@@ -307,11 +355,19 @@
                                       </template>
                                     </el-table-column>
                                     <el-table-column
-                                  width="80"
+                                  width="140"
                                   fixed="right"
                                   label="操作">
                                   <template slot-scope="scope">
                                      <div class="flexs">
+                                        <el-button size="mini" v-if="scope.row.offerType==='ECHELON'"
+                                        type="warning"
+                                        @click.native="dislogFunC('编辑阶梯报价',true,'ladderQuotation',scope.row)"
+                                        >编辑</el-button>
+                                        <el-button size="mini" v-else
+                                        type="warning"
+                                        @click.native="dislogFunC('编辑单一报价',true,'onlyQuotation',scope.row)"
+                                        >编辑</el-button>
                                       <kec-del-popover content="确定要删除?" 
                                    @click="delFunc"
                                    :date="{priceId:scope.row.id,
@@ -341,13 +397,20 @@
         </kec-tabs>
         
     </div>
-   
+    <component :is="componentName" 
+    :dialogVisible="dialogVisible" 
+    @close="cancelFunc" 
+    :item="itemData"
+    :text="textItem"
+    ></component>
   </kec-scroll>
 </template>
 
 <script>
 import {mapState,mapActions,mapMutations} from 'vuex'
 import {KecButton , KecTable ,KecScroll,KecTabs ,KecButtonClick,KecForm,KecDelPopover}  from '@/common/components'
+import ladderQuotation from './ladderQuotation'
+import onlyQuotation from './onlyQuotation'
 import {formateDate} from '@/utils/fun'
   export default {
     name:'costList',
@@ -360,8 +423,8 @@ import {formateDate} from '@/utils/fun'
            popoverId:'',
            visible:true,
            options:[
-             {code:'ALL_DO',name:'包干'},   
-             {code:'SEPARATE',name:'分项'}
+             {code:'ALL_DO',name:'单一'},   
+             {code:'ECHELON',name:'阶梯'}
            ],
            tabsIndex:0,
            tableHeader:{
@@ -379,18 +442,24 @@ import {formateDate} from '@/utils/fun'
            list:[],
            examineStatusString:'',
            execDate:'',
+           schemaIds:[],
            letWidth:{},
            versionsText:['当前成本价'],
+           componentName:'',
+           dialogVisible:false,
+           textItem:'',
            id:null,
            statementsData:{
              "content":[],
              "examineStatusString":"",
              "execDate":'',
              "partitionName":"",
+             "schemaIds":[],
              "id":null
            },
            serverType:null,
-           chargeItemIds:[]
+           chargeItemIds:[],
+           itemData:null
       };
     },
 
@@ -401,12 +470,14 @@ import {formateDate} from '@/utils/fun'
         KecScroll,
         KecForm,
         KecTabs,
-        KecDelPopover
+        KecDelPopover,
+        ladderQuotation,
+        onlyQuotation
     },
 
     computed: {
       ...mapState('basic',['supplierList','currencyList','serverList']),
-      ...mapState('vendor',['vendorProductList','statementsList','versionstList','versionstTwoList']),
+      ...mapState('vendor',['vendorProductList','statementsList','versionstList','versionstTwoList','schemasList']),
       ...mapState('home',['themeColor']),
       ...mapState('channels',['chargeItemsList'])
       
@@ -419,14 +490,20 @@ import {formateDate} from '@/utils/fun'
       this.loadVendorGetVendors()
       this.loadDictionaryCURRENCY()
       this.loadQueryServerTypes()
+      this.loadGetQueryLevelTwo()
+      this.loadEnumsTagTypes()
+      this.loadGetPartitionSchemasAll({partitionType:"vendor"})
+      // this.loadGetTags({pageSize:10000,pageNumber:1})
     },
 
     methods: {
-        ...mapActions('vendor',['loadGetVendorProducts','loadGetCostStatements',
+        ...mapActions('vendor',['loadGetVendorProducts','loadGetCostStatements','loadGetPartitionSchemasAll',
         'loadPutCostStatements','loadGetCostStatementsVersions','loadPutRecall','loadPutEexamine','loadPutSubmit',
         'loadGetCostStatementsVersionsTwo','loadPostCostStatementsPrice','loadDeleteCostStatementsPrice']),
-        ...mapActions('basic',['loadVendorGetVendors','loadDictionaryCURRENCY','loadQueryServerTypes']),
+        ...mapActions('basic',['loadVendorGetVendors','loadDictionaryCURRENCY','loadQueryServerTypes','loadGetTags','loadEnumsTagTypes']),
         ...mapActions('channels',['loadGetChargeItems']),
+        ...mapActions('order',['loadGetQueryLevelTwo']),
+        ...mapMutations('basic',['filterTags']),
         addItem(quotationId,chargeItemIds,productId){
           let data = {quotationId,chargeItemIds}
           this.loadPostCostStatementsPrice(data).then(success=>{
@@ -470,15 +547,19 @@ import {formateDate} from '@/utils/fun'
          _this.id = null ;
          _this.serverType = null
          _this.chargeItemIds = []
+         
          _this.loadGetCostStatements([vendorProductId]).then(success=>{
            if(_this.statementsList.length){
               if(!ids){
-                 let { content ,examineStatusString,execDate,partitionName,id} = _this.statementsList[0] ;
-                 _this.statementsData = { content ,examineStatusString,execDate,partitionName,id} ;
+                 let { content ,examineStatusString,execDate,partitionName,id,schemaIds} = _this.statementsList[0] ;
+                 _this.statementsData = { content ,examineStatusString,execDate,partitionName,id,schemaIds} ;
                  
                  _this.tabsIndex = 0
                  _this.id = id ;
                  _this.loadGetCostStatementsVersions([id]).then(succes=>{
+                   _this.loadGetTags({pageSize:10000,pageNumber:1}).then(success=>{
+                      _this.filterTags(_this.statementsData.schemaIds)
+                    })
                     let arr = []
                     arr = _this.versionstList.map(item=>{
                         return item.name
@@ -498,6 +579,7 @@ import {formateDate} from '@/utils/fun'
                 "examineStatusString":"",
                 "execDate":'',
                 "partitionName":"",
+                "schemaIds":[],
                 "id":null
               }
            }
@@ -519,6 +601,9 @@ import {formateDate} from '@/utils/fun'
             _this.statementsData = _this.statementsList.find(item=> { return id == item.id })
 
             _this.loadGetCostStatementsVersions([id]).then(succes=>{
+               _this.loadGetTags({pageSize:10000,pageNumber:1}).then(success=>{
+                      _this.filterTags(_this.statementsData.schemaIds)
+                    })
                 let arr = []
                 arr = _this.versionstList.map(item=>{
                     return item.name
@@ -542,7 +627,7 @@ import {formateDate} from '@/utils/fun'
             
         },
         modificationFunc(vendorProductId,statementsData){
-           let {execDate,content,id} = statementsData ;
+           let {execDate,content,id,schemaIds} = statementsData ;
            if(vendorProductId && statementsData){
              
              let contents = content.map(item =>{
@@ -551,7 +636,7 @@ import {formateDate} from '@/utils/fun'
                let data = {id,unitPrice:parseFloat(unitPrice),currency,offerType,volumeWeightStatus,volumeWeightFactory,unitRate}
                return data
              })
-             let date = {vendorProductId,execDate:formateDate(execDate),content:contents,id}
+             let date = {vendorProductId,execDate:formateDate(execDate),content:contents,id,schemaIds}
              this.loadPutCostStatements(date).then(success=>{
                     this.clickConfirms([this.vendorProductId],id)
                     this.$message( {
@@ -573,9 +658,9 @@ import {formateDate} from '@/utils/fun'
               let i = index - 1 ;
               let {code} = this.versionstList[i] ;
               this.loadGetCostStatementsVersionsTwo([this.id,code]).then(success => {
-                let { content ,examineStatusString,execDate,partitionName,id} = this.versionstTwoList ;
+                let { content ,examineStatusString,execDate,partitionName,id,schemaIds} = this.versionstTwoList ;
                 this.list = content ;
-
+                this.schemaIds = schemaIds ;
                 this.examineStatusString = examineStatusString ;
                 this.execDate = execDate ;
 
@@ -592,6 +677,7 @@ import {formateDate} from '@/utils/fun'
              "examineStatusString":"",
              "execDate":'',
              "partitionName":"",
+             "schemaIds":[],
              "id":null
            }
           this.loadGetVendorProducts([ventorsId])
@@ -618,8 +704,10 @@ import {formateDate} from '@/utils/fun'
            _.tableRole = result ;
         },
         
-        dislogFunC(text,bool,component,type) {
-          this.textType = type ;
+        dislogFunC(text,bool,component,item) {
+          this.$nextTick(()=>{
+             this.itemData = item ;
+          })
           this.textItem = text ;
           this.dialogVisible = bool ;
           this.componentName = component ;
@@ -628,14 +716,11 @@ import {formateDate} from '@/utils/fun'
           this.dialogVisible = false ;
           this.$refs.singleTable.setCurrentRow();
           this.textItem = '' ;
-          this.textType = ''
+          this.itemData = null ;
           this.itemObj = null ; 
-
+          bool && this.clickConfirms(this.vendorProductId)
           bool && ( this.roleId = null )
           bool && ( this.routerPath = '' )
-          bool && ( this.loadGetPermission().then(success=>{
-                    this.tableRole = this.permissionList
-                  }) )
         },
         checkRole(id,bool){
           const _ = this ;
@@ -708,4 +793,14 @@ import {formateDate} from '@/utils/fun'
    width calc(100vw - 20px)
   .tableHeader 
    width calc(100vw - 24px)
+
+ .pr+.pr
+    margin-left 5px  
+    margin-bottom 5px
+ .ell 
+    width 80px
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
+    cursor pointer
 </style>

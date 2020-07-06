@@ -17,7 +17,7 @@
       <template>
          <div class="row">
             <div class="col-sm-12">
-                <kec-form crosswise width="70px" text="产品">
+                <kec-form crosswise width="100px" text="产品">
                   <template #input>
                     <el-select v-model="payload.productId" 
                    disabled placeholder="" size="medium" style="width:100%">
@@ -33,7 +33,7 @@
             </div>
             
             <div class="col-sm-12">
-                <kec-form crosswise width="70px" text="目的国">
+                <kec-form crosswise width="100px" text="目的地区/国家">
                 <template #input>
                   <el-select v-model="payload.destinationCountryIds" 
                   multiple placeholder="" size="medium" style="width:100%">
@@ -48,22 +48,22 @@
                 </kec-form>
             </div>
             <div class="col-sm-12">
-                <kec-form crosswise width="70px" text="分区">
+                <kec-form crosswise width="100px" text="分区方案">
                 <template #input>
-                  <el-select v-model="payload.partitionIds" 
+                  <el-select v-model="payload.schemaIds" 
                    multiple placeholder="" size="medium" style="width:100%">
                     <el-option
                       v-for="item in countryPartitionList.partitionList"
                       :key="item.id"
-                      :label="item.partitionName"
-                      :value="item.id">
+                      :label="item.schemaName"
+                      :value="item.schemaId">
                     </el-option>
                   </el-select>
                 </template>
                 </kec-form>
             </div>
             <div class="col-sm-12">
-                <kec-form crosswise width="70px" text="描述">
+                <kec-form crosswise width="100px" text="描述">
                   <template #input>
                     <el-input v-model="payload.description"
                     type="textarea"
@@ -92,7 +92,7 @@ import {KecForm, KecButton ,KecDialog}  from '@/common/components'
            productId:null,
            description: "",
            destinationCountryIds:[],
-           partitionIds:[]
+           schemaIds:[]
         }
       };
     },
@@ -121,13 +121,13 @@ import {KecForm, KecButton ,KecDialog}  from '@/common/components'
            productId:null,
            description: "",
            destinationCountryIds:[],
-           partitionIds:[]
+           schemaIds:[]
         }
       },
       clickConfirm() {
         const _this = this ;
-        let { productId,description,destinationCountryIds,partitionIds} = _this.payload ;
-        let data = {productId,description,destinationCountryIds,partitionIds}
+        let { productId,description,destinationCountryIds,schemaIds} = _this.payload ;
+        let data = {productId,description,destinationCountryIds,schemaIds}
                 _this.loadPostProductQuotation(data).then(success=>{
                    this.$emit('close',true)
                    this.closeData()

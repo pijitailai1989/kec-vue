@@ -1,7 +1,7 @@
 <template>
   <div class="drags flexs a-center j-center">
-     <div class="box" :style="{width:boxWidth}" id="myDrag" @mousedown="downFunc">
-       <div class="tops" :style="{borderColor:themeColor.content_border_color}">
+     <div class="box" :style="{width:boxWidth}" id="myDrag">
+       <div class="tops" :style="{borderColor:themeColor.content_border_color}" @mousedown="downFunc">
           <slot name="title"></slot>
        </div>
        <div class="centers">

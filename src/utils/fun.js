@@ -22,7 +22,7 @@ export function themeColor(url){
             copy_background_color:'#000',
             copy_text_color:'#fff',
             content_background_color:'#eee',
-            content_table_color:'#FAE1CB',
+            content_table_color:'#FFEBCD',
             content_border_color:'#ED6D01',
             content_text_color:'#333'
         }
@@ -143,4 +143,18 @@ export function sortCompare(data,type,fn){
            break;
    } 
    return arr
+}
+
+export function getClientHeight()
+{
+  var clientHeight=0;
+  if(document.body.clientHeight&&document.documentElement.clientHeight)
+  {
+  var clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+  }
+  else
+  {
+  var clientHeight = (document.body.clientHeight>document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+  }
+  return clientHeight;
 }

@@ -178,7 +178,7 @@ import addProduct from './addProduct'
       this.loadQueryServerTypes()
       this.loadGetVendorProducts([this.ventorsId])
       // this.loadGetPartitionSchemas({pageSize:100,pageNumber:1})
-      this.loadGetPartitionSchemasAll()
+      this.loadGetPartitionSchemasAll({partitionType:"vendor"})
     },
 
     methods: {

@@ -115,7 +115,14 @@ import contractApprove from './contractApprove'
            types:'',
            componentName:'KecContract',
            letWidth:{
-             0:'60px'
+             0:'80px',
+             1:'120px',
+             2:'100px',
+             4:'70px',
+             6:'80px',
+             9:'100px',
+             10:"100px"
+
            },
            lastWidth:'',
            tableHeader:{
@@ -125,7 +132,7 @@ import contractApprove from './contractApprove'
              customercompanyName:{"title":'客户名称','slot':false,'sort':'ZH'},
              customerType:{"title":'客户类','slot':false},
              servicerName:{"title":'销售代表','slot':false},
-             paymentPeriod:{"title":'账期','slot':false},
+            //  paymentPeriod:{"title":'账期','slot':false},
              managerName:{"title":'客户经理','slot':false},
              productName:{"title":'服务产品','slot':false},
              effectiveDate:{"title":'生效日期','slot':false},
@@ -169,16 +176,18 @@ import contractApprove from './contractApprove'
     mounted() {
       this.mountFunc(this.PageSize,this.PageNum)
       this.loadCustomerQueryAll({status:'ENABLED'})
-      this.loadGetUsersByRoleCodeSALES()
-      this.loadGetUsersByRoleCodeSERVICE()
+      // this.loadGetUsersByRoleCodeSALES()
+      // this.loadGetUsersByRoleCodeSERVICE()
       this.loadCountryQueryAll()
       this.loadDictionaryCURRENCY()
       this.loadGetBillCycles()
+      this.loadGetOperation()
+      this.loadGetService()
     },
 
     methods: {
-        ...mapActions('customer',['loadPostAgreementQueryPage','loadGetUsersByRoleCodeSALES','loadGetUsersByRoleCodeSERVICE']),
-        ...mapActions('basic',['loadCustomerQueryAll','loadCountryQueryAll','loadDictionaryCURRENCY']),
+        ...mapActions('customer',['loadPostAgreementQueryPage','loadGetUsersByRoleCodeSALES','loadGetUsersByRoleCodeSERVICE','loadGetFindAll']),
+        ...mapActions('basic',['loadCustomerQueryAll','loadCountryQueryAll','loadDictionaryCURRENCY','loadGetOperation','loadGetService']),
         ...mapActions('vendor',['loadGetBillCycles']),
         handleCurrentChange(page){
           this.PageNum = page ;
@@ -285,10 +294,12 @@ import contractApprove from './contractApprove'
           this.selectItem = null ;
           this.selectItems = null ;
           this.componentName = 'KecContract'
+          
           this.dialogVisible = false ;
           if(data.bool) {
             if(data.type === 'addVisible') this.PageNum = 1 ;
             this.mountFunc(this.PageSize,this.PageNum)
+            this.loadGetFindAll()
           }
           if(data.type){
               this[data.type] = false ;

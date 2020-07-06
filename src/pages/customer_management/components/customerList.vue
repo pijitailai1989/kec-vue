@@ -49,9 +49,8 @@
             <template v-slot:default="slotProps">
               {{slotProps.item}}
             </template>
-            <template v-slot:a="slotProps">
-              <kec-button text="操作" icon="fa-trash-o" background="#F18A33" color="#fff"></kec-button>
-              <span>{{slotProps.item}}</span>
+            <template v-slot:type="slotProps">
+              <span>{{slotProps.item==='PEER'?'同行':'直客'}}</span>
             </template>
           </kec-table>
     </div>
@@ -72,11 +71,11 @@ import KecCustomer from './addCustomer'
            addVisible:false,
            changeVisible:false,
            letWidth:{
-             "0":"60px"
+             "0":"80px"
            },
            lastWidth:'',
            tableHeader:{
-           id:{"title":'id','slot':false},
+           id:{"title":'ID','slot':false},
            companyName:{"title":'公司名称','slot':false,'sort':'ZH'},
            customer_code:{"title":'客户编码','slot':false,'sort':'ZH'},
            contactName:{"title":'联系人','slot':false,'sort':'ZH'},

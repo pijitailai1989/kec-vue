@@ -74,9 +74,9 @@ import addChannel from './addChannel'
            lastWidth:'',
            tableHeader:{
              id:{"title":'ID','slot':false},
-             channelName:{"title":'备注','slot':false},
+             channelName:{"title":'资源组名称','slot':false},
              channelCode:{"title":'资源组编号','slot':false},
-             a:{"title":'供应商产品','slot':false},
+            //  a:{"title":'供应商产品','slot':false},
             //  averageCostVolume:{"title":'平均成本','slot':false},
             //  grossProfit:{"title":'毛利','slot':false},
             //  useTime:{"title":'时效','slot':false}
@@ -132,6 +132,7 @@ import addChannel from './addChannel'
                     type: 'warning'
                    });
             }else{
+              console.log(data.data,'data.data')
                this.tableData.push(data.data)
             }
           }

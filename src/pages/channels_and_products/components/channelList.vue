@@ -6,10 +6,10 @@
         @click.native="dislogFunC('新增资源组合',!dialogVisible,'ChannelDialog')" 
         background="#F18A33" 
         color="#fff"></kec-button>
-        <kec-button-click text="编辑" 
+        <kec-button-click text="编辑资源组合" 
         icon="fa-pencil" 
         :disabled="selectIndex===null"  
-        @click="dislogFunC('编辑',!dialogVisible,'ChannelDialog','eqit')" 
+        @click="dislogFunC('编辑资源组合',!dialogVisible,'ChannelDialog','eqit')" 
         background="#17A2B8" 
         color="#fff"></kec-button-click>
         <!-- <kec-button text="编辑成本" icon="fa-trash-o" background="#17A2B8" color="#fff"></kec-button>
@@ -20,10 +20,10 @@
     <div class="list">
       
         <kec-table 
-         height="251px"
+         height="283px"
          :tableHeader="tableHeader" 
          :lastWidth="lastWidth" 
-         :tableData="channelsList" 
+         :tableData="channelLists" 
          :letWidth="letWidth"
          :selectIndex="selectIndex"
          @active-item="activeItem"
@@ -35,12 +35,32 @@
             {{slotProps.item}}
           </template>
           <template v-slot:vendorProduct="slotProps">
-                  <div class="flexs columns">
-                    <el-tag class="pr" type="info" size="small" v-for="(item,i) of slotProps.item" :key="i">{{item.name}}</el-tag>
-                  </div>
-                </template>
+                  <el-popover
+                    placement="left"
+                    width="300"
+                    v-show="slotProps.item.length>0"
+                    trigger="hover">
+                    <div v-if="slotProps.item.length>0">
+                      <el-tag class="pr" type="info" size="small"
+                       v-for="(item,i) of slotProps.item" :key="i"
+                       >{{item.name}}</el-tag>
+                    </div>
+                    <div v-else>
+                       <el-tag class="pr" type="info" size="small">暂无数据</el-tag>
+                    </div>
+                    <el-tag class="pr ell" type="info" slot="reference" size="small">{{slotProps.item[0]['name']}}</el-tag>
+                  </el-popover>
+          </template>
         </kec-table>
-      
+        <div class="flexs j-end">
+        <el-pagination
+          layout="prev, pager, next"
+          @current-change="handleCurrentChange"
+          :current-page.sync="PageNum"
+          :page-size="PageSize"
+          :total="total">
+        </el-pagination>
+      </div>
     </div>
     <component :is="componentName" :dialogVisible="dialogVisible" @closeFunc="cancelFunc" :text="textItem"></component>
   </div>
@@ -61,13 +81,14 @@ import ShareDialog from './shareDialog'
           componentName:'',
           tableData: [],
            letWidth:{
-             "0":"60px"
+             "0":"60px",
+             "2":"150px"
            },
            lastWidth:'',
            tableHeader:{
-             id:{"title":'id','slot':false},
+             id:{"title":'ID','slot':false},
             //  channelCode:{"title":'渠道编码','slot':false,'sort':'ZH'},
-             channelName:{"title":'备注','slot':false,'sort':'ZH'},
+             channelName:{"title":'资源组合名称','slot':false,'sort':'ZH'},
              vendorProduct:{"title":'供应商产品','slot':true},
             //  averageCostWeight:{"title":'成本','slot':false},
             //  averageCostVolume:{"title":'平均成本','slot':false},
@@ -77,7 +98,11 @@ import ShareDialog from './shareDialog'
            selectItem:null,
            selectIndex:null,
            selectItem:null,
-           textItem:''
+           textItem:'',
+           PageSize:20,
+           PageNum:1,
+           total:null,
+           channelLists:[]
              
       };
     },
@@ -91,11 +116,27 @@ import ShareDialog from './shareDialog'
     },
     computed: {
       ...mapState('home',['tabsShow']),
-      ...mapState('basic',['channelsList'])
+      ...mapState('basic',['channelsList','channelsObj'])
     },
     methods: {
-      ...mapActions('basic',['loadQueryServerTypes','loadChannelGetChannels']),
+      ...mapActions('basic',['loadQueryServerTypes','loadChannelGetChannels','loadGetChannels']),
       ...mapMutations('basic',['setChannelInfo']),
+      handleCurrentChange(page){
+          this.PageNum = page ;
+          this.mountFunc(this.PageSize,page)
+      },
+      mountFunc(size,num){
+        const _ = this ;
+        let data = {
+          pageSize:size,
+          pageNumber:num
+        }
+        _.loadGetChannels(data).then(success => {
+          let {content,totalElements} = _.channelsObj;
+          _.channelLists = content ;
+          _.total = totalElements ;
+        })
+      },
       dislogFunC(text,bool,component,type) {
           this.textItem = text ;
           this.dialogVisible = bool ;
@@ -109,7 +150,7 @@ import ShareDialog from './shareDialog'
          this.selectItem = null ;
          this.textItem = '' ;
          this.setChannelInfo(null)
-         propsBool && this.loadChannelGetChannels()
+         propsBool && this.mountFunc(this.PageSize,this.PageNum)
          
       },
       activeFunc(index) {
@@ -121,7 +162,8 @@ import ShareDialog from './shareDialog'
     },
     mounted(){
       this.loadQueryServerTypes()
-      this.loadChannelGetChannels()
+      this.mountFunc(this.PageSize,this.PageNum)
+      // this.loadChannelGetChannels()
     }
 
   }
@@ -142,6 +184,14 @@ import ShareDialog from './shareDialog'
    background #fff
  .kec-button+.kec-button 
    margin-left 10px
- .pr+.pr  
-     margin-top 2px
+ .pr+.pr
+    margin-left 5px  
+    margin-bottom 5px
+ .ell 
+    width 80px
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
+    cursor pointer
+
 </style>

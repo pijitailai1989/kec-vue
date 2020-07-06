@@ -43,7 +43,7 @@
                                 </template>
                               </kec-form>
                           </div>
-                          <div class="col-sm-12" v-show="types==='add'">
+                          <div class="col-sm-12">
                               <kec-form text="服务类型" width="120px" crosswise>
                                 <template #input>
                                   <el-select filterable v-model="payload.serviceTypeId" placeholder="" style="width:100%">
@@ -57,14 +57,14 @@
                                 </template>
                               </kec-form>
                           </div>
-                          <div class="col-sm-12" v-show="types==='eqit'">
+                          <!-- <div class="col-sm-12" v-show="types==='eqit'">
                               <kec-form text="服务类型" width="120px" crosswise>
                                 <template #input>
                                   <el-input disabled v-model="payload.serviceTypeText" ></el-input>
                                 </template>
                               </kec-form>
-                          </div>
-                          <div class="col-sm-12" v-show="types==='add'">
+                          </div> -->
+                          <div class="col-sm-12">
                               <kec-form text="分区方案" width="120px" crosswise>
                                 <template #input>
                                   <el-select filterable v-model="payload.schemaName" @change="schemaNameSelect" placeholder="" style="width:100%">
@@ -78,14 +78,14 @@
                                 </template>
                               </kec-form>
                           </div>
-                          <div class="col-sm-12" v-show="types==='eqit'">
+                          <!-- <div class="col-sm-12" v-show="types==='eqit'">
                               <kec-form text="分区方案" width="120px" crosswise>
                                 <template #input>
                                   <el-input disabled v-model="payload.schemaName"></el-input>
                                 </template>
                               </kec-form>
-                          </div>
-                          <div class="col-sm-12" v-show="types==='add'">
+                          </div> -->
+                          <div class="col-sm-12">
                               <kec-form text="服务分区" width="120px" crosswise>
                                 <template #input>
                                   <el-select filterable 
@@ -101,14 +101,14 @@
                                 </template>
                               </kec-form>
                           </div>
-                          <div class="col-sm-12" v-show="types==='eqit'">
+                          <!-- <div class="col-sm-12" v-show="types==='eqit'">
                               <kec-form text="服务分区" width="120px" crosswise>
                                 <template #input>
                                   <el-input disabled v-model="payload.partitionName"></el-input>
                                 </template>
                               </kec-form>
-                          </div>
-                          <div class="col-sm-12" v-show="types==='eqit'">
+                          </div> -->
+                          <!-- <div class="col-sm-12" v-show="types==='eqit'">
                               <kec-form text="状态" width="120px" crosswise>
                                 <template #input>
                                   <el-checkbox 
@@ -116,7 +116,7 @@
                                   >启用</el-checkbox>
                                 </template>
                               </kec-form>
-                          </div>
+                          </div> -->
                           <div class="col-sm-12">
                               <kec-form crosswise text="描述" width="120px">
                               <template #input>
@@ -240,7 +240,7 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                     })
               
            }else{
-             data = {name,description,id,enabled,vendorProductCode} ;
+             data = {name,description,id,enabled,vendorProductCode,serviceTypeId,servicePartitionId} ;
              
              _this.loadPutVendorProducts(data).then(success=>{
                   _this.$emit('closeFunc',true)
@@ -279,10 +279,16 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                 serviceTypeText:'',
             }
            if( val === 'eqit'){
-             let {id,name,description,enabled,serviceTypeCode,vendorProductCode,servicePartitionId,
-             partitionName,schemaName,serviceTypeText} = _.item ;
-             _.payload = {id,name,description,enabled,serviceTypeId:serviceTypeCode,vendorProductCode,
-             servicePartitionId,partitionName,schemaName,serviceTypeText}
+             let {id,name,description,enabled,serviceTypeId,vendorProductCode,servicePartitionId,
+             partitionName,schemaName,serviceTypeText,schemaId} = _.item ;
+             _.schemasList.forEach( (item,index) => {
+               if(schemaId === item.id){
+                 _.schemaNameSelect(index)
+               }
+             })
+             _.payload = {id,name,description,enabled,serviceTypeId,vendorProductCode,
+             servicePartitionId,partitionName,schemaName,serviceTypeText};
+             
            }
           //  let {content,totalElements} = _.schemasList;
           //     if(content && content.length){

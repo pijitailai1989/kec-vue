@@ -6,9 +6,10 @@
           <template #input>
             <div class="row borders err">
                 <div class="col-sm-12">
-                    <kec-form crosswise text="公司名称" width="80px">
+                    <kec-form crosswise text="公司名称" width="80px" star="star">
                       <template #input>
-                        <el-input v-model="payload.companyName" placeholder="" size="medium"></el-input>
+                        <el-input v-model="payload.companyName" class='v-check'
+                                        v-checkParam="{required:true}" placeholder="" size="medium"></el-input>
                       </template>
                     </kec-form>
                 </div>
@@ -34,9 +35,10 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form crosswise text="Email" width="80px">
+                    <kec-form crosswise text="Email" width="80px" star="star">
                       <template #input>
-                        <el-input v-model="payload.email" placeholder="" size="medium"></el-input>
+                        <el-input v-model="payload.email" placeholder="" class='v-check'
+                                        v-checkParam="{required:true}" size="medium"></el-input>
                       </template>
                     </kec-form>
                 </div>
@@ -55,9 +57,10 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form crosswise text="类型" width="80px">
+                    <kec-form crosswise text="类型" width="80px" star="star">
                     <template #input>
-                      <el-select v-model="payload.type" placeholder="" size="medium" style="width:100%">
+                      <el-select v-model="payload.type" placeholder="" class='v-check'
+                                        v-checkParam="{required:true}" size="medium" style="width:100%">
                         <el-option
                           v-for="(item,key) in types"
                           :key="key"
@@ -76,9 +79,10 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form crosswise text="客户编码" width="80px">
+                    <kec-form crosswise text="客户编码" width="80px" star="star">
                     <template #input>
-                      <el-input-number v-model="payload.customerCode" 
+                      <el-input-number v-model="payload.customerCode" class='v-check'
+                                        v-checkParam="{required:true}"
                       :controls="false" :min="1" :max="999999" style="width:100%"
                       placeholder="" size="medium"></el-input-number>
                     </template>
@@ -93,9 +97,10 @@
          <template #input>
            <div class="row borders err">
                 <div class="col-sm-6">
-                    <kec-form crosswise text="国家" width="80px">
+                    <kec-form crosswise text="国家" width="80px" star="star">
                       <template #input>
-                        <el-select v-model="payload.countryCode" @change="changeCountryCode" filterable placeholder="" style="width:100%">
+                        <el-select v-model="payload.countryCode" class='v-check'
+                                        v-checkParam="{required:true}" @change="changeCountryCode" filterable placeholder="" style="width:100%">
                           <el-option
                             v-for="item in countryList"
                             :key="item.code"
@@ -149,9 +154,10 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form crosswise text="邮政编码" width="80px">
+                    <kec-form crosswise text="邮政编码" width="80px" star="star">
                     <template #input>
-                      <el-input v-model="payload.postCode" placeholder=""></el-input>
+                      <el-input v-model="payload.postCode" class='v-check'
+                                        v-checkParam="{required:true}" placeholder=""></el-input>
                     </template>
                     </kec-form>
                 </div>
@@ -174,10 +180,15 @@
     </div>
     <div class="col-sm-12 flexs kec-btn">
        <kec-button 
-       @click.native="clickConfirm" 
+       v-checkSubmit
        :text="type==='addVisible'?'新增':'修改'" 
        icon="fa-floppy-o" 
        :background="type==='addVisible'?'#ED6D01':'#17A2B8'" color="#fff"></kec-button>
+       <!-- <kec-button 
+       @click.native="clickConfirm" 
+       :text="type==='addVisible'?'新增':'修改'" 
+       icon="fa-floppy-o" 
+       :background="type==='addVisible'?'#ED6D01':'#17A2B8'" color="#fff"></kec-button> -->
        <kec-button @click.native="clickClose" text="取消" icon="fa-undo" background="#6C757D" color="#fff"></kec-button>
     </div>
   </div>
@@ -259,6 +270,10 @@ import {KecForm, KecButton }  from '@/common/components'
                  "customerCode":""
         }
       },
+      submit(){
+          const _ = this ;
+          _.clickConfirm()
+        },
       clickConfirm() {
         const _this = this ;
         switch(_this.type){

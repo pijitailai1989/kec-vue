@@ -1,8 +1,9 @@
 import * as types from '../mutation-types'
-import api from '@/http/api'
+import api from '@/http'
 import { getPromiseAction ,getPromiseActionNoMutations} from '@/utils/promiseUtils'
 
 export default {
+  name:'vendor',
   namespaced: true,
   state() {
     return {
@@ -14,7 +15,10 @@ export default {
       schemasList:{},
       cyclesList:[],
       billList:[],
-      billItems:null
+      billItems:null,
+      productPricesList:[],
+      expensesList:[],
+      expenseType:[]
     }
   },
   getters: {
@@ -50,9 +54,35 @@ export default {
     },
     setVendorProductList(state,body){
       state.vendorProductList = body
-    }
+    },
+    [types.GET_PRODUCT_PRICES](state,body){
+      
+      state.productPricesList = body || [];
+    },
+
+    [types.GET_EXPENSES](state,body){
+      
+      state.expensesList = body || [];
+    },
+    [types.GET_EXPENSE_NUMBER_TYPE](state,body){
+      
+      state.expenseType = body || [];
+    },
   },
   actions: {
+    loadPostExpenses({commit},payload){
+      return getPromiseActionNoMutations (api.postExpenses(payload))
+    },
+    loadPutExpenses({commit},payload){
+      return getPromiseActionNoMutations (api.putExpenses(payload))
+    },
+    loadGetExpenses({commit},payload){
+      return getPromiseAction (api.getExpenses(payload),commit,types.GET_EXPENSES)
+    },
+    loadGetExpenseNumberType({commit},payload){
+      return getPromiseAction (api.getExpenseNumberType(payload),commit,types.GET_EXPENSE_NUMBER_TYPE)
+    },
+
     loadGetBillCycles({commit},payload){
       return getPromiseAction (api.getBillCycles(payload),commit,types.GET_BILL_CYCLES)
     },
@@ -67,6 +97,9 @@ export default {
     },
     loadPostApBills({commit},payload){
       return getPromiseActionNoMutations (api.postApBills(payload))
+    },
+    loadDeleteArBills({commit},payload){
+      return getPromiseActionNoMutations (api.deleteArBills(payload))
     },
     loadGetArBillsItems({commit},payload){
       return getPromiseAction (api.getArBillsItems(payload),commit,types.GET_AP_BILLS_ITEMS)
@@ -95,6 +128,19 @@ export default {
     },
     loadDeletePartitionSchemas({commit},payload){
       return getPromiseActionNoMutations (api.deletePartitionSchemas(payload))
+    },
+
+    loadGetProductPrices({commit},payload){
+      return getPromiseAction (api.getCostGradients(payload),commit,types.GET_PRODUCT_PRICES)
+    },
+    loadPostProductPrices({commit},payload){
+      return getPromiseActionNoMutations (api.postCostGradients(payload))
+    },
+    loadPutProductPrices({commit},payload){
+      return getPromiseActionNoMutations (api.putCostGradients(payload))
+    },
+    loadPutCostStatementsPrice({commit},payload){
+      return getPromiseActionNoMutations (api.putCostStatementsPrice(payload))
     },
     
     loadGetCostStatementsVersions({commit},payload){

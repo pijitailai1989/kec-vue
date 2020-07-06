@@ -102,7 +102,10 @@ import addExchanges from './addExchanges'
            dialogVisible:false,
            agreementLists:[],
            letWidth:{
-               0:'50px'
+               0:'60px',
+               5:'140px',
+               6:'140px',
+               7:'100px',
            },
            lastWidth:'',
            tableHeader:{

@@ -61,7 +61,7 @@
                     <kec-form text="组织类型">
                     <template #input>
                       
-                      <el-select v-model="payload.orgType" placeholder="" style="width:100%">
+                      <el-select v-model="payload.orgType"  clearable placeholder="" style="width:100%">
                         <el-option
                           v-for="item in options"
                           :key="item.code"
@@ -166,6 +166,9 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
           {code:'OPERATION',text:'运营主体'},
           {code:'CUSTOMER',text:'客户'},
           {code:'VENDOR',text:'供应商'},
+          {code:'INTERNAL',text:'内部部门-其他'},
+          {code:'SALES',text:'内部部门-销售部门'},
+          {code:'CUSTOMER_SERVICE',text:'内部部门-客服部门'},
         ]
         
       }
@@ -271,7 +274,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
         let {name,parentId,address,description,id,orgId,roleCode,orgType} = this.payload ;
         let data = {}
         if(type==='organization'){
-           data = { name,parentId,address,description,orgType}
+           data = { name,parentId,address,description,orgType:orgType?orgType:null}
            this.loadOrganizationCreate(data).then(success=>{
                    this.loadOrganizationQueryParent()
                    this.closeData()
@@ -286,7 +289,7 @@ import {KecForm, KecButton ,KecScroll,KecButtonNo }  from '@/common/components'
                    });
                 })
         }else if(type==='ORG'){
-          data = {name,address,description,id,orgType}
+          data = {name,address,description,id,orgType:orgType?orgType:null}
            this.loadOrganizationUpdate(data).then(success=>{
                    this.loadOrganizationQueryParent()
                    this.closeData()

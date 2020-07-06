@@ -68,7 +68,7 @@ import KecServer from './addServer'
            addVisible:false,
            changeVisible:false,
            letWidth:{
-             "0":"50px"
+             "0":"80px"
            },
            lastWidth:'',
            tableHeader:{

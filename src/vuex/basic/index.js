@@ -1,10 +1,11 @@
 import * as types from '../mutation-types'
-import api from '@/http/api'
+import api from '@/http'
 import { mGetDate , sortCompare} from '@/utils/fun'
 import { getPromiseAction ,getPromiseActionNoMutations} from '@/utils/promiseUtils'
 import { stat } from 'fs'
 
 export default {
+  name:'basic',
   namespaced: true,
   state() {
     return {
@@ -64,17 +65,42 @@ export default {
       vendorStateList:[],
       codeRuleObJ:{},
       chargeItemList:{},
+      chargeItemsList:{},
       customerInfoList:[],
       productByCustomerList:[],
       accountObjectList:[],
       queryItemList:[],
-      relationList:[]
+      relationList:[],
+      operationList:[],
+      service:{},
+      channelsObj:{}
     }
   },
   getters: {
     
   },
   mutations: {
+    getChannels(state,body){
+      state.channelsObj = body || {}
+    },
+    setOperationList(state,body){
+      state.operationList = body || [] ;
+    },
+    setService(state,body){
+      let arrs = body || []
+      let obj = {}
+       if(arrs){
+        arrs.forEach(el=>{
+            if(!obj[el['type']]){
+              obj[el['type']] = []
+            } 
+            
+            let arr = obj[el['type']]
+            arr.push(el)
+            })
+        state.service = obj;
+       }
+    },
     setUserInfo(state,data){
       state.userInfo = data;
     },
@@ -125,9 +151,10 @@ export default {
       let {index,months,value} = data;
       arr[months-1][index]['value'] = value === 0 ? 1 : 0 ;
       state.workDays = arr || [];
+      
     },
     [types.GET_WORKDAYS](state,body){
-      let arr = body.days ;
+      let arr = body.days || [] ;
       let newArr = arr.map( (item,index) => {
         let data = {
           value:parseInt(item),
@@ -151,7 +178,7 @@ export default {
          el['days'] = itemIndex + 1 ;
         })
        })
-       state.workDays = newarrays || [] ;
+       state.workDays = arr.length?newarrays:[] ;
     },
     [types.CHARGE_UNITES](state,body){
        state.unitsList = body || [] ;
@@ -196,7 +223,16 @@ export default {
       state.vendorsList = body || {} ;
     },
     [types.CHANNEL_GET_CHANNELS](state,body){
-      state.channelsList = body || [] ;
+      let arr = body.map(item => {
+        // let {vendorProduct} = item ;
+        // let arrs = []
+        // vendorProduct.forEach( todo => {
+        //   arrs.push(todo.name)
+        // })
+        // item['vendorProductName'] = arrs ;
+        return item ;
+      })
+      state.channelsList = arr || [] ;
     },
     [types.ORGANIZATION_QUERY_PARENT](state,body){
       state.organizationList = body || [] ;
@@ -221,10 +257,37 @@ export default {
     },
     [types.GET_TAGS](state,body){
       state.tagsData = body || {} ;
-      let arrs = body.content || []
+      let arrs = state.tagsData.content || []
       let obj = {}
        if(arrs){
         arrs.forEach(el=>{
+            if(!obj[el['tagTypeCode']]){
+              obj[el['tagTypeCode']] = []
+            } 
+            
+            let arr = obj[el['tagTypeCode']]
+            arr.push(el)
+            })
+        state.tagTypeClass = obj;
+       }
+    },
+    filterTags(state,body){
+      let arr = state.tagsData.content
+      let newArr = []
+      newArr = arr.filter(item=>{
+        return item.tagTypeCode !== 13;
+      })
+      body.forEach(item=>{
+        arr.forEach(todo=>{
+          if( parseInt(todo.tagValue) == item){
+            newArr.push(todo)
+          }
+        })
+      })
+      state.tagsData.content = newArr ;
+      let obj = {}
+       if(newArr){
+        newArr.forEach(el=>{
             if(!obj[el['tagTypeCode']]){
               obj[el['tagTypeCode']] = []
             } 
@@ -298,7 +361,14 @@ export default {
       state.routerPathList = body || [];
     },
     [types.GET_CHARGE_ITEM](state,body){
-      state.chargeItemList = body || [];
+      state.chargeItemList = body || {};
+    },
+    filterItem(state,body){
+      let {content} = state.chargeItemList;
+      
+      state.chargeItemsList = content.filter(item => {
+        return item.receiptsDirection === body
+      })
     },
     [types.GET_PERMISSON_ROLE](state,body){
       let {permissionList} = state;
@@ -371,6 +441,16 @@ export default {
     },
   },
   actions: {
+    loadGetChannels({commit},payload){
+      return getPromiseAction (api.getChannels(payload),commit,'getChannels')
+    },
+    loadGetOperation({commit},payload){
+      return getPromiseAction (api.getOperation(payload),commit,'setOperationList')
+    },
+    loadGetService({commit},payload){
+      return getPromiseAction (api.getService(payload),commit,'setService')
+    },
+
     loadGetComparativeRelation({commit},payload){
       return getPromiseAction (api.getComparativeRelation(payload),commit,types.GET_COMPARATIVE_RELATION)
     },
@@ -667,6 +747,12 @@ export default {
     },
     loadProducts({commit},payload){
       return getPromiseAction (api.products(payload),commit,types.PRODUCTS)
+    },
+    loadProductsId({commit},payload){
+      return getPromiseAction (api.productsId(payload),commit,'setProductsInfo')
+    },
+    loadProductsSimpleList({commit},payload){
+      return getPromiseAction (api.productsSimpleList(payload),commit,types.PRODUCTS)
     },
     loadPostProducts({commit},payload){
       return getPromiseActionNoMutations (api.postProducts(payload))

@@ -93,7 +93,7 @@
                    <kec-form text="费用触发货态" star="star">
                     <template #input>
                       
-                      <el-select v-model="payload.standardStateIds" 
+                      <el-select v-model="payload.standardStateId" 
                       class='v-check'
                       v-checkParam="{required:true}"
                       filterable
@@ -213,7 +213,7 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
            "currency":"",
            "unitRate":"",
            "chargeItemAccountingWay":"",
-           "standardStateIds":null,
+           "standardStateId":null,
            "tagIds":[]
          },
         multipleSelection: [],
@@ -262,7 +262,7 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
 
     methods: {
         ...mapActions('basic',['loadEnumsTagTypes']),
-        ...mapActions('channels',['loadPutProductPricesItem']),
+        ...mapActions('vendor',['loadPutCostStatementsPrice']),
         cancel(bool) {
             this.$emit('close',bool)
             this.payload = {
@@ -272,7 +272,7 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
               "currency":"",
               "unitRate":"",
               "chargeItemAccountingWay":"",
-              "standardStateIds":null,
+              "standardStateId":null,
               "tagIds":[]
             }
             this.typeCode = null
@@ -300,7 +300,7 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
           const _ = this ;
           let {ledgerSubjectName,
             ledgerSubjectNumber,
-            standardStateIds,
+            standardStateId,
             tagIds,
             id,
             unit,
@@ -312,21 +312,21 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
             this.payload = {
                 ledgerSubjectName,
                 ledgerSubjectNumber,
-                standardStateIds,
+                standardStateId,
                 unit,
                 id,
                 currency,
                 unitRate,
-                tagIds,
+                tagIds:tagIds?tagIds:[],
                 chargeItemAccountingWay}
             
 
         },
         clickConfirm(payload){
            const _this = this ;
-           let {id,tagIds,standardStateIds} = payload ;
-           let data = {id,tagIds,standardStateIds} ;
-                _this.loadPutProductPricesItem(data).then(success=>{
+           let {id,tagIds,standardStateId} = payload ;
+           let data = {id,tagIds,standardStateId} ;
+                _this.loadPutCostStatementsPrice(data).then(success=>{
                       this.cancel(true)
                       _this.$message( {
                         message: success,

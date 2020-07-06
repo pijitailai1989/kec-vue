@@ -40,6 +40,7 @@ import {KecForm, KecButton }  from '@/common/components'
         payload : {
            "id": null,
            "channelCode": null,
+           "channelName": null,
            "averageCostWeight": 2,
            "averageCostVolume": 3,
            "grossProfit": 6,
@@ -71,6 +72,7 @@ import {KecForm, KecButton }  from '@/common/components'
         this.payload = {
            "id": null,
            "channelCode": null,
+           "channelName": null,
            "averageCostWeight": 2,
            "averageCostVolume": 3,
            "grossProfit": 6,
@@ -83,6 +85,7 @@ import {KecForm, KecButton }  from '@/common/components'
         this.payload = {
            "id": result.id,
            "channelCode": result.channelCode,
+           "channelName": result.channelName,
            "averageCostWeight": 2,
            "averageCostVolume": 3,
            "grossProfit": 6,

@@ -28,9 +28,9 @@
     <div class="kec-content">
         <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
           <div-sort class="padd" style="width:119px" @clickSort="sortFunc" :sortType="{a:'countryCode',b:'ZH'}">国家编码</div-sort>
-          <div-sort class="padd" style="width:120px" @clickSort="sortFunc" :sortType="{a:'schemaName',b:'ZH'}">方案名称</div-sort>
-          <div class="padd" style="width:100px">分区类型</div>
-          <div class="padd flx">分区名</div>
+          <div-sort class="padd flx" @clickSort="sortFunc" :sortType="{a:'schemaName',b:'ZH'}">方案名称</div-sort>
+          <div class="padd" style="width:150px">分区类型</div>
+          <div class="padd" style="width:120px">分区名</div>
 
         </div>
         <kec-scroll :numbers="260" style="border-bottom:1px solid #EBEEF5">
@@ -59,13 +59,12 @@
               </el-table-column>
               <el-table-column
               prop="schemaName"
-              width="120"
               label=""
               >
               </el-table-column>
               <el-table-column
               label=""
-              width="100"
+              width="150"
               >
               <template slot-scope="scope">
                   <div class="flexs">
@@ -75,13 +74,22 @@
               </el-table-column>
               <el-table-column
               label=""
-              >
+              width="120">
               <template slot-scope="scope">
-                  <div class="flexs">
-                    <el-tag class="pr" type="info" size="small" 
-                    v-for="(name,i) of scope.row.partitionList" 
-                    :key="i">{{name.partitionName}}</el-tag>
-                  </div>
+                  <el-popover
+                    v-show="scope.row.partitionNames.length>0"
+                    placement="left"
+                    width="400"
+                    trigger="hover">
+                    <div>
+                      <el-tag class="pr" type="info" size="small" 
+                      v-for="(name,i) of scope.row.partitionNames" 
+                      :key="i">{{name}}</el-tag>
+                    </div>
+                    <el-tag class="pr ell" type="info" slot="reference" size="small">
+                      {{scope.row.partitionNames[0]}}
+                    </el-tag>
+                  </el-popover>
                 </template>
               </el-table-column>
           </el-table>
@@ -154,11 +162,12 @@ import addPartition from './addPartitions'
     mounted() {
       this.mountFunc(this.PageSize,this.PageNum)
       this.loadCountryQueryAll()
+      // this.loadGetTags({pageSize:10000,pageNumber:1}) 
     },
 
     methods: {
         ...mapActions('vendor',['loadGetPartitionSchemas','loadDeletePartitionSchemas']),
-        ...mapActions('basic',['loadCountryQueryAll']),
+        ...mapActions('basic',['loadCountryQueryAll','loadGetTags']),
         handleCurrentChange(page){
           this.PageNum = page ;
           this.mountFunc(this.PageSize,page)
@@ -170,10 +179,20 @@ import addPartition from './addPartitions'
             pageNumber:num
           }
           _.loadGetPartitionSchemas(data).then(success => {
-            let {content,totalElements} = _.schemasList;
+            _.tableFun()
+          })
+        },
+        tableFun(){
+          const _ = this ;
+          let {content,totalElements} = _.schemasList;
             if(content && content.length){
               _.tableRole = content.map(item=>{
-                  // item['countryName'] = item['country']['name']
+                  let {partitionList} = item ;
+                  let arrs = [] ;
+                  partitionList.forEach(element => {
+                    arrs.push(element.partitionName)
+                  });
+                  item['partitionNames'] = arrs ;
                   return item
               })
               
@@ -182,7 +201,6 @@ import addPartition from './addPartitions'
             }
             
             _.total = totalElements ;
-          })
         },
         sortFunc(type){
              let {a,b} = type ;
@@ -190,7 +208,7 @@ import addPartition from './addPartitions'
               _this.tableRole = sortCompare(_this.tableRole,a,b)
         },
         changeSelectFunc(obj){
-           this.itemObj = obj ;
+           this.itemObj = JSON.parse( JSON.stringify(obj) );
         },
         delFunc(){
           let {length} = this.tableRole ;
@@ -274,5 +292,12 @@ import addPartition from './addPartitions'
   .tableHeader 
    width calc(100vw - 22px)
  .pr+.pr  
-     margin-left 2px
+     margin-left 5px  
+     margin-bottom 5px
+ .ell 
+    width 80px
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
+    cursor pointer
 </style>

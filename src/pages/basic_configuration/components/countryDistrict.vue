@@ -80,11 +80,16 @@ import KecCountry from './addCountry'
            changeVisible:false,
            locationList:[],
            letWidth:{
+             1:'120px',
+             3:'100px',
+             4:'100px',
+             5:'100px',
+             6:'100px'
            },
            lastWidth:'',
            tableHeader:{
-             countryName:{"title":'国家','slot':false},
-             countryCode:{"title":'国家代码','slot':false},
+             countryName:{"title":'国家/地区','slot':false},
+             countryCode:{"title":'国家/地区代码','slot':false},
              locationName:{"title":'地点','slot':false},
              locationCode:{"title":'地点代码','slot':false},
             //  e:{"title":'类型','slot':false},

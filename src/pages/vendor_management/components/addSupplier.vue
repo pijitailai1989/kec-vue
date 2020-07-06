@@ -6,9 +6,10 @@
           <template #input>
             <div class="row borders err">
                 <div class="col-sm-6">
-                    <kec-form crosswise text="公司名称" width="80px">
+                    <kec-form crosswise text="公司名称" width="80px" star="star">
                       <template #input>
-                        <el-input v-model="payload.companyName" placeholder=""></el-input>
+                        <el-input v-model="payload.companyName" placeholder="" class='v-check'
+                                        v-checkParam="{required:true}"></el-input>
                       </template>
                     </kec-form>
                 </div>
@@ -41,9 +42,10 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form crosswise text="币种" width="80px">
+                    <kec-form crosswise text="币种" width="80px" star="star">
                     <template #input>
-                      <el-select v-model="payload.currency" filterable placeholder="" style="width:100%">
+                      <el-select v-model="payload.currency" filterable placeholder="" style="width:100%" class='v-check'
+                                        v-checkParam="{required:true}">
                         <el-option
                           v-for="item in currencyList"
                           :key="item.id"
@@ -62,9 +64,10 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
-                    <kec-form crosswise text="供应商编码" width="80px">
+                    <kec-form crosswise text="供应商编码" width="80px" star="star">
                     <template #input>
-                      <el-input v-model="payload.vendorCode" placeholder=""></el-input>
+                      <el-input v-model="payload.vendorCode" placeholder="" class='v-check'
+                                        v-checkParam="{required:true}"></el-input>
                     </template>
                     </kec-form>
                 </div>
@@ -172,10 +175,15 @@
     </div>
     <div class="col-sm-12 flexs kec-btn">
        <kec-button 
-       @click.native="clickConfirm" 
+        v-checkSubmit
        :text="type==='addVisible'?'新增':'修改'" 
        icon="fa-floppy-o" 
        :background="type==='addVisible'?'#ED6D01':'#17A2B8'" color="#fff"></kec-button>
+       <!-- <kec-button 
+       @click.native="clickConfirm" 
+       :text="type==='addVisible'?'新增':'修改'" 
+       icon="fa-floppy-o" 
+       :background="type==='addVisible'?'#ED6D01':'#17A2B8'" color="#fff"></kec-button> -->
        <kec-button @click.native="clickClose" text="取消" icon="fa-undo" background="#6C757D" color="#fff"></kec-button>
     </div>
   </div>
@@ -258,6 +266,10 @@ import {KecForm, KecButton }  from '@/common/components'
                  "billCycle":null
         }
       },
+      submit(){
+          const _ = this ;
+          _.clickConfirm()
+        },
       clickConfirm() {
         const _this = this ;
         if(!_this.payload.companyName) return

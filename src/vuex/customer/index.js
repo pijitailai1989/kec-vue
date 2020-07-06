@@ -1,8 +1,9 @@
 import * as types from '../mutation-types'
-import api from '@/http/api'
+import api from '@/http'
 import { getPromiseAction ,getPromiseActionNoMutations} from '@/utils/promiseUtils'
 
 export default {
+  name:'customer',
   namespaced: true,
   state() {
     return {

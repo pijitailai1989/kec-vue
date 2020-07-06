@@ -72,14 +72,17 @@ import ShareDialog from './shareDialog'
            componentName:'',
            tableData: [],
            letWidth:{
-             "0":"60px"
+             "0":"100px",
+             "3":"120px",
+             "4":"120px",
+             "5":"100px"
            },
            lastWidth:'',
            tableHeader:{
              id:{"title":'ID','slot':false},
              name:{"title":'产品名称','slot':false,'sort':'ZH'},
              code:{"title":'产品编码','slot':false,'sort':'OTHER'},
-             destinationCountryCode:{"title":'目的国家','slot':false,'sort':'ZH'},
+             destinationCountryCode:{"title":'目的地区/国家','slot':false,'sort':'ZH'},
              shippingCountryCode:{"title":'起运国家','slot':false,'sort':'ZH'},
              needCargoTracking:{"title":'货态跟踪','slot':true}
            },
@@ -109,7 +112,8 @@ import ShareDialog from './shareDialog'
       'loadDictionaryCURRENCY',
       'loadChargeUnits',
       'loadCountryQueryAll',
-      'loadProducts',
+      'loadProductsSimpleList',
+      'loadProductsId',
       'loadGetTags']),
       ...mapActions('channels',['loadGetProductTypes']),
       ...mapActions('vendor',['loadGetPartitionSchemasAll']),
@@ -125,7 +129,8 @@ import ShareDialog from './shareDialog'
           this.textItem = text ;
           this.dialogVisible = bool ;
           this.componentName = component ;
-          type==='eqit' && this.setProductsInfo(this.selectItem)
+          // type==='eqit' && this.setProductsInfo(this.selectItem)
+          type==='eqit' && this.loadProductsId([this.selectItem.id])
           // type==='eqit' && this.setProductsInfo(this.selectItem.productId)
       },
       cancelFunc(propsBool) {
@@ -137,7 +142,7 @@ import ShareDialog from './shareDialog'
          this.setProductsInfo(null)
          this.setDestination(null)
          this.setDestinationShow(false)
-         propsBool && this.loadProducts()
+         propsBool && this.loadProductsSimpleList()
          
       },
       delFunc(id){
@@ -171,7 +176,7 @@ import ShareDialog from './shareDialog'
       this.loadPaymentMethods()
       this.loadDictionaryCURRENCY()
       this.loadChargeUnits()
-      this.loadProducts()
+      this.loadProductsSimpleList()
       this.loadCountryQueryAll()
       this.mountFunc(10000,1)
       this.loadGetProductTypes()

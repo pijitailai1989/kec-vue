@@ -22,7 +22,8 @@ const contractManagement = ()=>import( '@/pages/customer_management/contractMana
 const exchangeTable      = ()=>import( '@/pages/customer_management/exchangeTable.vue')
 const receivableBill     = ()=>import( '@/pages/customer_management/receivableBill.vue')
 const costTable          = ()=>import( '@/pages/vendor_management/costTable.vue')
-const copeBill          = ()=>import( '@/pages/vendor_management/copeBill.vue')
+const copeBill           = ()=>import( '@/pages/vendor_management/copeBill.vue')
+const costEntry          = ()=>import( '@/pages/vendor_management/costEntry.vue')
 
 Vue.use(Router)
 const originalPush = Router.prototype.push
@@ -129,6 +130,10 @@ const router = new Router({
                   path: '/cost-table',name:'costTable',
                   meta : { authority: '/business/cost-statements' , keepAlive: false },
                   component: costTable  //成本表
+                 },{
+                  path: '/cost-entry',name:'costEntry',
+                  meta : { authority: '/business/cost-statements' , keepAlive: false },
+                  component: costEntry  //费用录入
                  },
       ]
     }

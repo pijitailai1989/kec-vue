@@ -1,8 +1,9 @@
 import * as types from '../mutation-types'
-import api from '@/http/api'
+import api from '@/http'
 import { getPromiseAction ,getPromiseActionNoMutations} from '@/utils/promiseUtils'
 
 export default {
+  name:'channels',
   namespaced: true,
   state() {
     return {
@@ -41,11 +42,23 @@ export default {
       state.productPartitionsItem = body || {}
     },
     [types.GET_COUNTRY_PARTITION](state,body){
-      
-      state.countryPartitionList = body || {
-        countryList:[],
-        partitionList:[]
-      };
+      if(body){
+        let arrs = body.partitionList
+        if(arrs){
+          var obj = {};
+            arrs = arrs.reduce(function(item, next) {
+              obj[next.schemaId] ? '' : obj[next.schemaId] = true && item.push(next);
+              return item;
+          }, []);
+          state.countryPartitionList['partitionList']  = arrs;
+          state.countryPartitionList['countryList']  = body.countryList;
+      }else{
+        state.countryPartitionList= {
+          countryList:[],
+          partitionList:[]
+        }
+      }
+     }
     },
     [types.GET_PRODUCT_PRICES](state,body){
       

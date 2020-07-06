@@ -54,7 +54,7 @@
                           <el-option
                             v-for="item in agreementLists"
                             :key="item.id"
-                            :label="item.code"
+                            :label="item.code +' ( '+item.productName+' ) '"
                             :value="item.id">
                           </el-option>
                         </el-select>
@@ -207,6 +207,7 @@ import {formateDate} from '@/utils/fun'
               if(content.length){
                 this.agreementLists = content.map(item=>{ 
                   item['productId'] = item['product']['id']
+                  item['productName'] = item['product']['name']
                   return item ;
                 })
               }else{

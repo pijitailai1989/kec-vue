@@ -24,7 +24,7 @@
                         :disabled="!productId" clearable
                         placeholder="" size="medium" style="width:140px">
                           <el-option
-                            v-for="item in countryPartitionList.countryList"
+                            v-for="item in countryList.countryList"
                             :key="item.code"
                             :label="item.name"
                             :value="item.code">
@@ -41,7 +41,7 @@
                      size="medium" @change="selectQuotoFunc('partition')"
                      filterable placeholder="" style="width:140px">
                       <el-option
-                        v-for="item in countryPartitionList.partitionList"
+                        v-for="item in countryList.partitionList"
                         :key="item.id"
                         :label="item.partitionName"
                         :value="item.id">
@@ -70,6 +70,10 @@
           :disabled="!productId"
           @click="newQuoteFunc(productId)"
           background="#C92626" color="#fff"></kec-button-click>
+          <kec-button-click  text="拷贝报价表" style="width:80px" 
+          :disabled="!productId"
+          @click="cloneQuoteFunc(payload.id)"
+          background="#7ABF45" color="#fff"></kec-button-click>
       </div>
         
     </div>
@@ -84,7 +88,7 @@
                       <div class="row">
                         <div class="col-sm-12" style="margin-top:5px">
                           <div class="col-sm-3">
-                             <kec-form crosswise text="产品 :" width="70px">
+                             <kec-form crosswise text="产品 :" width="50px">
                               <template #input>
                                 <div class="flexs a-center" style="height:36px">
                                     <span>{{payload.productName?payload.productName:'无'}}</span>
@@ -114,13 +118,13 @@
                         </div>
                         <div class="col-sm-12">
                           <div class="col-sm-5">
-                            <kec-form crosswise text="目的地区/国家" width="70px">
+                            <kec-form crosswise text="目的地区/国家" width="100px">
                               <template #input>
                                      <el-select v-model="payload.destinationCountryNameList" 
                                        clearable multiple placeholder="" size="medium"
                                         style="width:100%">
                                         <el-option
-                                          v-for="item in countryPartitionList.countryList"
+                                          v-for="item in countryList.countryList"
                                           :key="item.code"
                                           :label="item.name"
                                           :value="item.code">
@@ -135,7 +139,7 @@
                                      <el-select v-model="payload.partitionNameList" 
                                       clearable multiple placeholder="" size="medium" style="width:100%">
                                         <el-option
-                                          v-for="item in countryPartitionList.partitionList"
+                                          v-for="item in countryList.partitionList"
                                           :key="item.id"
                                           :label="item.partitionName"
                                           :value="item.id">
@@ -145,7 +149,7 @@
                             </kec-form>
                             </div>
                             <div class="col-sm-5">
-                                <kec-form text="服务类型" crosswise width="70px">
+                                <kec-form text="服务类型" crosswise width="100px">
                                   <template #input>
                                     <el-select v-model="serverType" placeholder="" size="medium"
                                     @change="changeServer"
@@ -252,7 +256,27 @@
                                   label="科目编号"
                                   width="100">
                                   </el-table-column>
-                                  
+                                  <el-table-column
+                                  prop="tagName"
+                                  label="适用标签"
+                                  width="110">
+                                    <template slot-scope="scope">
+                                      <el-popover
+                                        v-show="scope.row.tagName.length>0"
+                                        placement="right"
+                                        width="300"
+                                        trigger="hover">
+                                        <div>
+                                          <el-tag class="pr" type="info" size="small" 
+                                          v-for="(name,i) of scope.row.tagName" 
+                                          :key="i">{{name}}</el-tag>
+                                        </div>
+                                        <el-tag class="pr ell" type="info" slot="reference" size="small">
+                                          {{scope.row.tagName[0]}}
+                                        </el-tag>
+                                      </el-popover>
+                                    </template>
+                                  </el-table-column>
                                   <el-table-column
                                   label="费率"
                                   width="100"
@@ -394,7 +418,7 @@ import {KecButton , KecTable ,KecScroll,KecTabs ,KecButtonClick,KecForm,KecDelPo
 import quoteDialog from './quoteDialog'
 import ladderQuotation from './ladderQuotation'
 import onlyQuotation from './onlyQuotation'
-import {formateDate} from '@/utils/fun'
+import {formateDate,getClientHeight} from '@/utils/fun'
   export default {
     name:'quoteList',
     props:[''],
@@ -438,7 +462,12 @@ import {formateDate} from '@/utils/fun'
              "id":null
            },
            itemData:null,
-           textItem:''
+           textItem:'',
+           countryList:{
+             countryList:[],
+             partitionList:[]
+           },
+           tableHeight:0,
       };
     },
 
@@ -452,13 +481,16 @@ import {formateDate} from '@/utils/fun'
         quoteDialog,
         ladderQuotation,
         onlyQuotation,
-        KecDelPopover
+        KecDelPopover,
+        
     },
 
     computed: {
       ...mapState('basic',['currencyList','productsList','serverList']),
-      ...mapState('channels',['productPartitionsList','countryPartitionList','chargeItemsList']),
+      ...mapState('channels',['productPartitionsList','countryPartitionList',
+      'chargeItemsList','productPartitionsItem']),
       ...mapState('home',['themeColor']),
+      
       
       
     },
@@ -472,6 +504,7 @@ import {formateDate} from '@/utils/fun'
       this.loadGetQueryLevelTwo()
       this.loadEnumsTagTypes()
       this.loadQueryServerTypes()
+      this.tableHeight = parseInt( getClientHeight() - 400 )
 
     },
 
@@ -529,7 +562,11 @@ import {formateDate} from '@/utils/fun'
               _.versionsText = _.productPartitionsList.map(item=>{
                return item.quotationCode ;
              })
-             _.payload = _.productPartitionsList[0];
+             let {id} = _.productPartitionsList[0]
+             _.loadGetProductQuotationId([id]).then(success => {
+                _.payload = _.productPartitionsItem;
+             })
+             
             }else{
               _.payload = {
                           description:'',
@@ -578,7 +615,10 @@ import {formateDate} from '@/utils/fun'
               
            }
            if(arr && arr.length){
-             _.payload = arr[0]
+             let {id} = arr[0]
+             _.loadGetProductQuotationId([id]).then(success => {
+                _.payload = _.productPartitionsItem;
+             })
              _.versionsText = arr.map(item=>{
                return item.quotationCode ;
              })
@@ -592,6 +632,20 @@ import {formateDate} from '@/utils/fun'
           this.componentName = 'quoteDialog'
           this.dialogVisible = true
           this.itemData = {productId} ;
+        },
+        cloneQuoteFunc(id){
+          this.loadPostProductQuotation([id]).then(success => {
+            this.cancelFunc(true)
+            this.$message( {
+                    message: success,
+                    type: 'success'
+                    });
+          }).catch(error=> {
+                    this.$message( {
+                    message: error,
+                    type: 'error'
+                    });
+                })
         },
         modificationFunc(payload){
              let{
@@ -645,8 +699,11 @@ import {formateDate} from '@/utils/fun'
             _.chargeItemIds = []
             if(_.productPartitionsList.length){
 
-              _.payload = _.productPartitionsList.find(item=>{
+              let {id} = _.productPartitionsList.find(item=>{
                 return code == item.quotationCode ;
+              })
+              _.loadGetProductQuotationId([id]).then(success => {
+                    _.payload = _.productPartitionsItem;
               })
             }
         },
@@ -665,7 +722,10 @@ import {formateDate} from '@/utils/fun'
                this.tabsFunc(quotationCode)
              }else{
                
-               _.payload = _.productPartitionsList[0];
+               let {id} = _.productPartitionsList[0]
+                _.loadGetProductQuotationId([id]).then(success => {
+                    _.payload = _.productPartitionsItem;
+                })
              }
              
             }else{
@@ -681,17 +741,24 @@ import {formateDate} from '@/utils/fun'
                         };
               _.versionsText = ['无']
             }
-            //  this.$message( {
-            //         message: success,
-            //         type: 'success'
-            //         });
           }).catch(error=>{
               this.$message( {
                     message: error,
                     type: 'error'
                     });
           })
-          this.loadGetCountryPartition([productId])
+          this.loadGetCountryPartition([productId]).then(success=>{
+                   this.countryPartitionList && (this.countryList = this.countryPartitionList) 
+                }).catch(error=> {
+                    this.countryList={
+                      countryList:[],
+                      partitionList:[]
+                    }
+                    this.$message( {
+                    message: error,
+                    type: 'error'
+                    });
+                })
         },
 
         changeSelectFunc(obj){
@@ -785,4 +852,13 @@ import {formateDate} from '@/utils/fun'
    width calc(100vw - 20px)
   .tableHeader 
    width calc(100vw - 24px)
+ .pr+.pr
+    margin-left 5px  
+    margin-bottom 5px
+ .ell 
+    width 80px
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
+    cursor pointer
 </style>

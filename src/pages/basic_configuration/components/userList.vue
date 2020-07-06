@@ -86,7 +86,10 @@ import KecUser from './addUser'
            addVisible:false,
            changeVisible:false,
            letWidth:{
-             4:'150px'
+             1:'150px',
+             2:'150px',
+             4:'80px',
+             5:'160px',
            },
            lastWidth:'',
            tableHeader:{

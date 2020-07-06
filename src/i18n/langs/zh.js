@@ -36,6 +36,8 @@ export default {
         "EXCHANGE_TABLE":"报价管理",
         "COST_TABLE":"成本费率",
         "RECE_BILL":"应收账单",
-        "COPE_BILL":"应付账单"
+        "COPE_BILL":"应付账单",
+        "COPE_F":"成本分摊",
+        "COPE_L":"费用录入"
     }
 }

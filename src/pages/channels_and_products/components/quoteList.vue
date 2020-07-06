@@ -16,7 +16,7 @@
                   </el-select>
                 </template>
               </kec-form>
-              <kec-form text="目的国" crosswise width="60px">
+              <kec-form text="目的地区/国家" crosswise width="100px">
                   <template #input>
                     <div class="flexs a-center">
                         <el-select v-model="countryCode" 
@@ -24,7 +24,7 @@
                         :disabled="!productId" clearable
                         placeholder="" size="medium" style="width:140px">
                           <el-option
-                            v-for="item in countryPartitionList.countryList"
+                            v-for="item in countryList.countryList"
                             :key="item.code"
                             :label="item.name"
                             :value="item.code">
@@ -34,17 +34,17 @@
                   </template>
                 </kec-form>
 
-                <kec-form crosswise text="分区" width="40px">
+                <kec-form crosswise text="分区方案" width="70px">
                   <template #input>
                     <el-select v-model="partitionId" 
                     :disabled="!productId" clearable
                      size="medium" @change="selectQuotoFunc('partition')"
                      filterable placeholder="" style="width:140px">
                       <el-option
-                        v-for="item in countryPartitionList.partitionList"
+                        v-for="item in countryList.partitionList"
                         :key="item.id"
-                        :label="item.partitionName"
-                        :value="item.id">
+                        :label="item.schemaName"
+                        :value="item.schemaId">
                       </el-option>
                     </el-select>
                   </template>
@@ -70,6 +70,10 @@
           :disabled="!productId"
           @click="newQuoteFunc(productId)"
           background="#C92626" color="#fff"></kec-button-click>
+          <kec-button-click  text="拷贝报价表" style="width:80px" 
+          :disabled="!productId"
+          @click="cloneQuoteFunc(payload.id)"
+          background="#7ABF45" color="#fff"></kec-button-click>
       </div>
         
     </div>
@@ -84,7 +88,7 @@
                       <div class="row">
                         <div class="col-sm-12" style="margin-top:5px">
                           <div class="col-sm-3">
-                             <kec-form crosswise text="产品 :" width="70px">
+                             <kec-form crosswise text="产品 :" width="50px">
                               <template #input>
                                 <div class="flexs a-center" style="height:36px">
                                     <span>{{payload.productName?payload.productName:'无'}}</span>
@@ -114,13 +118,13 @@
                         </div>
                         <div class="col-sm-12">
                           <div class="col-sm-5">
-                            <kec-form crosswise text="目的国" width="70px">
+                            <kec-form crosswise text="目的地区/国家" width="100px">
                               <template #input>
                                      <el-select v-model="payload.destinationCountryNameList" 
                                        clearable multiple placeholder="" size="medium"
                                         style="width:100%">
                                         <el-option
-                                          v-for="item in countryPartitionList.countryList"
+                                          v-for="item in countryList.countryList"
                                           :key="item.code"
                                           :label="item.name"
                                           :value="item.code">
@@ -130,22 +134,22 @@
                             </kec-form>
                             </div>
                             <div class="col-sm-7">
-                            <kec-form crosswise text="分区" width="70px">
+                            <kec-form crosswise text="分区方案" width="70px">
                               <template #input>
-                                     <el-select v-model="payload.partitionNameList" 
+                                     <el-select v-model="payload.schemaIds" 
                                       clearable multiple placeholder="" size="medium" style="width:100%">
                                         <el-option
-                                          v-for="item in countryPartitionList.partitionList"
-                                          :key="item.id"
-                                          :label="item.partitionName"
-                                          :value="item.id">
+                                        v-for="item in countryList.partitionList"
+                                        :key="item.id"
+                                        :label="item.schemaName"
+                                        :value="item.schemaId">
                                         </el-option>
                                       </el-select>
                               </template>
                             </kec-form>
                             </div>
                             <div class="col-sm-5">
-                                <kec-form text="服务类型" crosswise width="70px">
+                                <kec-form text="服务类型" crosswise width="100px">
                                   <template #input>
                                     <el-select v-model="serverType" placeholder="" size="medium"
                                     @change="changeServer"
@@ -223,6 +227,15 @@
                                   }"
                                   style="width:100%">
                                   <el-table-column
+                                  label="序号"
+                                  width="50">
+                                  <template slot-scope="scope">
+                                     <div class="flexs j-center">
+                                       <span>{{payload.productPrices.length - scope.$index}}</span>
+                                     </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
                                   prop="offerType"
                                   label="报价方式"
                                   width="100">
@@ -244,15 +257,40 @@
                                   width="100">
                                   </el-table-column>
                                   <el-table-column
+                                  prop="standardStateName"
+                                  label="货态">
+                                  </el-table-column>
+                                  <el-table-column
                                   prop="ledgerSubjectName"
-                                  label="科目项名称">
+                                  label="科目项名称"
+                                  width="120">
                                   </el-table-column>
                                   <el-table-column
                                   prop="ledgerSubjectNumber"
                                   label="科目编号"
                                   width="100">
                                   </el-table-column>
-                                  
+                                  <el-table-column
+                                  prop="tagName"
+                                  label="适用标签"
+                                  width="110">
+                                    <template slot-scope="scope">
+                                      <el-popover
+                                        v-show="scope.row.tagName.length>0"
+                                        placement="right"
+                                        width="300"
+                                        trigger="hover">
+                                        <div>
+                                          <el-tag class="pr" type="info" size="small" 
+                                          v-for="(name,i) of scope.row.tagName" 
+                                          :key="i">{{name}}</el-tag>
+                                        </div>
+                                        <el-tag class="pr ell" type="info" slot="reference" size="small">
+                                          {{scope.row.tagName[0]}}
+                                        </el-tag>
+                                      </el-popover>
+                                    </template>
+                                  </el-table-column>
                                   <el-table-column
                                   label="费率"
                                   width="100"
@@ -394,7 +432,7 @@ import {KecButton , KecTable ,KecScroll,KecTabs ,KecButtonClick,KecForm,KecDelPo
 import quoteDialog from './quoteDialog'
 import ladderQuotation from './ladderQuotation'
 import onlyQuotation from './onlyQuotation'
-import {formateDate} from '@/utils/fun'
+import {formateDate,getClientHeight} from '@/utils/fun'
   export default {
     name:'quoteList',
     props:[''],
@@ -418,7 +456,7 @@ import {formateDate} from '@/utils/fun'
            payload:{
              description:'',
              destinationCountryNameList:[],
-             partitionNameList:[],
+             schemaIds:[],
              id:null,
              productId:null,
              productName:'',
@@ -438,7 +476,12 @@ import {formateDate} from '@/utils/fun'
              "id":null
            },
            itemData:null,
-           textItem:''
+           textItem:'',
+           countryList:{
+             countryList:[],
+             partitionList:{}
+           },
+           tableHeight:0,
       };
     },
 
@@ -452,13 +495,16 @@ import {formateDate} from '@/utils/fun'
         quoteDialog,
         ladderQuotation,
         onlyQuotation,
-        KecDelPopover
+        KecDelPopover,
+        
     },
 
     computed: {
       ...mapState('basic',['currencyList','productsList','serverList']),
-      ...mapState('channels',['productPartitionsList','countryPartitionList','chargeItemsList','productPartitionsItem']),
+      ...mapState('channels',['productPartitionsList','countryPartitionList',
+      'chargeItemsList','productPartitionsItem']),
       ...mapState('home',['themeColor']),
+      
       
       
     },
@@ -467,11 +513,12 @@ import {formateDate} from '@/utils/fun'
 
     mounted() {
       this.loadProducts()
-      this.loadGetTags({pageSize:10000,pageNumber:1})
+      // this.loadGetTags({pageSize:10000,pageNumber:1})
       this.loadDictionaryCURRENCY()
       this.loadGetQueryLevelTwo()
       this.loadEnumsTagTypes()
       this.loadQueryServerTypes()
+      this.tableHeight = parseInt( getClientHeight() - 400 )
 
     },
 
@@ -480,6 +527,7 @@ import {formateDate} from '@/utils/fun'
         'loadPostProductQuotation','loadPutProductQuotation','loadPostProductPricesPrice','loadGetProductQuotationId',
         'loadDeleteProductPricesPrice','loadGetChargeItems']),
         ...mapActions('order',['loadGetQueryLevelTwo']),
+        ...mapMutations('basic',['filterTags']),
         ...mapActions('basic',['loadProducts','loadDictionaryCURRENCY','loadGetTags','loadEnumsTagTypes','loadQueryServerTypes']),
         addItem(quotationId,chargeItemIds,productId,quotationCode){
           let data = {quotationId,chargeItemIds}
@@ -532,13 +580,16 @@ import {formateDate} from '@/utils/fun'
              let {id} = _.productPartitionsList[0]
              _.loadGetProductQuotationId([id]).then(success => {
                 _.payload = _.productPartitionsItem;
+                _.loadGetTags({pageSize:10000,pageNumber:1}).then(success=>{
+                      _.filterTags(_.productPartitionsItem.schemaIds)
+                    })
              })
              
             }else{
               _.payload = {
                           description:'',
                           destinationCountryNameList:[],
-                          partitionNameList:[],
+                          schemaIds:[],
                           id:null,
                           productId:null,
                           productName:'',
@@ -566,7 +617,7 @@ import {formateDate} from '@/utils/fun'
            if(_.productPartitionsList.length>0){
               if(_.partitionId&&_.countryCode){
                    arr = _.productPartitionsList.filter(item=>{
-                    return item.destinationCountryNameList.indexOf(_.countryCode)!=-1 && item.partitionNameList.indexOf(_.partitionId)!=-1
+                    return item.destinationCountryNameList.indexOf(_.countryCode)!=-1 && item.schemaList.indexOf(_.partitionId)!=-1
                   })
               }else if(!_.partitionId&&_.countryCode){
                    arr = _.productPartitionsList.filter(item=>{
@@ -574,7 +625,7 @@ import {formateDate} from '@/utils/fun'
                   })
               }else if(_.partitionId&&!_.countryCode){
                   arr = _.productPartitionsList.filter(item=>{
-                    return item.partitionNameList.indexOf(_.partitionId)!=-1
+                    return item.schemaList.indexOf(_.partitionId)!=-1
                   })
               }else{
                   arr = _.productPartitionsList
@@ -585,6 +636,9 @@ import {formateDate} from '@/utils/fun'
              let {id} = arr[0]
              _.loadGetProductQuotationId([id]).then(success => {
                 _.payload = _.productPartitionsItem;
+                _.loadGetTags({pageSize:10000,pageNumber:1}).then(success=>{
+                      _.filterTags(_.productPartitionsItem.schemaIds)
+                    })
              })
              _.versionsText = arr.map(item=>{
                return item.quotationCode ;
@@ -600,11 +654,25 @@ import {formateDate} from '@/utils/fun'
           this.dialogVisible = true
           this.itemData = {productId} ;
         },
+        cloneQuoteFunc(id){
+          this.loadPostProductQuotation([id]).then(success => {
+            this.cancelFunc(true)
+            this.$message( {
+                    message: success,
+                    type: 'success'
+                    });
+          }).catch(error=> {
+                    this.$message( {
+                    message: error,
+                    type: 'error'
+                    });
+                })
+        },
         modificationFunc(payload){
              let{
                description,
              destinationCountryNameList,
-             partitionNameList,
+             schemaIds,
              id,
              productId,
              productName,
@@ -630,7 +698,7 @@ import {formateDate} from '@/utils/fun'
              }
              let data = {productId,id,description,
              destinationCountryIds:destinationCountryNameList,
-             partitionIds:partitionNameList,content}
+             schemaIds,content}
              this.loadPutProductQuotation(data).then(success=>{
                     this.changeProductId(productId,quotationCode) ;
                     
@@ -657,6 +725,10 @@ import {formateDate} from '@/utils/fun'
               })
               _.loadGetProductQuotationId([id]).then(success => {
                     _.payload = _.productPartitionsItem;
+                    _.loadGetTags({pageSize:10000,pageNumber:1}).then(success=>{
+                      _.filterTags(_.productPartitionsItem.schemaIds)
+                    })
+                    
               })
             }
         },
@@ -678,6 +750,9 @@ import {formateDate} from '@/utils/fun'
                let {id} = _.productPartitionsList[0]
                 _.loadGetProductQuotationId([id]).then(success => {
                     _.payload = _.productPartitionsItem;
+                    _.loadGetTags({pageSize:10000,pageNumber:1}).then(success=>{
+                      _.filterTags(_.productPartitionsItem.schemaIds)
+                    })
                 })
              }
              
@@ -685,7 +760,7 @@ import {formateDate} from '@/utils/fun'
               _.payload = {
                           description:'',
                           destinationCountryNameList:[],
-                          partitionNameList:[],
+                          schemaIds:[],
                           id:null,
                           productId:null,
                           productName:'',
@@ -694,17 +769,27 @@ import {formateDate} from '@/utils/fun'
                         };
               _.versionsText = ['无']
             }
-            //  this.$message( {
-            //         message: success,
-            //         type: 'success'
-            //         });
           }).catch(error=>{
               this.$message( {
                     message: error,
                     type: 'error'
                     });
           })
-          this.loadGetCountryPartition([productId])
+          this.loadGetCountryPartition([productId]).then(success=>{
+                   if(this.countryPartitionList){
+                        this.countryList  = this.countryPartitionList;
+                    } 
+                     
+                }).catch(error=> {
+                    this.countryList={
+                      countryList:[],
+                      partitionList:{}
+                    }
+                    this.$message( {
+                    message: error,
+                    type: 'error'
+                    });
+                })
         },
 
         changeSelectFunc(obj){
@@ -740,7 +825,14 @@ import {formateDate} from '@/utils/fun'
         cancelFunc(bool){
           this.dialogVisible = false ;
           this.itemData = null
-          bool && this.changeProductId(this.payload.productId)
+          if(bool){
+             if(this.payload.productId){
+               this.changeProductId(this.payload.productId,this.payload.quotationCode)
+               
+             }else{
+               this.changeProductId(this.productId,this.payload.quotationCode)
+             } 
+          } 
         },
         checkRole(id,bool){
           const _ = this ;
@@ -798,4 +890,13 @@ import {formateDate} from '@/utils/fun'
    width calc(100vw - 20px)
   .tableHeader 
    width calc(100vw - 24px)
+ .pr+.pr
+    margin-left 5px  
+    margin-bottom 5px
+ .ell 
+    width 80px
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
+    cursor pointer
 </style>

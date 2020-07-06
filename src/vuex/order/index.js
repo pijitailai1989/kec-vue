@@ -1,8 +1,9 @@
 import * as types from '../mutation-types'
-import api from '@/http/api'
+import api from '@/http'
 import { getPromiseAction ,getPromiseActionNoMutations} from '@/utils/promiseUtils'
 
 export default {
+  name:'order',
   namespaced: true,
   state() {
     return {
@@ -36,6 +37,9 @@ export default {
   actions: {
     loadGetOrders({commit},payload){
         return getPromiseAction (api.getOrders(payload),commit,types.GET_ORDERS)
+    },
+    loadGetOrdersInfo({commit},payload){
+      return getPromiseAction (api.getOrdersInfo(payload),commit,'setOrderInfo')
     },
     loadGetQueryLevelTwo({commit},payload){
       return getPromiseAction (api.getQueryLevelTwo(payload),commit,types.GET_QUERY_LEVEL_TWO)

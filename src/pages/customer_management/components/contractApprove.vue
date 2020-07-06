@@ -303,7 +303,7 @@ import {formatDate} from '@/utils/fun'
           code:null
         },
         tableHeader:{
-             offerType:{"title":'报价方式','slot':true},'sort':'ZH',
+             offerType:{"title":'报价方式','slot':true,'sort':'ZH'},
              serviceType:{"title":'服务类型','slot':false,'sort':'ZH'},
              chargeItemName:{"title":'收费项','slot':false},
              ledgerSubjectName:{"title":'科目名称','slot':false,'sort':'ZH'},

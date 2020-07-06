@@ -18,6 +18,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'default-passive-events'
 import VueCookies from 'vue-cookies'
 import {checkParam , checkSubmit} from './directive'
+import { gt } from 'semver'
 
 Vue.use(Input)
 Vue.use(InputNumber)
@@ -50,14 +51,22 @@ Message.install = function (Vue, options) {
   Vue.prototype.$message = Message
 }
 Vue.use(Message)
+
+const requireComponents = require.context('./common/components',true,/\.vue/)
+requireComponents.keys().forEach(fileName => {
+ const reqCom = requireComponents(fileName)
+ const reqComName = fileName.split('/')[1]
+ Vue.component(reqComName,reqCom.default || reqCom)
+})
+
 router.beforeEach((to, from, next) => {
-  
   let {path,meta:{authority}} = to 
   if(path === '/login') {
     next()
   } else {
     let isShowMenu = JSON.parse( sessionStorage.getItem('isShowMenu') ) ;
-    let bool = authority in isShowMenu ;
+    let bool = null ;
+    if(isShowMenu) bool = authority in isShowMenu ;
     bool ? next() : setTimeout(()=>{ next('/login') },2000) 
     !bool && (
       Message({

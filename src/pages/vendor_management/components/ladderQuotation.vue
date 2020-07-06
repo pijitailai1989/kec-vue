@@ -16,7 +16,7 @@
             background="#28A745" 
             color="#fff">
             </kec-button-click>
-            <!-- <kec-button-click 
+           <!-- <kec-button-click 
             @click="clickConfirm(selectIndex)" 
             :text="types==='add'?'新建':'保存'" 
             icon="fa-floppy-o" 
@@ -104,10 +104,12 @@
                                     >
 
                                        <div class="col-sm-7">
-                                          <kec-form crosswise text="名称" width="90px">
+                                          <kec-form crosswise text="名称" width="90px" star="star">
                                             <template #input>
                                               <el-input placeholder="输入" 
                                               size="small"
+                                              class='v-check'
+                                              v-checkParam="{required:true}"
                                               v-model="item.name">
                                               </el-input>
                                             </template>
@@ -115,13 +117,13 @@
                                           
                                         </div>
                                         <div class="col-sm-5">
-                                          <kec-form text="费用触发货态" width="90px" star="star" crosswise>
+                                          <kec-form text="费用触发货态" width="90px" crosswise star="star">
                                             <template #input>
                                               
-                                              <el-select v-model="item.standardStateIds" 
+                                              <el-select v-model="item.standardStateId" 
+                                              filterable
                                               class='v-check'
                                               v-checkParam="{required:true}"
-                                              filterable
                                               placeholder="" size="medium" style="width:100%">
                                                 <el-option
                                                   v-for="item in levelTwoList"
@@ -140,7 +142,7 @@
                                               
                                               <el-select
                                                 style="width:100%"
-                                                v-model="item.typeTagIdSet"
+                                                v-model="item.typeTagIds"
                                                 multiple
                                                 size="small"
                                                 filterable
@@ -353,8 +355,8 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                   "id": null,
                   "index":'0',
                   "name": "",
-                  "typeTagIdSet": [],
-                  "standardStateIds": null,
+                  "typeTagIds": [],
+                  "standardStateId": null,
                   "gradientModel": 0,
                   "carryValve": false,
                   "carryValveNumber": null,
@@ -396,7 +398,7 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
     computed: {
       ...mapState('home',['themeColor']),
       ...mapState('order',['levelTwoList']),
-      ...mapState('channels',['productPricesList','productPrices']),
+      ...mapState('vendor',['productPricesList']),
       ...mapState('basic',['tagTypeClass','tagsData']),
       addShow: function(){
         const _ = this ;
@@ -417,7 +419,7 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
     },
 
     methods: {
-        ...mapActions('channels',['loadGetProductPrices','loadPostProductPrices','loadPutProductPrices']),
+        ...mapActions('vendor',['loadGetProductPrices','loadPostProductPrices','loadPutProductPrices']),
         cancel() {
             this.$emit('close',false)
             
@@ -433,8 +435,8 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                         "id": null,
                         "index":'0',
                         "name": "",
-                        "typeTagIdSet": [],
-                        "standardStateIds": null,
+                        "typeTagIds": [],
+                        "standardStateId": null,
                         "gradientModel": 0,
                         "carryValve": false,
                         "carryValveNumber": null,
@@ -454,7 +456,6 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
             }
         },
         loadFunC(item){
-          console.log('item',item)
           const _ = this ;
             let {ledgerSubjectName,
             ledgerSubjectNumber,
@@ -474,10 +475,10 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
               if(_.productPricesList.length){
                productPricesList = _.productPricesList.map((item,index)=>{
                   item['index'] = index + '' ;
-                  let arr = item.typeTagSet.map(todo => {
-                    return todo.id
-                  })
-                  _.$set(item,'typeTagIdSet',arr)
+                  // let arr = item.typeTagSet.map(todo => {
+                  //   return todo.id
+                  // })
+                  // _.$set(item,'typeTagIds',arr)
                   _.$set(item,'carryValve',item.carryValve==1?true:false)
                   return item ;
                })
@@ -490,8 +491,8 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                         
                         "index":'0',
                         "name": "",
-                        "typeTagIdSet": [],
-                        "standardStateIds": null,
+                        "typeTagIds": [],
+                        "standardStateId": null,
                         "gradientModel": 0,
                         "carryValve": false,
                         "carryValveNumber": null,
@@ -529,11 +530,11 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
         clickConfirm(selectIndex){
            const _this = this ;
            let item = this.payload['productPricesList'][selectIndex] ;
-           let {id,name,typeTagIdSet,gradientModel,carryValveNumber,standardStateIds,
+           let {id,name,typeTagIds,gradientModel,carryValveNumber,standardStateId,
            carryValve,priceGradientItems} = item ;
            let data = {}
            if(id){
-                data = {id,name,typeTagIdSet,gradientModel,carryValveNumber,standardStateIds,
+                data = {id,name,typeTagIds,gradientModel,carryValveNumber,standardStateId,
            carryValve:carryValve?1:0,priceGradientItems} ;
                 _this.loadPutProductPrices(data).then(success=>{
                       this.$emit('close',true)
@@ -549,11 +550,11 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                     })
               
            }else{
-             data = {name,typeTagIdSet,gradientModel,carryValveNumber,standardStateIds,
+             data = {name,typeTagIds,gradientModel,carryValveNumber,standardStateId,
            carryValve:carryValve?1:0,priceGradientItems,productPriceId:_this.payload.productPriceId} ;
              
              _this.loadPostProductPrices(data).then(success=>{
-                  this.payload['productPricesList'][selectIndex] = _this.productPrices ;
+                  // this.payload['productPricesList'][selectIndex] = _this.productPrices ;
                   this.$emit('close',true)
                   _this.$message( {
                   message: success,
@@ -594,8 +595,8 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                   "id": null,
                   "index":newTabName,
                   "name": "",
-                  "typeTagIdSet": [],
-                  "standardStateIds": null,
+                  "typeTagIds": [],
+                  "standardStateId": null,
                   "gradientModel": 0,
                   "carryValve": false,
                   "carryValveNumber": null,

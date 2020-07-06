@@ -2,7 +2,7 @@
   <div style="padding:5px">
     <div class="flexs j-between a-center">
       <div>
-             <span>目的国家 ：</span>
+             <span>目的地区/国家 ：</span>
              <span>{{destinationCountry && destinationCountry.name}}</span>
       </div>
       <div class="flexs kec-btn j-end" v-show="destinationCountry">

@@ -79,7 +79,7 @@ import KecUnit from './addUnit'
            },
            lastWidth:'',
            tableHeader:{
-             id:{"title":'id','slot':false},
+             id:{"title":'ID','slot':false},
              chName:{"title":'中文名','slot':false,'sort':'ZH'},
              enName:{"title":'英文名','slot':false,'sort':'ZH'},
              code:{"title":'符号单位','slot':false},
@@ -117,8 +117,8 @@ import KecUnit from './addUnit'
             const _ = this ;
             _.loadChargeUnits().then(success=>{
               _.unitsLists = _.unitsList.map(item=>{
-                item['unitTypeText'] = item['unitType']['text']
-                item['unitTypeCode'] = item['unitType']['code']
+                // item['unitTypeText'] = item['unitType']['text']
+                // item['unitTypeCode'] = item['unitType']['code']
                 return item
               })
               })

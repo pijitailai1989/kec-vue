@@ -72,7 +72,7 @@
         </kec-form>
     </div>
     <div class="col-sm-12">
-        <kec-form text="计费纬度" crosswise width="80px">
+        <kec-form text="计费维度" crosswise width="80px">
          <template #input>
            <el-select v-model="payload.accountingDimension" @change="changeAccountFunc" placeholder="" size="medium" style="width:100%">
               <el-option

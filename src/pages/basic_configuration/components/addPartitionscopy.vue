@@ -63,27 +63,10 @@
                       </template>
                     </kec-form>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <kec-form crosswise text="方案名称" width="90px">
                       <template #input>
                         <el-input v-model="payload.partitionSchemaName" placeholder="" size="medium"></el-input>
-                      </template>
-                    </kec-form>
-                </div>
-                <div class="col-sm-6">
-                    <kec-form text="区段类型" width="90px" crosswise>
-                      <template #input>
-                        <el-select 
-                        size="medium"
-                        filterable v-model="payload.sectionType"
-                        placeholder="" style="width:100%">
-                          <el-option
-                            v-for="item in typex"
-                            :key="item.code"
-                            :label="item.text"
-                            :value="item.code">
-                          </el-option>
-                        </el-select>
                       </template>
                     </kec-form>
                 </div>
@@ -113,31 +96,19 @@
                                           
                                         </div>
                                         <div class="col-sm-12" style="margin-bottom:5px;">
-                                          <el-input
-                                            v-if="payload.sectionType === 'codeList'"
-                                            type="textarea"
-                                            :autosize="{ minRows: 10, maxRows: 10}"
-                                            placeholder="请输入内容"
-                                            v-model="item.zipCodeText">
-                                          </el-input>
-                                          <el-input
-                                            v-else-if="payload.sectionType === 'label'"
-                                            type="textarea"
-                                            :autosize="{ minRows: 10, maxRows: 10}"
-                                            placeholder="请输入内容"
-                                            v-model="item.keywords">
-                                          </el-input>
+
                                           <el-table
-                                            height="200"
-                                            v-else
-                                            :data="payload.sectionType === 'code'?item.partitionZipCode:item.partitionTags"
+                                            height="305"
+                                            :data="item.partitionZipCode"
                                             tooltip-effect="dark"
-                                            :cell-style="{ padding:'3px 0' }"
+                                            :cell-style="{
+                                              padding:'3px 0'
+                                            }"
                                             style="width: 100%">
                                             <el-table-column
-                                              v-if="payload.sectionType === 'code'"
                                               prop="locationCode"
-                                              label="地区邮编">
+                                              label="地区邮编"
+                                              show-overflow-tooltip>
                                               <template slot-scope="scope">
                                                 <div class="row">
                                                      <div class="col-sm-6">
@@ -152,36 +123,10 @@
                                               
                                             </template>
                                             </el-table-column>
-                                            <!-- <el-table-column
-                                              v-if="payload.sectionType === 'label'"
-                                              prop="locationCode"
-                                              label="地区标签">
-                                              <template slot-scope="scope">
-                                                <div class="row">
-                                                     <div class="col-sm-3">
-                                                         <el-select 
-                                                          size="mini"
-                                                          filterable v-model="scope.row.tagId"
-                                                          placeholder="">
-                                                            <el-option
-                                                              v-for="item in tagTypeClass[12]"
-                                                              :key="item.id"
-                                                              :label="item.tagName"
-                                                              :value="item.id">
-                                                            </el-option>
-                                                          </el-select>
-                                                     </div>
-                                                     <div class="col-sm-9">
-                                                       <el-input placeholder="" size="mini" v-model="scope.row.keywords">
-                                                       </el-input>
-                                                     </div>
-                                                </div>
-                                              
-                                            </template>
-                                            </el-table-column> -->
                                             <el-table-column
                                               label="删除"
-                                              width="50">
+                                              width="50"
+                                              show-overflow-tooltip>
                                               <template slot-scope="scope">
                                                  <i class="fa fa-minus-circle cur fa-lg" 
                                                  style="color:#C50A2E"
@@ -196,7 +141,6 @@
                             </div>
                             <div class="col-sm-12" style="margin:5px 0">
                                <kec-button 
-                                  v-show="payload.sectionType === 'code'"
                                   @click.native="addPartitionCode(selectIndex)" 
                                   text="添加地区" icon="fa-plus" 
                                   background="#17A2B8" 
@@ -237,19 +181,10 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
             "countryCode": "",
             "partitionSchemaName": "",
             "partitionType":null,
-            "sectionType":"code",
             "partitionList": [
                 {
                         "partitionName": "",
                         "name":'0',
-                        "partitionTags":[
-                          {
-		                    		"tagId": "",
-		                    		"keywords": ""
-		                    	}
-                        ],
-                        "zipCodeText":"",
-                        "keywords":"",
                         "partitionZipCode": [
                           {
                             "zipCodeStart": "",
@@ -268,11 +203,6 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
         typess:[
           {code:'sale',text:'销售方案'},
           {code:'vendor',text:'供应商方案'}
-        ],
-        typex:[
-          {code:'code',text:'邮编区段'},
-          {code:'label',text:'地址列表'},
-          {code:'codeList',text:'邮编列表'}
         ]
 
       };
@@ -289,7 +219,7 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
 
     computed: {
       ...mapState('home',['themeColor']),
-      ...mapState('basic',['countryList','tagTypeClass']),
+      ...mapState('basic',['countryList']),
       ...mapState('vendor',['locationsList']),
       filteredTableData: function(){
         let arr = this.locationList.filter(item => {
@@ -315,7 +245,6 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                 "id":null,
                 "countryCode": "",
                 "partitionType":null,
-                "sectionType":"code",
                 "partitionSchemaName": "",
                 "partitionList": [
                     {
@@ -326,15 +255,7 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                                 "zipCodeStart": "",
                                 "zipCodeEnd": ""
                               }
-                            ],
-                            "zipCodeText":"",
-                            "keywords":"",
-                            "partitionTags":[
-                              {
-		                        		"tagId": "",
-		                        		"keywords": ""
-		                        	}
-                            ],
+                            ]
                     }
                 ]
             }
@@ -413,21 +334,13 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
         clickConfirm(type){
            const _this = this ;
            _this.loading = true ;
-           let {id,countryCode,partitionSchemaName,partitionList,partitionType,sectionType} = this.payload ;
+           let {id,countryCode,partitionSchemaName,partitionList,partitionType} = this.payload ;
            let arr = []
            if(partitionList.length){
               partitionList.forEach(item=>{
                  let data = {}
-                    data['partitionName'] = item['partitionName']
-                    item['id'] = ( data['id'] = item['id'] )
-                    if(sectionType === 'code'){
-                      data['partitionZipCode'] = item['partitionZipCode']
-                    }else if(sectionType === 'label'){
-                      data['keywords'] = item['keywords']
-                    }else{
-                      data['zipCodeText'] = item['zipCodeText']
-                    }
-                     
+                     data['partitionName'] = item['partitionName']
+                     data['partitionZipCode'] = item['partitionZipCode']
                  
                  arr.push(data)
 
@@ -478,11 +391,9 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
         },
         addPartitionCode(index){
           this.payload['partitionList'][index]['partitionZipCode'].push({"zipCodeStart": "","zipCodeEnd": ""})
-          // this.payload['partitionList'][index]['partitionTags'].push({"tagId": "","keywords": ""})
         },
         delPartitionCode(index,i){
           this.payload['partitionList'][index]['partitionZipCode'].splice(i,1)
-          // this.payload['partitionList'][index]['partitionTags'].splice(i,1)
         },
         handleTabsEdit(targetName, action) {
             const _this = this ;
@@ -496,15 +407,7 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                                 "zipCodeStart": "",
                                 "zipCodeEnd": ""
                               }
-                            ],
-                "zipCodeText":"",
-                "keywords":"",
-                "partitionTags":[
-                              {
-		                        		"tagId": "",
-		                        		"keywords": ""
-		                        	}
-                            ],
+                            ]
               });
               this.editableTabsValue = newTabName;
               
@@ -558,7 +461,6 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                 "countryCode": "",
                 "partitionSchemaName": "",
                 "partitionType":null,
-                "sectionType":"code",
                 "partitionList": [
                     {
                             "partitionName": "",
@@ -567,68 +469,23 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
                                 "zipCodeStart": "",
                                 "zipCodeEnd": ""
                               }
-                            ],
-                            "zipCodeText":"",
-                            "keywords":"",
-                            "partitionTags":[
-                              {
-		                        		"tagId": "",
-		                        		"keywords": ""
-		                        	}
-                            ],
+                            ]
                     }
                 ]
             }
            if( val === 'eqit'){
-             let{country,countryName,id,partitionList,schemaName,partitionType} = JSON.parse( JSON.stringify(_.item ));
-             let sectionType = '' ;
+             let{country,countryName,id,partitionList,schemaName,partitionType} = _.item ;
              if(partitionList.length){
                partitionList.forEach((item,index)=>{
-                  let {keywords,partitionZipCode,zipCodeText} = item ;
                   item['name'] = index + ''
-                  if(!keywords){
-                    // item['partitionTags']=[
-                    //           {
-		                //         		"tagId": "",
-		                //         		"keywords": ""
-		                //         	}
-                    //         ]
-                    item['keywords'] = ""
-                  }else{
-                    sectionType = 'label'
-                  }
-                  if(!partitionZipCode){
-                    item['partitionZipCode']=[
-                              {
-                                "zipCodeStart": "",
-                                "zipCodeEnd": ""
-                              }
-                            ]
-                  }else{
-                    sectionType = 'code'
-                  }
-                  if(!zipCodeText){
-                    item['zipCodeText'] = ""
-                  }else{
-                    sectionType = 'codeList'
-                  }
                })
-               
+               _.editableTabsValue = '0'
                _.tabIndex = partitionList.length
               //  _.changeCountry(country['code'],id)
              }
-             _.payload = {
-               id,countryCode:country['code'],
-               partitionSchemaName:schemaName,
-               partitionList:partitionList.length>0?partitionList:_.payload['partitionList'],
-               sectionType:sectionType?sectionType:'code',
-               partitionType
-               }
-
+             _.payload = {id,countryCode:country['code'],partitionSchemaName:schemaName,partitionList,partitionType}
             
            }
-
-           _.editableTabsValue = '0'
 
            
         }

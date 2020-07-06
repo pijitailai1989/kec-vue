@@ -14,8 +14,8 @@
              color:activeIndex===index?themeColor.content_border_color:'#000',
              fontWeight:activeIndex===index?600:400
              }"
-           v-show="item"
-           >{{item}}</span>
+           class="marl"
+           v-show="item">{{item}}</span>
            </div>
      </div>
      <slot></slot>
@@ -116,9 +116,8 @@ import {mapState} from 'vuex'
    position relative 
    background #fff 
    border 1px solid #dcdfe6
-   box-shadow 0 1px 2px 0 rgba(0,0,0,.12)
    .bg-title  
-     span  
+     span 
        padding 5px 15px
        cursor pointer
      span:first-child 
@@ -128,8 +127,9 @@ import {mapState} from 'vuex'
    .nowrap 
      white-space nowrap
      overflow-x auto
-     
      background #f5f7fa
+     .marl
+       border-right:1px solid #DCDFE6
      .posi  
        background #f5f7fa 
        cursor pointer

@@ -7,8 +7,8 @@
       }">
       <div ref="tableHeader" class="table-th flexs" :style="{background:themeColor.content_border_color,
       borderColor:themeColor.content_border_color}">
-          <div class="flexs a-center j-center sort" 
-          :class="[ letWidth[index]?'':'five' ]" 
+          <div class="flexs a-center sort" 
+          :class="[ letWidth[index]?'':'five',centerText?'j-center':'pad']" 
           :style="{'width':letWidth[index]}" 
           v-for="(item,key,index) in tableHeader" 
           :key="key"
@@ -16,7 +16,7 @@
           <span>{{item['title']}}</span>
           <i class="fa fa-sort" @click="sortEvent(key,item['sort'])" v-if="item['sort']"></i>
           </div>
-          <div class="flexs a-center j-center" :style="{'width':lastWidth}" v-if="lastWidth">{{lastText?lastText:'操作'}}</div>
+          <div class="flexs a-center" :class="[centerText?'j-center':'pad']" :style="{'width':lastWidth}" v-if="lastWidth">{{lastText?lastText:'操作'}}</div>
       </div>
       <div class="table-tr" :style="{'font-size':font,'padding-top':clientHeight+'px'}" v-if="tableDatas.length>0">
           <ul v-for="(item,index) in tableDatas" :key="index" 
@@ -27,13 +27,13 @@
                        opacity:active_index===index?1:1
                       }"
                @click="clickItemUl(index,item)">
-              <li :class="[ letWidth[index]?'':'five' ]" class="todo-li flexs a-center j-center" 
+              <li :class="[ letWidth[index]?'':'five',centerText?'j-center':'pad']" class="todo-li flexs a-center" 
               :style="{'width':letWidth[index]}" v-for="(todo,key,index) in tableHeader" :key="key">
                 <slot v-if="todo['slot']" :name="key" v-bind:item="item[key]"></slot>
                 <slot v-else v-bind:item="item[key]"></slot>
                 
               </li>
-              <li class="todo-li flexs a-center j-center" :style="{'width':lastWidth}" v-if="lastWidth">
+              <li class="todo-li flexs a-center" :class="[centerText?'j-center':'pad']" :style="{'width':lastWidth}" v-if="lastWidth">
                 <slot name="operation" v-bind:item="item"></slot>
               </li>
           </ul>
@@ -60,6 +60,7 @@ import {sortCompare } from '@/utils/fun'
        tableHeader:Object,
        lastWidth:String,
        lastText:String,
+       centerText:Boolean,
        height: [String,Number]
     },
     data () {
@@ -143,6 +144,8 @@ import {sortCompare } from '@/utils/fun'
    width 100%
    border-radius 3px 
    border-bottom 1px solid #EBEEF5 
+   .pad 
+     padding-left 8px !important
    .sky 
      background #FFF
    .five  

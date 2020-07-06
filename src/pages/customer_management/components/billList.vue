@@ -68,19 +68,33 @@
        type="success"
       @click.native="mountFunc(payload)">查询</el-button>
       <el-button size="medium" style="margin:0 0 4px 5px" type="primary"
-      @click.native="eqitFunc('billDialog')">手工触发</el-button>
+      @click.native="eqitFunc('billDialog')">手动创建</el-button>
       <el-popover
         placement="left-start"
         width="160"
         :disabled="selectItem==null"
         v-model="visible">
-        <p>确定账单刷新吗？</p>
+        <p>确定重新计算吗？</p>
         <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click.native="cancelFunc">取消</el-button>
+          <el-button size="mini" type="text" @click.native="cancelFunc(false)">取消</el-button>
           <el-button type="primary" size="mini" @click.native="putFunc(selectItem)">确定</el-button>
         </div>
         <el-button slot="reference" :disabled="selectItem==null" 
-        size="medium" style="margin:0 0 4px 5px" type="warning" >账单刷新</el-button>
+        size="medium" style="margin:0 0 4px 5px" type="warning" >重新计算</el-button>
+      </el-popover>
+
+      <el-popover
+        placement="left-start"
+        width="160"
+        :disabled="selectItem==null"
+        v-model="visibles">
+        <p>确定删除吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click.native="cancelFunc(false)">取消</el-button>
+          <el-button type="primary" size="mini" @click.native="delFunc(selectItem)">确定</el-button>
+        </div>
+        <el-button slot="reference" :disabled="selectItem==null" 
+        size="medium" style="margin:0 0 4px 5px" type="danger" >删除</el-button>
       </el-popover>
     </div>
     <kec-scroll :numbers="239" class="list">
@@ -103,9 +117,8 @@
                 <template v-slot:default="slotProps">
                 {{slotProps.item}}
                 </template>
-                <template v-slot:a="slotProps">
-                <kec-button text="操作" icon="fa-trash-o" background="#F18A33" color="#fff"></kec-button>
-                <span>{{slotProps.item}}</span>
+                <template v-slot:weight="slotProps">
+                <span>{{ (slotProps.item / 1000) }}</span>
                 </template>
             </kec-table>
         </div>
@@ -139,35 +152,43 @@ import axios from '@/http/config'
     data () {
       return {
            visible:false,
+           visibles:false,
            addVisible:false,
            changeVisible:false,
            order_list:[],
            letWidth:{
-             0:'100px',
-             3:'200px',
-             4:'80px',
-             7:'100px',
+             0:'90px',
+             1:'80px',
+             2:'130px',
+             5:'150px',
+             6:'100px',
+             7:'110px',
              8:'100px',
-             9:'60px',
-             10:'60px'
+             9:'100px',
+             10:'80px',
+             11:'60px',
+             12:'100px'
            },
            lastWidth:'80px',
            lastText:'明细下载',
            tableHeader:{
              execTime:{"title":'账期首日','slot':false,'sort':'ZH'},
              billCycle:{"title":'账单周期','slot':false},
-             agreementCode:{"title":'协议编码','slot':false},
-             createTime:{"title":'账单生成时间','slot':false},
-             number:{"title":'数量/件','slot':false},
-             weight:{"title":'重量','slot':false},
-             billStatus:{"title":'状态','slot':false,'sort':'ZH'},
+             agreementCode:{"title":'协议编码','slot':false,'sort':'ZH'},
+             productName:{"title":'产品名称','slot':false},
+             customerName:{"title":'客户名称','slot':false,'sort':'ZH'},
+             createTime:{"title":'账单生成时间','slot':false,'sort':'ZH'},
+            //  number:{"title":'数量/件','slot':false},
+             countNum:{"title":'总条目数','slot':false},
+             weight:{"title":'重量(千克)','slot':true},
              reportAmount:{"title":'借方','slot':false},
              dealAmount:{"title":'贷方','slot':false},
              currency:{"title":'货币','slot':false},
-             billAge:{"title":'账龄','slot':false,'sort':'1-9'}
+             billAge:{"title":'账龄','slot':false},
+             billStatus:{"title":'状态','slot':false,'sort':'ZH'},
            },
            payload:{
-             pageSize:15,
+             pageSize:20,
              pageNumber:1,
              vendorId:null,
              billStatus:null,
@@ -231,7 +252,7 @@ import axios from '@/http/config'
 
     methods: {
         ...mapActions('basic',['loadCustomerQueryAll']),
-        ...mapActions('vendor',['loadGetBillCycles','loadGetArBills','loadGetArBillsItems','loadPutArBills']),
+        ...mapActions('vendor',['loadGetBillCycles','loadGetArBills','loadGetArBillsItems','loadPutArBills','loadDeleteArBills']),
         handleCurrentChange(page){
           this.payload.pageNumber = page ;
           this.mountFunc(this.payload)
@@ -330,8 +351,9 @@ import axios from '@/http/config'
           this.selectIndex = null ;
           this.selectItem = null ;
           this.visible = false ;
+          this.visibles = false ;
           this.dialogVisible = false
-          this.clearFunc()
+          data && this.clearFunc()
           data && this.mountFunc(this.payload)
         },
         eqitFunc(str){
@@ -353,11 +375,12 @@ import axios from '@/http/config'
         delFunc(){
           let {length} = this.order_list ;
           if(this.selectIndex!==null) {
-            this.loadDeleteOrders({data:{id:this.selectItem.id}}).then(success=> {
+            this.loadDeleteArBills([this.selectItem.id]).then(success=> {
                    this.selectIndex = null ;
                    if(length == 1){
                      this.payload.pageNumber >=2 && this.payload.pageNumber -- ;
                    }
+                   this.visibles = false ;
                    this.mountFunc(this.payload)
                    this.$message( {
                     message: success,

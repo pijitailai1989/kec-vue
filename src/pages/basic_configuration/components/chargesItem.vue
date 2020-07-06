@@ -79,6 +79,9 @@ import KecItem from './addItem'
            changeVisible:false,
            tagsList:[],
            letWidth:{
+             4:'100px',
+             5:'100px',
+             6:'100px',
            },
            lastWidth:'',
            tableHeader:{
@@ -87,7 +90,7 @@ import KecItem from './addItem'
              ledgerSubjectNumber:{"title":'科目项编号','slot':false,'sort':'ZH'},
              ledgerSubjectName:{"title":'科目项名称','slot':false,'sort':'ZH'},
              accountingObjectText:{"title":'计费依据','slot':false},
-             accountingWayText:{"title":'计费纬度','slot':false},
+             accountingWayText:{"title":'计费维度','slot':false},
              receiptsDirection:{"title":'计费方向','slot':true},
              unitCode:{"title":'计费单位','slot':false}
              

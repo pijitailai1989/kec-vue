@@ -10,10 +10,16 @@
         <div class="flexs j-end">
            <kec-button 
             v-show="!disableds"
-            @click.native="clickConfirm" 
+            v-checkSubmit
             :text="type==='addVisible'?'新建':'修改'" 
             icon="fa-floppy-o" 
             :background="type==='addVisible'?'#ED6D01':'#17A2B8'" color="#fff"></kec-button>
+            <!-- <kec-button 
+            v-show="!disableds"
+            @click.native="clickConfirm" 
+            :text="type==='addVisible'?'新建':'修改'" 
+            icon="fa-floppy-o" 
+            :background="type==='addVisible'?'#ED6D01':'#17A2B8'" color="#fff"></kec-button> -->
             <kec-button @click.native="clickClose" text="取消" icon="fa-undo" background="#6C757D" color="#fff"></kec-button>
         </div>
       </template>
@@ -31,11 +37,13 @@
                             </kec-form>
                         </div> -->
                         <div class="col-sm-8">
-                            <kec-form text="客户" width="70px" crosswise>
+                            <kec-form text="客户" width="70px" star="star" crosswise>
                             <template #input>
                               <div class="flexs">
                                     <el-select
                                       style="width:100%"
+                                        class='v-check'
+                                        v-checkParam="{required:true}"
                                         :disabled="disableds"
                                         v-model="payload.customerId"
                                         filterable
@@ -52,12 +60,14 @@
                             </kec-form>
                         </div>
                         <div class="col-sm-4">
-                            <kec-form text="结算货币" width="70px" crosswise>
+                            <kec-form text="结算货币" star="star" width="70px" crosswise>
                             <template #input>
                               <div class="flexs">
                                     <el-select
                                       style="width:100%"
                                       :disabled="disableds"
+                                       class='v-check'
+                                        v-checkParam="{required:true}"
                                         v-model="payload.currency"
                                         filterable
                                         placeholder="">
@@ -73,22 +83,49 @@
                             </template>
                             </kec-form>
                         </div>
-                        
-                        
+
                         <div class="col-sm-4">
-                            <kec-form text="销售代表" width="70px" crosswise>
+                            <kec-form text="运营主体" width="70px" star="star" crosswise>
                             <template #input>
                               <div class="flexs">
                                     <el-select
                                       style="width:100%"
                                       :disabled="disableds"
-                                        v-model="payload.managerId"
+                                       class='v-check'
+                                        v-checkParam="{required:true}"
+                                        v-model="payload.organizationId"
                                         filterable
                                         placeholder="">
                                         <el-option
-                                          v-for="item in SALES"
+                                          v-for="item in operationList"
                                           :key="item.id"
-                                          :label="item.userName"
+                                          :label="item.name"
+                                          :value="item.id">
+                                        </el-option>
+                                      </el-select>
+                                      
+                                </div>
+                            </template>
+                            </kec-form>
+                        </div>
+                        
+                        
+                        <div class="col-sm-4">
+                            <kec-form text="销售代表" width="70px" star="star" crosswise>
+                            <template #input>
+                              <div class="flexs">
+                                    <el-select
+                                      style="width:100%"
+                                      :disabled="disableds"
+                                      class='v-check'
+                                        v-checkParam="{required:true}"
+                                        v-model="payload.salesmanId"
+                                        filterable
+                                        placeholder="">
+                                        <el-option
+                                          v-for="item in service['SALES']"
+                                          :key="item.id"
+                                          :label="item.name"
                                           :value="item.id">
                                         </el-option>
                                       </el-select>
@@ -97,19 +134,21 @@
                             </kec-form>
                         </div>
                         <div class="col-sm-4">
-                            <kec-form text="客服代表" width="70px" crosswise>
+                            <kec-form text="客服代表" width="70px" star="star" crosswise>
                             <template #input>
                               <div class="flexs">
                                     <el-select
                                       style="width:100%"
                                       :disabled="disableds"
+                                      class='v-check'
+                                        v-checkParam="{required:true}"
                                         v-model="payload.servicerId"
                                         filterable
                                         placeholder="">
                                         <el-option
-                                          v-for="item in SERVICE"
+                                          v-for="item in service['CUSTOMER_SERVICE']"
                                           :key="item.id"
-                                          :label="item.userName"
+                                          :label="item.name"
                                           :value="item.id">
                                         </el-option>
                                       </el-select>
@@ -148,12 +187,14 @@
                             </kec-form>
                         </div> -->
                         <div class="col-sm-4">
-                            <kec-form text="生效日期" width="70px" crosswise>
+                            <kec-form text="生效日期" width="70px" star="star" crosswise>
                             <template #input>
                               <div class="flexs">
                                     <el-date-picker
                                     style="width:100%"
                                     :disabled="disableds"
+                                    class='v-check'
+                                        v-checkParam="{required:true}"
                                       v-model="payload.effectiveDate"
                                       type="date"
                                       placeholder="选择日期">
@@ -215,7 +256,7 @@
                         </kec-form>
                     </div>
                     <div class="col-sm-3">
-                        <kec-form text="目的国" width="70px" crosswise>
+                        <kec-form text="目的地区/国家" width="100px" crosswise>
                         <template #input>
                           <div class="flexs">
                                 <el-select
@@ -241,12 +282,14 @@
                         :disabled="disableds" plain type="success">查询</el-button>
                     </div>
                     <div class="col-sm-4">
-                        <kec-form text="可用产品" width="70px" crosswise>
+                        <kec-form text="可用产品" width="70px" star="star" crosswise>
                         <template #input>
                           <div class="flexs">
                                 <el-select
                                   style="width:100%"
                                   :disabled="disableds"
+                                  class='v-check'
+                                        v-checkParam="{required:true}"
                                     v-model="payload.productId"
                                     filterable
                                     placeholder="">
@@ -316,7 +359,7 @@ import {formateDate} from '@/utils/fun'
           effectiveDate:null,
           productId:null,
           customerId:null,
-          managerId:null,
+          salesmanId:null,
           servicerId:null,
           normalItem:false,
           sensitiveItem:false,
@@ -324,7 +367,8 @@ import {formateDate} from '@/utils/fun'
           cod:false,
           deliveryDay:null,
           shippingCountryCode:null,
-          destinationCountryCode:null
+          destinationCountryCode:null,
+          organizationId:null
         },
         tableHeader:{
              type:{"title":'类型','slot':true},
@@ -349,12 +393,12 @@ import {formateDate} from '@/utils/fun'
     },
 
     computed: {
-      ...mapState('basic',['customerList','currencyList','countryList']),
+      ...mapState('basic',['customerList','currencyList','countryList','service','operationList']),
       ...mapState('vendor',['cyclesList']),
       ...mapState('customer',['agreementQueryPage','SALES','SERVICE','productLists','examineList']),
       disableds(){
         const _ = this ;
-        if(_.type === 'addVisible' || _.payload.examineStatus == 5 ){
+        if(_.type === 'addVisible' || _.payload.examineStatus == 5 || _.payload.examineStatus == 1 ){
           return false ;
         }else{
           return true ;
@@ -365,6 +409,7 @@ import {formateDate} from '@/utils/fun'
     beforeMount() {},
 
     mounted() {
+      this.productFind()
     },
 
     methods: {
@@ -378,7 +423,7 @@ import {formateDate} from '@/utils/fun'
             effectiveDate:null,
             productId:null,
             customerId:null,
-            managerId:null,
+            salesmanId:null,
             servicerId:null,
             normalItem:false,
             sensitiveItem:false,
@@ -386,12 +431,17 @@ import {formateDate} from '@/utils/fun'
             cod:false,
             deliveryDay:null,
             shippingCountryCode:null,
+            organizationId:null,
           destinationCountryCode:null
         }
       },
       productFind(shippingCountryCode,destinationCountryCode){
          this.loadGetFindAll({destinationCountryCode,shippingCountryCode})
       },
+      submit(){
+          const _ = this ;
+          _.clickConfirm()
+        },
       clickConfirm() {
         const _this = this ;
         let { currency
@@ -400,13 +450,14 @@ import {formateDate} from '@/utils/fun'
               ,effectiveDate
               ,productId
               ,customerId
-              ,managerId
+              ,salesmanId
               ,servicerId
               ,normalItem
               ,sensitiveItem
               ,stateTrack
               ,cod
               ,id
+              ,organizationId
               ,deliveryDay} = _this.payload ;
         let data = {}
         switch(_this.type){
@@ -417,12 +468,13 @@ import {formateDate} from '@/utils/fun'
                 ,currency
                 ,productId
                 ,customerId
-                ,managerId
+                ,salesmanId
                 ,servicerId
                 ,normalItem:normalItem?1:2
                 ,sensitiveItem:sensitiveItem?1:2
                 ,stateTrack:stateTrack?1:2
                 ,cod:cod?1:2
+                ,organizationId
                 ,deliveryDay}
                 _this.loadPostAgreementCreate(data).then(success=>{
                    this.$emit('close',{type:this.type,bool:true})
@@ -446,12 +498,13 @@ import {formateDate} from '@/utils/fun'
                 ,currency
                 ,productId
                 ,customerId
-                ,managerId
+                ,salesmanId
                 ,servicerId
                 ,normalItem:normalItem?1:2
                 ,sensitiveItem:sensitiveItem?1:2
                 ,stateTrack:stateTrack?1:2
                 ,cod:cod?1:2
+                ,organizationId
                 ,id
                 ,deliveryDay}
                 _this.loadPutAgreementUpdate(data).then(success=>{
@@ -491,7 +544,7 @@ import {formateDate} from '@/utils/fun'
               ,startPaymentDate
               ,effectiveDate
               ,examineStatus
-              ,managerId
+              ,salesmanId
               ,servicerId,
               deliveryDay
               ,normalItem
@@ -499,6 +552,7 @@ import {formateDate} from '@/utils/fun'
               ,stateTrack
               ,cod
               ,currency
+              ,organizationId
               ,id
               } = payload ;
 
@@ -510,18 +564,18 @@ import {formateDate} from '@/utils/fun'
               ,examineStatus
               ,productId
               ,customerId
-              ,managerId
+              ,salesmanId
               ,servicerId
               ,normalItem:normalItem == 1 ? true :false
               ,sensitiveItem:sensitiveItem == 1 ? true :false
               ,stateTrack:stateTrack == 1 ? true :false
               ,cod:cod == 1 ? true :false
               ,deliveryDay
+              ,organizationId
               ,id}
               this.loadGetExamineLog({agreementId:id}).then(success=>{
                   this.list = this.examineList ;
               })
-              this.productFind()
             }else{
               this.closeData()
             }

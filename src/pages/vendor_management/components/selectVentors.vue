@@ -67,7 +67,9 @@ import KecSupplier from './addSupplier'
            addVisible:false,
            changeVisible:false,
            letWidth:{
-             "0":"60px"
+             "0":"80px",
+             "2":"140px",
+             "3":"140px",
            },
            lastWidth:'',
            tableHeader:{

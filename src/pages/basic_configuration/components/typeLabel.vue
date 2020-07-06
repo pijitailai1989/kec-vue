@@ -80,11 +80,12 @@ import KecLabel from './addLabel'
            changeVisible:false,
            tagsList:[],
            letWidth:{
-             0:'60px'
+             0:'120px',
+             1:'150px',
            },
            lastWidth:'',
            tableHeader:{
-             id:{"title":'id','slot':false},
+             id:{"title":'ID','slot':false},
              tagTypeText:{"title":'类型','slot':false,'sort':'ZH'},
              tagName:{"title":'标签名','slot':false,'sort':'ZH'},
              tagValue:{"title":'标签编码','slot':false,'sort':'ZH'}

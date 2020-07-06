@@ -68,7 +68,7 @@
        type="success"
       @click.native="mountFunc(payload)">查询</el-button>
       <el-button size="medium" style="margin:0 0 4px 5px" type="primary"
-      @click.native="eqitFunc('billDialog')">手工触发</el-button>
+      @click.native="eqitFunc('billDialog')">手动创建</el-button>
     </div>
     <kec-scroll :numbers="239" class="list">
         <div class="kec-content">

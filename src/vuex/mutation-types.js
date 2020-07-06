@@ -90,3 +90,6 @@ export const GET_PRODUCT_PRICES = "getProductPrices"
 export const POST_PRODUCT_PRICES = "postProductPrices"
 export const GET_COMPARATIVE_RELATION = "getComparativeRelation"
 export const GET_CHARGE_ITEMS = "getChargeItems"
+
+export const GET_EXPENSES = "getExpenses"
+export const GET_EXPENSE_NUMBER_TYPE = "getExpenseNumberType"
