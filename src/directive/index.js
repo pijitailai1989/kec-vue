@@ -5,6 +5,12 @@ const IP_REGEX = '^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\.' +
 '(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\.' +
 '(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$' ;
 
+const focus = Vue.directive('focus',{
+  inserted: function(el,{value}){
+    el.querySelector('input').focus();
+  }
+})
+
 // 注册一个全局自定义指令 `v-checkParam`
 const checkParam = Vue.directive('checkParam', {
     inserted: function (el, binding, vNode) {

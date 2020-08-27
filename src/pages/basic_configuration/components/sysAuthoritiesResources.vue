@@ -46,32 +46,35 @@
         
     </div>
     <div class="kec-content">
-        <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
+        <!-- <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
           <div-sort class="padd" style="width:240px" @clickSort="sortFunc" :sortType="{a:'moduleName',b:'ZH'}">模块</div-sort>
-          <div-sort class="padd" style="width:200px" @clickSort="sortFunc" :sortType="{a:'moduleName',b:'ZH'}">权限名称</div-sort>
+          <div-sort class="padd" style="width:140px" @clickSort="sortFunc" :sortType="{a:'moduleName',b:'ZH'}">权限名称</div-sort>
           <div-sort class="padd flx" @clickSort="sortFunc" :sortType="{a:'routerPathString',b:'ZH'}">路径</div-sort>
           <div class="padd" style="width:50px">分配</div>
-          <div class="padd" style="width:49px">增</div>
-          <div class="padd" style="width:50px">查</div>
-          <div class="padd" style="width:50px">改</div>
-          <div class="padd" style="width:50px">删</div>
-        </div>
+          <div class="padd" style="width:39px">增</div>
+          <div class="padd" style="width:40px">查</div>
+          <div class="padd" style="width:40px">改</div>
+          <div class="padd" style="width:40px">删</div>
+        </div> -->
         <kec-scroll :numbers="234" style="border-bottom:1px solid #EBEEF5">
           <el-table
              ref="singleTable"
               class="scrollbar"
               :data="tableRole"
               :header-cell-style="{
+                background:themeColor.content_border_color,
+                borderRight:'1px solid #FFF',
                 fontWeight:'bold',
                 height:'38px',
-                color:'#000',
+                color:'#fff',
                 padding:'0'
               }"
+              :max-height="tableHeight"
               highlight-current-row
               @current-change="changeSelectFunc"
               :cell-style="{
                 borderRight:'1px solid #EBEEF5',
-                padding:'6px 0'
+                padding:'3px 0'
               }"
               style="width:100%">
               <el-table-column
@@ -82,9 +85,9 @@
               <el-table-column
               prop="diyModuleName"
               label="权限名称"
-              width="200">
+              width="140">
                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.diyModuleName" disabled placeholder="" size="small"></el-input>
+                  <el-input v-model="scope.row.diyModuleName" disabled placeholder="" size="mini"></el-input>
                 </template>
               </el-table-column>
               <el-table-column
@@ -96,16 +99,20 @@
               label="分配"
               width="50">
                 <template slot-scope="scope">
-                  <el-checkbox 
-                  @change="checkRole(scope.row.id,scope.row.role)"
-                  v-model="scope.row.role" 
-                  :disabled="!roleId"></el-checkbox>
+                  <div class="flexs j-center">
+
+                  
+                      <el-checkbox 
+                      @change="checkRole(scope.row.id,scope.row.role)"
+                      v-model="scope.row.role" 
+                      :disabled="!roleId"></el-checkbox>
+                  </div>
                 </template>
               </el-table-column>
               <el-table-column
               prop="create"
               label="增"
-              width="50">
+              width="40">
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.create" disabled></el-checkbox>
                 </template>
@@ -113,7 +120,7 @@
               <el-table-column
               prop="read"
               label="查"
-              width="50"
+              width="40"
               >
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.read" disabled></el-checkbox>
@@ -122,7 +129,7 @@
               <el-table-column
               prop="update"
               label="改"
-              width="50">
+              width="40">
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.update" disabled></el-checkbox>
                 </template>
@@ -131,7 +138,7 @@
               <el-table-column
               prop="delete"
               label="删"
-              width="49">
+              width="39">
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.delete" disabled></el-checkbox>
                 </template>
@@ -145,7 +152,7 @@
 
 <script>
 import {mapState,mapActions,mapMutations} from 'vuex'
-import {sortCompare } from '@/utils/fun'
+import {sortCompare,getClientHeight } from '@/utils/fun'
 import {KecButton , KecTable ,KecScroll ,KecButtonClick,KecForm,KecSort}  from '@/common/components'
 import addResources from './addResources' 
   export default {
@@ -184,6 +191,9 @@ import addResources from './addResources'
       ...mapState('home',['themeColor']),
       filteredTableData: function(){
         return this.table
+      },
+      tableHeight: function(){
+        return getClientHeight() - 235
       }
       
     },

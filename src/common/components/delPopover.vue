@@ -13,7 +13,7 @@
  
 <script>
 module.exports = {
-  name: "del-popover",
+  name: "KecDelPopover",
   props: ["content", "date"],
   data: function() {
     return {

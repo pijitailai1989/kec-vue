@@ -9,7 +9,7 @@
 <script>
 
   export default {
-    name:'switchs',
+    name:'KecSwitch',
     props:{
         icon:String,
         text:String

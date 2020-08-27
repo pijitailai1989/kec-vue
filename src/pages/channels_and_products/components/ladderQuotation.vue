@@ -35,7 +35,7 @@
             
             <div class="col-sm-12">
                 <div class="col-sm-5">
-                    <kec-form text="科目项名称 ：" width="90px" crosswise>
+                    <kec-form text="科目项名称 :" width="100px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.ledgerSubjectName}}
@@ -45,7 +45,7 @@
                 </div>
                 
                 <div class="col-sm-4">
-                    <kec-form text="计费维度 ：" width="90px" crosswise>
+                    <kec-form text="计费维度 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.chargeItemAccountingWay}}
@@ -54,7 +54,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-3">
-                    <kec-form text="单位乘数 ：" width="90px" crosswise>
+                    <kec-form text="单位乘数 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.unitRate}}
@@ -63,7 +63,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-5">
-                    <kec-form text="科目编号 ：" width="90px" crosswise>
+                    <kec-form text="科目编号 :" width="100px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.ledgerSubjectNumber}}
@@ -72,7 +72,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-4">
-                    <kec-form text="单位 ：" width="90px" crosswise>
+                    <kec-form text="单位 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.unit}}
@@ -81,7 +81,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-3">
-                    <kec-form text="币种 ：" width="90px" crosswise>
+                    <kec-form text="币种 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.currency}}
@@ -115,7 +115,7 @@
                                           
                                         </div>
                                         <div class="col-sm-5">
-                                          <kec-form text="费用触发货态" width="90px" star="star" crosswise>
+                                          <kec-form text="费用触发货态" width="100px" star="star" crosswise>
                                             <template #input>
                                               
                                               <el-select v-model="item.standardStateIds" 
@@ -197,13 +197,8 @@
                                             height="200"
                                             :data="item.priceGradientItems"
                                             tooltip-effect="dark"
-                                            :cell-style="{
-                                              padding:'3px 0'
-                                            }"
-                                            :header-cell-style="{
-                                              height:'36px',
-                                              padding:'0'
-                                            }"
+                                            :cell-style="{ padding:'3px 0'}"
+                                            :header-cell-style="{ padding:'5px 0',backgroundColor:'#F5F7FA'}"
                                             style="width: 100%">
                                             <el-table-column
                                               prop="index"

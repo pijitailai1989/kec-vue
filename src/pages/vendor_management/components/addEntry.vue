@@ -54,7 +54,7 @@
                 </kec-form>
           </div>
           <div class="col-sm-6">
-              <kec-form text="单据类型" crosswise width="70px">
+              <kec-form text="提单类型" crosswise width="70px">
                   <template #input>
                     <div class="flexs a-center">
                         <el-select v-model="payload.expenseNumberType" filterable placeholder="" size="medium" style="width:100%">
@@ -70,13 +70,113 @@
                 </kec-form>
           </div>
           <div class="col-sm-6">
-            <kec-form text="单据号码" crosswise width="70px">
-              <template #input>
-                <div class="flexs a-center">
-                    <el-input v-model="payload.expenseNumber" placeholder="单据号码" size="medium"></el-input>
-                </div>
-              </template>
-            </kec-form>
+              <kec-form text="提单号码" crosswise width="70px">
+                  <template #input>
+                    <div class="flexs a-center">
+                        <el-select v-model="payload.expenseNumber" filterable
+                        @change="numberFun" placeholder="" size="medium" style="width:100%">
+                          <el-option
+                            v-for="item in ladingBillsList"
+                            :key="item.id"
+                            :label="item.ladingBillNumber"
+                            :value="item.ladingBillNumber">
+                          </el-option>
+                        </el-select>
+                    </div>
+                  </template>
+                </kec-form>
+          </div>
+          <div class="col-sm-12 borders" style="margin-bottom:5px" v-show="payload.expenseNumber">
+            <div class="col-sm-6">
+              <kec-form text="提单号码" crosswise width="70px">
+                <template #input>
+                  <div class="flexs a-center">
+                      <el-input v-model="billItem.ladingBillNumber" placeholder="" size="small" disabled></el-input>
+                  </div>
+                </template>
+              </kec-form>
+            </div>
+            <div class="col-sm-6">
+              <kec-form text="承运人" crosswise width="70px">
+                <template #input>
+                  <div class="flexs a-center">
+                      <el-input v-model="billItem.carriageVendorName" placeholder="" size="small" disabled></el-input>
+                  </div>
+                </template>
+              </kec-form>
+            </div>
+            <div class="col-sm-6">
+              <kec-form text="发货人" crosswise width="70px">
+                <template #input>
+                  <div class="flexs a-center">
+                      <el-input v-model="billItem.shipper" placeholder="" size="small" disabled></el-input>
+                  </div>
+                </template>
+              </kec-form>
+            </div>
+            <div class="col-sm-6">
+              <kec-form text="收货人" crosswise width="70px">
+                <template #input>
+                  <div class="flexs a-center">
+                      <el-input v-model="billItem.consignee" placeholder="" size="small" disabled></el-input>
+                  </div>
+                </template>
+              </kec-form>
+            </div>
+            <div class="col-sm-6">
+              <kec-form text="起运港" crosswise width="70px">
+                <template #input>
+                  <div class="flexs a-center">
+                      <el-input v-model="billItem.departurePortName" placeholder="" size="small" disabled></el-input>
+                  </div>
+                </template>
+              </kec-form>
+            </div>
+            <div class="col-sm-6">
+              <kec-form text="目的港" crosswise width="70px">
+                <template #input>
+                  <div class="flexs a-center">
+                      <el-input v-model="billItem.arrivalPortName" placeholder="" size="small" disabled></el-input>
+                  </div>
+                </template>
+              </kec-form>
+            </div>
+            <div class="col-sm-6">
+              <kec-form text="离港时间" crosswise width="70px">
+                <template #input>
+                  <div class="flexs a-center">
+                      <el-input v-model="billItem.departureDate" placeholder="" size="small" disabled></el-input>
+                  </div>
+                </template>
+              </kec-form>
+            </div>
+            <div class="col-sm-6">
+              <kec-form text="到港时间" crosswise width="70px">
+                <template #input>
+                  <div class="flexs a-center">
+                      <el-input v-model="billItem.arrivalDate" placeholder="" size="small" disabled></el-input>
+                  </div>
+                </template>
+              </kec-form>
+            </div>
+            <div class="col-sm-6">
+              <kec-form text="付费实重" crosswise width="70px">
+                <template #input>
+                  <div class="flexs a-center">
+                      <el-input v-model="billItem.countWeight" placeholder="" size="small" disabled></el-input>
+                  </div>
+                </template>
+              </kec-form>
+            </div>
+            <div class="col-sm-6">
+              <kec-form text="运费总额" crosswise width="70px">
+                <template #input>
+                  <div class="flexs a-center">
+                      <el-input v-model="billItem.countMoney" placeholder="" size="small" disabled></el-input>
+                  </div>
+                </template>
+              </kec-form>
+            </div>
           </div>
           <div class="col-sm-12 borders">
             <div class="col-sm-12">
@@ -84,6 +184,7 @@
                 :data="payload.unamortizedExpenseItems"
                 height="250"
                 :cell-style="{ padding:'3px 0' }"
+                :header-cell-style="{ padding:'5px 0',backgroundColor:'#F5F7FA'}"
                 style="width: 100%">
                 <el-table-column
                   prop="date"
@@ -137,7 +238,7 @@
                 </el-table-column>
                 <el-table-column
                   label="删除"
-                  width="60">
+                  width="50">
                   <template slot-scope="scope">
                       <i class="fa fa-minus-circle cur fa-lg" 
                       @click="itemsRow(true,scope.$index)"
@@ -191,9 +292,21 @@ import {formateDate} from '@/utils/fun'
                   "chargeItemID": null,
                   "chargeItemCode": null
               }
-          ] 
+          ],
+          
         },
-        
+        billItem:{
+          "ladingBillNumber":"",
+          "carriageVendorName":"",
+          "shipper":"",
+          "consignee":"",
+          "departurePortName":"",
+          "arrivalPortName":"",
+          "arrivalDate":"",
+          "departureDate":"",
+          "countWeight":"",
+          "countMoney":"",
+        }
       };
     },
 
@@ -204,17 +317,18 @@ import {formateDate} from '@/utils/fun'
     },
 
     computed: {
-      ...mapState('vendor',['vendorProductList','expenseType']),
+      ...mapState('vendor',['vendorProductList','expenseType','ladingBillsList','billsItem']),
       ...mapState('basic',['supplierList','currencyList','chargeItemsList']),
     },
 
     beforeMount() {},
 
     mounted() {
+      // this.loadGetSimpleLadingBills()
     },
 
     methods: {
-      ...mapActions('vendor',['loadPostExpenses','loadPutExpenses']),
+      ...mapActions('vendor',['loadPostExpenses','loadPutExpenses','loadGetSimpleLadingBills','loadGetLadingBills']),
       closeData(){
         this.payload={
           "id":null,
@@ -231,7 +345,31 @@ import {formateDate} from '@/utils/fun'
                   "chargeItemCode": null
               }
           ] 
+        };
+        this.billItem = {
+          "ladingBillNumber":"",
+          "carriageVendorName":"",
+          "shipper":"",
+          "consignee":"",
+          "departurePortName":"",
+          "arrivalPortName":"",
+          "arrivalDate":"",
+          "departureDate":"",
+          "countWeight":"",
+          "countMoney":"",
         }
+      },
+      numberFun(number){
+        this.loadGetLadingBills([number]).then(success=>{
+            let { ladingBillNumber,carriageVendorName,shipper,consignee,
+                  departurePortName,arrivalPortName,arrivalDate,departureDate,
+                  countWeight,countMoney} = this.billsItem ;
+            this.billItem = { ladingBillNumber,carriageVendorName,shipper,consignee,
+                              departurePortName,arrivalPortName,
+                              arrivalDate:arrivalDate?formateDate(arrivalDate,true):'',
+                              departureDate:departureDate?formateDate(departureDate,true):'',
+                              countWeight,countMoney}
+        })
       },
       changeItem(id,index){
         
@@ -353,6 +491,7 @@ import {formateDate} from '@/utils/fun'
                 
               }
               this.payload = {id,vendorId,expenseNumber,expenseNumberType,execDate,unamortizedExpenseItems}
+              this.numberFun(expenseNumber)
             }else{
               this.closeData()
             }

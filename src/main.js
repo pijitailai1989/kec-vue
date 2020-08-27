@@ -55,7 +55,7 @@ Vue.use(Message)
 const requireComponents = require.context('./common/components',true,/\.vue/)
 requireComponents.keys().forEach(fileName => {
  const reqCom = requireComponents(fileName)
- const reqComName = fileName.split('/')[1]
+ const reqComName = reqCom.default['name']
  Vue.component(reqComName,reqCom.default || reqCom)
 })
 
@@ -67,7 +67,7 @@ router.beforeEach((to, from, next) => {
     let isShowMenu = JSON.parse( sessionStorage.getItem('isShowMenu') ) ;
     let bool = null ;
     if(isShowMenu) bool = authority in isShowMenu ;
-    bool ? next() : setTimeout(()=>{ next('/login') },2000) 
+    bool ? next() : setTimeout(()=>{ next('/login') },1000) 
     !bool && (
       Message({
         showClose: true,

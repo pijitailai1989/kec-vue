@@ -1,7 +1,7 @@
 <template>
     <kec-dialog 
       boxWidth="800px"
-      boxTop="12vh"
+      boxTop="20vh"
       v-if="dialogVisible"
       >
       <template v-slot:title>
@@ -45,14 +45,14 @@
             <div class="kec-content">
                 <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
                   <div class="padd" style="width:200px">模块</div>
-                  <div class="padd" style="width:200px">权限名称</div>
+                  <div class="padd" style="width:140px">权限名称</div>
                   <div class="padd flx">路径</div>
-                  <div class="padd" style="width:49px">增</div>
-                  <div class="padd" style="width:50px">查</div>
-                  <div class="padd" style="width:50px">改</div>
-                  <div class="padd" style="width:50px">删</div>
+                  <div class="padd" style="width:39px">增</div>
+                  <div class="padd" style="width:40px">查</div>
+                  <div class="padd" style="width:40px">改</div>
+                  <div class="padd" style="width:40px">删</div>
                 </div>
-                <kec-scroll :numbers="600">
+                <kec-scroll>
                   <el-table
                       class="scrollbar"
                       :data="table"
@@ -64,7 +64,7 @@
                       }"
                       :cell-style="{
                         borderRight:'1px solid #EBEEF5',
-                        padding:'6px 0'
+                        padding:'3px 0'
                       }"
                       style="width:100%">
                       <el-table-column
@@ -75,9 +75,9 @@
                       <el-table-column
                       prop="diyModuleName"
                       label="权限名称"
-                      width="200">
+                      width="140">
                         <template slot-scope="scope">
-                          <el-input v-model="scope.row.diyModuleName" placeholder="" size="small"></el-input>
+                          <el-input v-model="scope.row.diyModuleName" placeholder="" size="mini"></el-input>
                         </template>
                       </el-table-column>
                       <el-table-column
@@ -87,7 +87,7 @@
                       <el-table-column
                       prop="create"
                       label="增"
-                      width="50">
+                      width="40">
                         <template slot-scope="scope">
                           <el-checkbox v-model="scope.row.create"></el-checkbox>
                         </template>
@@ -95,7 +95,7 @@
                       <el-table-column
                       prop="read"
                       label="查"
-                      width="50"
+                      width="40"
                       >
                         <template slot-scope="scope">
                           <el-checkbox v-model="scope.row.read"></el-checkbox>
@@ -104,7 +104,7 @@
                       <el-table-column
                       prop="update"
                       label="改"
-                      width="50">
+                      width="40">
                         <template slot-scope="scope">
                           <el-checkbox v-model="scope.row.update"></el-checkbox>
                         </template>
@@ -113,7 +113,7 @@
                       <el-table-column
                       prop="delete"
                       label="删"
-                      width="49">
+                      width="39">
                         <template slot-scope="scope">
                           <el-checkbox v-model="scope.row.delete"></el-checkbox>
                         </template>

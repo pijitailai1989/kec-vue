@@ -5,8 +5,8 @@
            <div class="flexs a-center">
             <kec-form crosswise text="产品" width="40px">
                 <template #input>
-                  <el-select v-model="productId" size="medium" @change="changeProductId" 
-                  filterable placeholder="" style="width:140px">
+                  <el-select v-model="productId" size="medium" @change="changeProductId(productId);isStandard=null;" 
+                    filterable placeholder="" style="width:140px">
                     <el-option
                       v-for="item in productsList"
                       :key="item.id"
@@ -16,6 +16,23 @@
                   </el-select>
                 </template>
               </kec-form>
+              <kec-form text="类型" crosswise width="40px">
+                  <template #input>
+                    <div class="flexs a-center">
+                        <el-select v-model="isStandard" 
+                        @change="selectType"
+                        :disabled="!productId" clearable
+                        placeholder="" size="medium" style="width:100px">
+                          <el-option
+                            v-for="item in 2"
+                            :key="item"
+                            :label="item===1?'标准价':'协议价'"
+                            :value="item">
+                          </el-option>
+                        </el-select>
+                    </div>
+                  </template>
+                </kec-form>
               <kec-form text="目的地区/国家" crosswise width="100px">
                   <template #input>
                     <div class="flexs a-center">
@@ -62,18 +79,45 @@
            
       </div>
       <div class="flexs a-center j-end">
-          <kec-button-click  text="保存" style="width:60px" 
-          :disabled="!productId"
-          @click="modificationFunc(payload)"
-          background="#F18A34" color="#fff"></kec-button-click>
+          <el-popover
+            placement="left-start"
+            width="150"
+            :disabled="!productId"
+            v-model="visibleSum">
+            <p>确定保存报价表 ？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="visibleSum = false">取消</el-button>
+              <el-button type="primary"  size="mini" @click="modificationFunc(payload)">确定</el-button>
+            </div>
+            <kec-button-click  slot="reference" text="保存" style="width:60px" :disabled="!productId"
+                               background="#F18A34" color="#fff"></kec-button-click>
+          </el-popover>
           <kec-button-click  text="新增报价表" style="width:80px" 
           :disabled="!productId"
           @click="newQuoteFunc(productId)"
           background="#C92626" color="#fff"></kec-button-click>
-          <kec-button-click  text="拷贝报价表" style="width:80px" 
-          :disabled="!productId"
-          @click="cloneQuoteFunc(payload.id)"
-          background="#7ABF45" color="#fff"></kec-button-click>
+          
+          <el-popover
+            placement="left-start"
+            width="240"
+            :disabled="!payload.quotationCode"
+            v-model="visible">
+            <p>确定拷贝报价表 ？</p>
+            <kec-form crosswise width="80px" text="类型 ：">
+                  <template #input>
+                    <div class="flexs" style="padding:10px 0">
+                        <el-radio v-model="isStandard" :label="1">标准价</el-radio>
+                        <el-radio v-model="isStandard" :label="2">协议价</el-radio>
+                    </div>
+                  </template>
+            </kec-form>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+              <el-button type="primary"  :disabled="!isStandard" size="mini" @click="cloneQuoteFunc(payload.id,isStandard)">确定</el-button>
+            </div>
+              <kec-button-click slot="reference" text="拷贝报价表" style="width:80px" :disabled="!payload.quotationCode"
+               background="#7ABF45" color="#fff"></kec-button-click>
+          </el-popover>
       </div>
         
     </div>
@@ -87,8 +131,8 @@
                     <div >
                       <div class="row">
                         <div class="col-sm-12" style="margin-top:5px">
-                          <div class="col-sm-3">
-                             <kec-form crosswise text="产品 :" width="50px">
+                          <div class="col-sm-2">
+                             <kec-form crosswise text="产品 :" width="40px">
                               <template #input>
                                 <div class="flexs a-center" style="height:36px">
                                     <span>{{payload.productName?payload.productName:'无'}}</span>
@@ -97,7 +141,7 @@
                              </kec-form>
                           </div>
                           <div class="col-sm-2">
-                            <kec-form crosswise text="编号 :" width="50px">
+                            <kec-form crosswise text="编号 :" width="40px">
                               <template #input>
                                 <div class="flexs a-center" style="height:36px">
                                     <span>{{payload.quotationCode?payload.quotationCode:'无'}}</span>
@@ -105,8 +149,33 @@
                               </template>
                             </kec-form>
                             </div>
-                          <div class="col-sm-7">
-                            <kec-form crosswise text="描述" width="70px">
+                            
+                            <div class="col-sm-1">
+                            <kec-form crosswise text="类型 :" width="40px">
+                              <template #input>
+                                <div class="flexs a-center" style="height:36px">
+                                    <span v-if="payload.isStandard">{{payload.isStandard==1?'标准价':'协议价'}}</span>
+                                    <span v-else>{{'无'}}</span>
+                                </div>
+                              </template>
+                            </kec-form>
+                            </div>
+                            <div class="col-sm-3" v-if="payload.isStandard==1">
+                            <kec-form crosswise text="执行日期" width="70px">
+                              <template #input>
+                                <div class="flexs a-center" style="height:36px；">
+                                    <el-date-picker
+                                     size="medium" style="width:100%"
+                                      v-model="payload.executeTime"
+                                      type="date"
+                                      placeholder="选择日期">
+                                    </el-date-picker>
+                                </div>
+                              </template>
+                            </kec-form>
+                            </div>
+                            <div :class="[payload.isStandard==1?'col-sm-4':'col-sm-7']">
+                            <kec-form crosswise text="描述" :width="payload.isStandard==1?'40px':'70px'">
                               <template #input>
                                 <div class="flexs a-center">
                                     <el-input v-model="payload.description" 
@@ -219,13 +288,13 @@
                                     color:'#fff',
                                     padding:'0'
                                   }"
+                                  :max-height="tableHeight"
                                   highlight-current-row
                                   @current-change="changeSelectFunc"
                                   :cell-style="{
                                     borderRight:'1px solid #EBEEF5',
-                                    padding:'6px 0'
-                                  }"
-                                  style="width:100%">
+                                    padding:'4px 0'
+                                  }">
                                   <el-table-column
                                   label="序号"
                                   width="50">
@@ -241,7 +310,7 @@
                                   width="100">
                                   <template slot-scope="scope">
                                     <el-select v-model="scope.row.offerType"
-                                    placeholder="请选择" size="small">
+                                    placeholder="请选择" size="mini">
                                         <el-option
                                           v-for="item in options"
                                           :key="item.code"
@@ -281,11 +350,11 @@
                                         width="300"
                                         trigger="hover">
                                         <div>
-                                          <el-tag class="pr" type="info" size="small" 
+                                          <el-tag class="pr" type="info" size="mini" 
                                           v-for="(name,i) of scope.row.tagName" 
                                           :key="i">{{name}}</el-tag>
                                         </div>
-                                        <el-tag class="pr ell" type="info" slot="reference" size="small">
+                                        <el-tag class="pr ell" type="info" slot="reference" size="mini">
                                           {{scope.row.tagName[0]}}
                                         </el-tag>
                                       </el-popover>
@@ -299,7 +368,7 @@
                                       <el-input-number v-model="scope.row.unitPrice"
                                        v-show="scope.row.offerType==='ALL_DO'"
                                        style="width:100%"
-                                       :controls="false" size="small"
+                                       :controls="false" size="mini"
                                       :min="0.00"></el-input-number>
                                     </template>
                                   </el-table-column>
@@ -311,7 +380,7 @@
                                   <template slot-scope="scope">
                                       <el-input-number v-model="scope.row.lowestPrice"
                                        style="width:100%"
-                                       :controls="false" size="small"
+                                       :controls="false" size="mini"
                                       :min="0.00"></el-input-number>
                                     </template>
                                   </el-table-column>
@@ -320,7 +389,7 @@
                                   label="币种"
                                   width="100">
                                     <template slot-scope="scope">
-                                      <el-select v-model="scope.row.currency" placeholder="请选择" size="small">
+                                      <el-select v-model="scope.row.currency" placeholder="请选择" size="mini">
                                         <el-option
                                           v-for="item in currencyList"
                                           :key="item.id"
@@ -340,7 +409,7 @@
                                   <template slot-scope="scope">
                                       <el-input-number v-model="scope.row.unitRate"
                                        style="width:100%"
-                                       :controls="false" size="small"></el-input-number>
+                                       :controls="false" size="mini"></el-input-number>
                                     </template>
                                   </el-table-column>
                                   <el-table-column
@@ -366,7 +435,7 @@
                                   <template slot-scope="scope">
                                       <el-input-number v-model="scope.row.volumeWeightFactory"
                                        style="width:100%"
-                                       :controls="false" size="small"
+                                       :controls="false" size="mini"
                                       :min="1"></el-input-number>
                                     </template>
                                   </el-table-column>
@@ -378,7 +447,7 @@
                                       
                                       <el-input-number v-model="scope.row.countLightGoodsRatio"
                                        style="width:100%"
-                                       :controls="false" size="small"
+                                       :controls="false" size="mini"
                                       :min="1"></el-input-number>
                                       
                                     </template>
@@ -440,7 +509,8 @@ import {formateDate,getClientHeight} from '@/utils/fun'
       return {
            componentName:'quoteDialog',
            dialogVisible:false,
-           visible:true,
+           visible:false,
+           visibleSum:false,
            countryCode:null,
            partitionId:null,
            productId:null,
@@ -453,12 +523,15 @@ import {formateDate,getClientHeight} from '@/utils/fun'
              {code:'ECHELON',name:'阶梯'}
            ],
            tabsIndex:0,
+           isStandard:null,
            payload:{
              description:'',
              destinationCountryNameList:[],
              schemaIds:[],
              id:null,
              productId:null,
+             isStandard:null,
+             executeTime:'',
              productName:'',
              productPrices:[],
              quotationCode:''
@@ -480,8 +553,7 @@ import {formateDate,getClientHeight} from '@/utils/fun'
            countryList:{
              countryList:[],
              partitionList:{}
-           },
-           tableHeight:0,
+           }
       };
     },
 
@@ -503,7 +575,16 @@ import {formateDate,getClientHeight} from '@/utils/fun'
       ...mapState('basic',['currencyList','productsList','serverList']),
       ...mapState('channels',['productPartitionsList','countryPartitionList',
       'chargeItemsList','productPartitionsItem']),
-      ...mapState('home',['themeColor']),
+      ...mapState('home',['themeColor','tabsShow']),
+      tableHeight: function(){
+        let that = this ;
+        if(that.tabsShow === 'show'){
+           return getClientHeight() - 440
+        }else{
+           return getClientHeight() - 400
+        }
+        
+      }
       
       
       
@@ -518,7 +599,6 @@ import {formateDate,getClientHeight} from '@/utils/fun'
       this.loadGetQueryLevelTwo()
       this.loadEnumsTagTypes()
       this.loadQueryServerTypes()
-      this.tableHeight = parseInt( getClientHeight() - 400 )
 
     },
 
@@ -592,6 +672,8 @@ import {formateDate,getClientHeight} from '@/utils/fun'
                           schemaIds:[],
                           id:null,
                           productId:null,
+                          isStandard:null,
+                          executeTime:'',
                           productName:'',
                           productPrices:[],
                           quotationCode:''
@@ -610,6 +692,44 @@ import {formateDate,getClientHeight} from '@/utils/fun'
             });
          })
          
+        },
+        selectType(type,quotationCode,str){
+          const _ = this ;
+           let arr = []
+           if(_.productPartitionsList.length>0){
+              if(!type){
+                  arr = _.productPartitionsList
+              }else{
+                  arr = _.productPartitionsList.filter(item=>{
+                    return item.showIsStandard == type ;
+                  })
+              }
+              
+           }
+
+           if(arr && arr.length){
+             let ids = null ;
+             if(str=='save'){
+               let {id} = arr.find(item=>{
+                  return quotationCode == item.quotationCode ;
+                })
+                ids = id ;
+             }else{
+                ids = arr[0]['id']
+             }
+             _.loadGetProductQuotationId([ids]).then(success => {
+                _.payload = _.productPartitionsItem;
+                _.loadGetTags({pageSize:10000,pageNumber:1}).then(success=>{
+                      _.filterTags(_.productPartitionsItem.schemaIds)
+                    })
+             })
+             _.versionsText = arr.map(item=>{
+               return item.quotationCode ;
+             })
+           }else{
+             _.payload = [] 
+             _.versionsText = ['无']
+           }
         },
         selectQuotoFunc(type){
            const _ = this ;
@@ -654,9 +774,9 @@ import {formateDate,getClientHeight} from '@/utils/fun'
           this.dialogVisible = true
           this.itemData = {productId} ;
         },
-        cloneQuoteFunc(id){
-          this.loadPostProductQuotation([id]).then(success => {
-            this.cancelFunc(true)
+        cloneQuoteFunc(id,isStandard){
+          this.loadPostProductQuotation([id+'-'+isStandard]).then(success => {
+            this.changeProductId(this.payload.productId,this.payload.quotationCode,true)
             this.$message( {
                     message: success,
                     type: 'success'
@@ -675,11 +795,14 @@ import {formateDate,getClientHeight} from '@/utils/fun'
              schemaIds,
              id,
              productId,
+             isStandard,
+             executeTime,
              productName,
              productPrices,
              quotationCode
              } = payload ;
              let content = []
+             productPrices = productPrices || []
              if(productPrices.length>=1){
                productPrices.forEach(element => {
                  let obj = {
@@ -697,10 +820,12 @@ import {formateDate,getClientHeight} from '@/utils/fun'
                });
              }
              let data = {productId,id,description,
+             executeTime:executeTime?formateDate(executeTime,false):'',
+             isStandard,
              destinationCountryIds:destinationCountryNameList,
              schemaIds,content}
              this.loadPutProductQuotation(data).then(success=>{
-                    this.changeProductId(productId,quotationCode) ;
+                    this.changeProductId(productId,quotationCode,true,'save') ;
                     
                     this.$message( {
                     message: success,
@@ -732,28 +857,33 @@ import {formateDate,getClientHeight} from '@/utils/fun'
               })
             }
         },
-        changeProductId(productId,quotationCode){
+        changeProductId(productId,quotationCode,bool,str){
           const _ = this ;
            _.serverType = null
            _.chargeItemIds = []
           _.partitionId = null ;
           _.countryCode = null ;
+          _.visible = false ;
+          _.visibleSum = false ;
           this.loadGetProductQuotation([productId]).then(success=>{
             if(_.productPartitionsList.length){
+              
               _.versionsText = _.productPartitionsList.map(item=>{
                return item.quotationCode ;
              })
-             if(quotationCode){
+             if(quotationCode && !bool){
                this.tabsFunc(quotationCode)
+               
              }else{
                
-               let {id} = _.productPartitionsList[0]
-                _.loadGetProductQuotationId([id]).then(success => {
-                    _.payload = _.productPartitionsItem;
-                    _.loadGetTags({pageSize:10000,pageNumber:1}).then(success=>{
-                      _.filterTags(_.productPartitionsItem.schemaIds)
-                    })
-                })
+              //  let {id} = _.productPartitionsList[0]
+              //   _.loadGetProductQuotationId([id]).then(success => {
+              //       _.payload = _.productPartitionsItem;
+              //       _.loadGetTags({pageSize:10000,pageNumber:1}).then(success=>{
+              //         _.filterTags(_.productPartitionsItem.schemaIds)
+              //       })
+              //   })
+                _.selectType(_.isStandard,quotationCode,str)
              }
              
             }else{
@@ -763,6 +893,8 @@ import {formateDate,getClientHeight} from '@/utils/fun'
                           schemaIds:[],
                           id:null,
                           productId:null,
+                          isStandard:null,
+                          executeTime:'',
                           productName:'',
                           productPrices:[],
                           quotationCode:''
@@ -824,13 +956,20 @@ import {formateDate,getClientHeight} from '@/utils/fun'
         },
         cancelFunc(bool){
           this.dialogVisible = false ;
-          this.itemData = null
+          this.itemData = null ;
+          let lean = false ;
+          if(this.componentName === 'ladderQuotation' || this.componentName==='onlyQuotation') {
+            lean = false
+          }else{
+            lean = true
+            this.isStandard = bool ;
+          }
           if(bool){
              if(this.payload.productId){
-               this.changeProductId(this.payload.productId,this.payload.quotationCode)
+               this.changeProductId(this.payload.productId,this.payload.quotationCode,lean)
                
              }else{
-               this.changeProductId(this.productId,this.payload.quotationCode)
+               this.changeProductId(this.productId,this.payload.quotationCode,lean)
              } 
           } 
         },

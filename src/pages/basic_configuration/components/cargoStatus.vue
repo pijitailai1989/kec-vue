@@ -25,30 +25,33 @@
       </el-popover>
     </div>
     <div class="kec-content">
-        <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
-          <div-sort class="padd" style="min-width:149px" @clickSort="sortFunc" :sortType="{a:'code',b:'ZH'}">编码</div-sort>
+        <!-- <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
+          <div-sort class="padd flx" style="min-width:199px" @clickSort="sortFunc" :sortType="{a:'code',b:'ZH'}">编码</div-sort>
           <div-sort class="padd" style="min-width:60px" @clickSort="sortFunc" :sortType="{a:'seq',b:'1-9'}">排序</div-sort>
           <div-sort class="padd" style="min-width:150px" @clickSort="sortFunc" :sortType="{a:'name',b:'ZH'}">中文名称</div-sort>
-          <div-sort class="padd" style="min-width:160px" @clickSort="sortFunc" :sortType="{a:'nameEn',b:'ZH'}">英文名称</div-sort>
+          <div-sort class="padd flx" style="min-width:200px" @clickSort="sortFunc" :sortType="{a:'nameEn',b:'ZH'}">英文名称</div-sort>
           <div-sort class="padd" style="min-width:120px" @clickSort="sortFunc" :sortType="{a:'serviceName',b:'ZH'}">服务类型</div-sort>
-          <div class="padd flx" style="min-width:81px">描述</div>
-          <div class="padd" style="min-width:100px">状态</div>
-        </div>
+          <div class="padd flx" style="min-width:120px">描述</div>
+          <div class="padd" style="min-width:80px">状态</div>
+        </div> -->
         <kec-scroll :numbers="219">
           <el-table
               class="scrollbar"
               ref="singleTable"
               :data="tableData"
               :header-cell-style="{
+                background:themeColor.content_border_color,
+                borderRight:'1px solid #FFF',
                 fontWeight:'bold',
                 height:'38px',
-                color:'#000',
+                color:'#fff',
                 padding:'0'
               }"
               :cell-style="{
                 borderRight:'1px solid #EBEEF5',
                 padding:'6px 0'
               }"
+              :max-height="tableHeight"
               highlight-current-row
               @current-change="handleCurrentChange"
               style="width:100%"
@@ -57,7 +60,7 @@
               <el-table-column
               prop="code"
               label="编码"
-              width="150">
+              >
               </el-table-column>
               <el-table-column
               prop="seq"
@@ -71,8 +74,7 @@
               </el-table-column>
               <el-table-column
               prop="nameEn"
-              label="英文名称"
-              width="160">
+              label="英文名称">
               </el-table-column>
               <el-table-column
               prop="serviceName"
@@ -87,7 +89,8 @@
               <el-table-column
               prop="status"
               label="状态"
-              width="100">
+              fixed="right"
+              width="80">
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.status" @change="changeStatusFunc(scope.row.status,scope.row.id)">启用</el-checkbox>
                 </template>
@@ -108,7 +111,7 @@
 
 <script>
 import {mapState,mapActions,mapMutations} from 'vuex'
-import {sortCompare } from '@/utils/fun'
+import {sortCompare,getClientHeight } from '@/utils/fun'
 import {KecButton , KecTable ,KecScroll,KecSort,KecButtonClick }  from '@/common/components'
 import KecStatus from './cargoDialog' 
   export default {
@@ -158,6 +161,9 @@ import KecStatus from './cargoDialog'
            _.selectItem.level === 'TWO' && (bool = false)
          }
          return bool
+      },
+      tableHeight: function(){
+        return getClientHeight() - 220
       }
     },
 

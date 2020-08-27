@@ -188,6 +188,7 @@ import goodsAttribute from './goodsAttribute'
         productData(data){
             this.payload["code"]=data.code
             this.payload["name"]=data.name
+            this.payload["externalCode"]=data.externalCode
             this.payload["shippingCountryCode"]=data.shippingCountryCode
             this.payload["paymentMethodCode"]=data.paymentMethodCode
             this.payload["needCargoTracking"]=data.needCargoTracking

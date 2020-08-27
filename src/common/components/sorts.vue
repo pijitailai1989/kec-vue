@@ -8,7 +8,7 @@
 <script>
 
   export default {
-    name:'sorts',
+    name:'KecSort',
     props:{
         sortType:{
         type:Object,

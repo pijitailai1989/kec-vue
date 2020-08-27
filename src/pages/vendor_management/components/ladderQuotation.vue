@@ -35,7 +35,7 @@
             
             <div class="col-sm-12">
                 <div class="col-sm-5">
-                    <kec-form text="科目项名称 ：" width="90px" crosswise>
+                    <kec-form text="科目项名称 :" width="100px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.ledgerSubjectName}}
@@ -45,7 +45,7 @@
                 </div>
                 
                 <div class="col-sm-4">
-                    <kec-form text="计费维度 ：" width="90px" crosswise>
+                    <kec-form text="计费维度 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.chargeItemAccountingWay}}
@@ -54,7 +54,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-3">
-                    <kec-form text="单位乘数 ：" width="90px" crosswise>
+                    <kec-form text="单位乘数 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.unitRate}}
@@ -63,7 +63,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-5">
-                    <kec-form text="科目编号 ：" width="90px" crosswise>
+                    <kec-form text="科目编号 :" width="100px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.ledgerSubjectNumber}}
@@ -72,7 +72,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-4">
-                    <kec-form text="单位 ：" width="90px" crosswise>
+                    <kec-form text="单位 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.unit}}
@@ -81,7 +81,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-3">
-                    <kec-form text="币种 ：" width="90px" crosswise>
+                    <kec-form text="币种 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.currency}}
@@ -107,6 +107,7 @@
                                           <kec-form crosswise text="名称" width="90px" star="star">
                                             <template #input>
                                               <el-input placeholder="输入" 
+                                              :disabled="tabsIndex!=0"
                                               size="small"
                                               class='v-check'
                                               v-checkParam="{required:true}"
@@ -117,12 +118,13 @@
                                           
                                         </div>
                                         <div class="col-sm-5">
-                                          <kec-form text="费用触发货态" width="90px" crosswise star="star">
+                                          <kec-form text="费用触发货态" width="100px" crosswise star="star">
                                             <template #input>
                                               
                                               <el-select v-model="item.standardStateId" 
                                               filterable
                                               class='v-check'
+                                              :disabled="tabsIndex!=0"
                                               v-checkParam="{required:true}"
                                               placeholder="" size="medium" style="width:100%">
                                                 <el-option
@@ -145,6 +147,7 @@
                                                 v-model="item.typeTagIds"
                                                 multiple
                                                 size="small"
+                                                :disabled="tabsIndex!=0"
                                                 filterable
                                                 placeholder="">
                                                 <el-option
@@ -162,8 +165,8 @@
                                           <kec-form crosswise text="计算方式" width="90px">
                                             <template #input>
                                               <div class="p5">
-                                              <el-radio v-model="item.gradientModel" :label="0">分段累加</el-radio>
-                                              <el-radio v-model="item.gradientModel" :label="1">分段快查</el-radio>
+                                              <el-radio v-model="item.gradientModel" :disabled="tabsIndex!=0" :label="0">分段累加</el-radio>
+                                              <el-radio v-model="item.gradientModel" :disabled="tabsIndex!=0" :label="1">分段快查</el-radio>
                                               </div>
                                             </template>
                                           </kec-form>
@@ -173,7 +176,7 @@
                                           <kec-form crosswise text="续重进位"  width="60px">
                                             <template #input>
                                               <div class="p5">
-                                                    <el-checkbox v-model="item.carryValve"></el-checkbox>
+                                                    <el-checkbox v-model="item.carryValve" :disabled="tabsIndex!=0"></el-checkbox>
                                               </div>
                                               
                                             </template>
@@ -185,6 +188,7 @@
                                             <template #input>
                                               
                                               <el-input-number :controls="false" size="small"
+                                              :disabled="tabsIndex!=0"
                                       v-model="item.carryValveNumber" style="width: 100%">
                                                        </el-input-number>
                                             </template>
@@ -199,13 +203,8 @@
                                             height="200"
                                             :data="item.priceGradientItems"
                                             tooltip-effect="dark"
-                                            :cell-style="{
-                                              padding:'3px 0'
-                                            }"
-                                            :header-cell-style="{
-                                              height:'36px',
-                                              padding:'0'
-                                            }"
+                                            :cell-style="{padding:'3px 0'}"
+                                            :header-cell-style="{ padding:'5px 0',backgroundColor:'#F5F7FA'}"
                                             style="width: 100%">
                                             <el-table-column
                                               prop="index"
@@ -220,6 +219,7 @@
                                                 <div class="row">
                                                      <div class="col-sm-12">
                                                        <el-input-number :controls="false" size="mini"
+                                                       :disabled="tabsIndex!=0"
                                       v-model="scope.row.perRenewedWeight" style="width: 100%">
                                                        </el-input-number>
                                                      </div>
@@ -233,6 +233,7 @@
                                                 <div class="row">
                                                      <div class="col-sm-12">
                                                        <el-input-number :controls="false" disabled size="mini" 
+                                                       
                                       v-model="scope.row.startNumber" style="width: 100%">
                                                        </el-input-number>
                                                      </div>
@@ -246,6 +247,7 @@
                                                 <div class="row">
                                                      <div class="col-sm-12">
                                                        <el-input-number :controls="false" size="mini" :min="scope.row.startNumber+1"
+                                                       :disabled="tabsIndex!=0"
                                        v-model="scope.row.endNumber" style="width: 100%">
                                                        </el-input-number>
                                                      </div>
@@ -260,6 +262,7 @@
                                                 <div class="row">
                                                      <div class="col-sm-12">
                                                        <el-input-number :controls="false" size="mini" 
+                                                       :disabled="tabsIndex!=0"
                                       v-model="scope.row.price" style="width: 100%">
                                                        </el-input-number>
                                                      </div>
@@ -274,6 +277,7 @@
                                                 <div class="row">
                                                      <div class="col-sm-12">
                                                        <el-input-number :controls="false" size="mini"
+                                                       :disabled="tabsIndex!=0"
                                       v-model="scope.row.fixedCharge" style="width: 100%">
                                                        </el-input-number>
                                                      </div>
@@ -284,7 +288,7 @@
                                             <el-table-column
                                               label="操作"
                                               width="50"
-                                              show-overflow-tooltip>
+                                              v-if="tabsIndex==0">
                                               <template slot-scope="scope">
                                                  <i class="fa fa-minus-circle cur fa-lg" 
                                                  style="color:#C50A2E"
@@ -300,7 +304,7 @@
                             <div class="col-sm-12 flexs j-end" style="margin:5px 0">
                               
                                <kec-button 
-                                  v-show="addShow"
+                                  v-show="addShow&&tabsIndex==0"
                                   @click.native="addPartitionCode(selectIndex)" 
                                   text="添加报价" icon="fa-plus" 
                                   background="#17A2B8" 
@@ -335,7 +339,8 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
       dialogVisible:Boolean,
       text:String,
       item:Object,
-      types:String
+      types:String,
+      tabsIndex:Number
     },
     data () {
       return {

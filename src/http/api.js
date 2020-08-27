@@ -263,4 +263,11 @@ export const getExpenseNumberType = data => http({ methods:'get' ,url:`/common/s
 export const postExpenses = data => http({ methods:'post' ,url:`/accounting/unamortized-expenses`,data}) //费用录入_增 
 export const putExpenses = data => http({ methods:'put' ,url:`/accounting/unamortized-expenses`,data}) //费用录入_改
 
+export const getBoxes = data => http({ methods:'get' ,url:`/business/boxes`,data}) //箱子_查_根据箱子编号
+export const getLocationsByType = data => http({ methods:'get' ,url:`/common/settings/location/getLocationsByType`,data}) //查地区_查港口
+export const getSimpleLadingBills = data => http({ methods:'get' ,url:`/business/lading-bills/simple-lading-bills`,data}) //单据_查简单_列表
+export const getLadingBills = data => http({ methods:'get' ,url:`/business/lading-bills`,data}) //单据_查简单_单个
+export const postLadingBills = data => http({ methods:'post' ,url:`/business/lading-bills`,data}) //单据_增单个
+export const postUploadCreate = data => http({ methods:'post' ,url:`/business/agreement/upload-create`,data}) //批量协议
+
 

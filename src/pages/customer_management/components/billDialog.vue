@@ -19,13 +19,13 @@
           <div class="col-sm-12">
               <kec-form crosswise text="客户" width="80px">
                 <template #input>
-                  <el-select v-model="companyId"
+                  <el-select v-model="payload.customerId"
                   @change="changeCompanyId" size="medium" filterable placeholder="" style="width:100%">
                     <el-option
-                      v-for="item in customerList"
-                      :key="item.id"
+                      v-for="(item,i) in customerList"
+                      :key="i+'companyId'"
                       :label="item.companyName"
-                      :value="item.companyName">
+                      :value="item.id">
                     </el-option>
                   </el-select>
                 </template>
@@ -35,7 +35,7 @@
               <kec-form crosswise text="服务协议号" width="80px">
                 <template #input>
                   <el-select v-model="payload.vendorId" size="medium" 
-                  :disabled="!companyId"
+                  :disabled="!payload.customerId"
                   clearable filterable placeholder="" style="width:100%">
                     <el-option
                       v-for="item in agreementLists"
@@ -98,8 +98,8 @@ import { formateDate } from '@/utils/fun'
     },
     data () {
       return {
-        companyId:null,
          payload:{
+            "customerId":null,
             "vendorId": null,
             "execTime": "",
             "billCycle": null,
@@ -136,9 +136,10 @@ import { formateDate } from '@/utils/fun'
             this.$emit('closeFunc',false)
             this.clearFun()
         },
-        changeCompanyId(customerName){
+        changeCompanyId(id){
+          let {companyName} = this.customerList.find(item => { return item.id == id })
           this.loadPostAgreementQueryPage({
-            customerName,pageSize:1000,pageNumber:1
+            customerName:companyName,pageSize:1000,pageNumber:1
           }).then(success=>{
               let {content,totalElements} = this.agreementQueryPage
               this.agreementLists = content.length>=1 ? content : []
@@ -146,21 +147,21 @@ import { formateDate } from '@/utils/fun'
         },
         clearFun(){
             this.payload = {
+            "customerId":null,
             "vendorId": null,
             "execTime": "",
             "billCycle": null,
             "apBillCode": ""
          }
-         this.companyId=null
          this.agreementLists=[]
 
         },
         bindCodeFun(payload){
-            let { vendorId ,execTime,billCycle,apBillCode} = payload ;
+            let { vendorId ,execTime,billCycle,apBillCode,customerId} = payload ;
              let data = {
                vendorId ,billCycle,
                execTime:execTime?formateDate(execTime):''
-               ,apBillCode
+               ,apBillCode,customerId
              }
                 
                 this.loadPostArBills(data).then(success=>{

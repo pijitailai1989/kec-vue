@@ -132,7 +132,6 @@ import addChannel from './addChannel'
                     type: 'warning'
                    });
             }else{
-              console.log(data.data,'data.data')
                this.tableData.push(data.data)
             }
           }

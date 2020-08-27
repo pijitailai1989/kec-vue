@@ -18,7 +18,11 @@ export default {
       billItems:null,
       productPricesList:[],
       expensesList:[],
-      expenseType:[]
+      expenseType:[],
+      boxesItem:{},
+      locationList:[],
+      ladingBillsList:[],
+      billsItem:{}
     }
   },
   getters: {
@@ -68,8 +72,37 @@ export default {
       
       state.expenseType = body || [];
     },
+
+    getBoxes(state,body){
+      state.boxesItem = body || {}
+    },
+    getLocationsByType(state,body){
+      state.locationList = body || []
+    },
+    getSimpleLadingBills(state,body){
+      state.ladingBillsList = body || []
+    },
+    getLadingBills(state,body){
+      state.billsItem = body || {}
+    },
   },
   actions: {
+    loadGetBoxes({commit},payload){
+      return getPromiseAction (api.getBoxes(payload),commit,'getBoxes')
+    },
+    loadGetLocationsByType({commit},payload){
+      return getPromiseAction (api.getLocationsByType(payload),commit,'getLocationsByType')
+    },
+    loadGetSimpleLadingBills({commit},payload){
+      return getPromiseAction (api.getSimpleLadingBills(payload),commit,'getSimpleLadingBills')
+    },
+    loadGetLadingBills({commit},payload){
+      return getPromiseAction (api.getLadingBills(payload),commit,'getLadingBills')
+    },
+    loadPostLadingBills({commit},payload){
+      return getPromiseActionNoMutations (api.postLadingBills(payload))
+    },
+
     loadPostExpenses({commit},payload){
       return getPromiseActionNoMutations (api.postExpenses(payload))
     },

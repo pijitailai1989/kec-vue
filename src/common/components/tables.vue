@@ -51,7 +51,7 @@
 import {mapState} from 'vuex'
 import {sortCompare } from '@/utils/fun'
   export default {
-    name:'tables',
+    name:'KecTable',
     props:{
        selectIndex: [String, Object,Number],
        tableData:Array,
@@ -166,7 +166,7 @@ import {sortCompare } from '@/utils/fun'
       border-right 1px solid
       color #fff
       width 100%
-      border-radius 3px
+      border-radius 0px
       box-shadow  0px 1px 2px #EBEEF5
       background #fff
       position absolute

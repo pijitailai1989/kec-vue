@@ -1,12 +1,12 @@
 <template>
  <div>
     <div class="flexs kec-btn btn-fun a-center">
-      <kec-form crosswise text="客户" width="60px">
+      <kec-form crosswise text="客户" width="40px">
         <template #input>
           <el-select v-model="payload.vendorId" size="medium" clearable filterable placeholder="">
                     <el-option
-                      v-for="item in customerList"
-                      :key="item.id"
+                      v-for="(item,index) in customerList"
+                      :key="(index+'customer')"
                       :label="item.companyName"
                       :value="item.id">
                     </el-option>
@@ -157,21 +157,23 @@ import axios from '@/http/config'
            changeVisible:false,
            order_list:[],
            letWidth:{
-             0:'90px',
-             1:'80px',
-             2:'130px',
-             5:'150px',
-             6:'100px',
-             7:'110px',
+             0:'80px',
+             1:'90px',
+             2:'80px',
+             3:'130px',
+             6:'150px',
+             7:'90px',
              8:'100px',
-             9:'100px',
-             10:'80px',
-             11:'60px',
-             12:'100px'
+             9:'110px',
+             10:'110px',
+             11:'70px',
+             12:'50px',
+             13:'100px'
            },
            lastWidth:'80px',
            lastText:'明细下载',
            tableHeader:{
+             id:{"title":'ID','slot':false},
              execTime:{"title":'账期首日','slot':false,'sort':'ZH'},
              billCycle:{"title":'账单周期','slot':false},
              agreementCode:{"title":'协议编码','slot':false,'sort':'ZH'},

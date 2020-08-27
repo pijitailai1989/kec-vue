@@ -11,6 +11,7 @@
         <div class="flexs j-end">
            <kec-button-click 
            v-checkSubmit
+           v-show="tabsIndex==0"
            :text="types==='add'?'新建':'保存'" 
            icon="fa-floppy-o" 
            background="#28A745" 
@@ -35,7 +36,7 @@
             
             <div class="col-sm-12">
                 <div class="col-sm-5">
-                    <kec-form text="科目项名称 ：" width="90px" crosswise>
+                    <kec-form text="科目项名称 :" width="100px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.ledgerSubjectName}}
@@ -45,7 +46,7 @@
                 </div>
                 
                 <div class="col-sm-4">
-                    <kec-form text="计费纬度 ：" width="90px" crosswise>
+                    <kec-form text="计费纬度 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.chargeItemAccountingWay}}
@@ -54,7 +55,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-3">
-                    <kec-form text="单位乘数 ：" width="90px" crosswise>
+                    <kec-form text="单位乘数 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.unitRate}}
@@ -63,7 +64,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-5">
-                    <kec-form text="科目编号 ：" width="90px" crosswise>
+                    <kec-form text="科目编号 :" width="100px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.ledgerSubjectNumber}}
@@ -72,7 +73,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-4">
-                    <kec-form text="单位 ：" width="90px" crosswise>
+                    <kec-form text="单位 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.unit}}
@@ -81,7 +82,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-3">
-                    <kec-form text="币种 ：" width="90px" crosswise>
+                    <kec-form text="币种 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.currency}}
@@ -95,6 +96,7 @@
                       
                       <el-select v-model="payload.standardStateId" 
                       class='v-check'
+                      :disabled="tabsIndex!=0"
                       v-checkParam="{required:true}"
                       filterable
                       placeholder="" size="medium" style="width:100%">
@@ -116,7 +118,7 @@
                               size="mini"
                               v-for="(tag,index) in tagIds"
                               :key="tag.id"
-                              closable
+                              :closable="tabsIndex==0"
                               @close="handleClose(index)"
                               type="info">
                               {{tag.tagName}}
@@ -128,7 +130,7 @@
                     </template>
                     </kec-form>
                 </div>
-                <div class="col-sm-12 ser">
+                <div class="col-sm-12 ser" v-show="tabsIndex==0">
                    <kec-form text="选择标签">
                       <template #input>
                           <div class="col-sm-12 borders">
@@ -198,7 +200,8 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
       dialogVisible:Boolean,
       text:String,
       item:Object,
-      types:String
+      types:String,
+      tabsIndex:Number
     },
     data () {
       return {

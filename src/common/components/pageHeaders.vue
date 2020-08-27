@@ -16,7 +16,7 @@
 <script>
 import {mapState} from 'vuex'
   export default {
-    name:'pageHeaders',
+    name:'KecPageHeader',
     props:{
         textArray:Array,
         nameComponent:Object,
@@ -65,12 +65,12 @@ import {mapState} from 'vuex'
    border-radius 4px
    span  
      padding 5px 1px
-     margin 0 8px
+     margin 0 5px
      &:first-child  
        font-size 16px
        font-weight bold
        cursor auto
-       padding 5px 12px 5px 0
+       padding 5px 6px 5px 0
        border-right 2px solid #BABAC0
     
      

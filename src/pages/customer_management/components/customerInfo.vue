@@ -5,11 +5,18 @@
         <kec-form text="供应商基本信息">
           <template #input>
             <div class="col-sm-12 borders err">
-                <div class="col-sm-12" style="margin-top:5px">
+                <div class="col-sm-6" style="margin-top:5px">
                     <kec-form crosswise text="公司名称" width="80px" star="star">
                       <template #input>
                         <el-input v-model="payload.companyName" placeholder="" class='v-check'
                                         v-checkParam="{required:true}"></el-input>
+                      </template>
+                    </kec-form>
+                </div>
+                <div class="col-sm-6" style="margin-top:5px">
+                    <kec-form crosswise text="外部编码" width="80px">
+                      <template #input>
+                        <el-input v-model="payload.externalCode" placeholder=""></el-input>
                       </template>
                     </kec-form>
                 </div>
@@ -99,7 +106,7 @@
          <template #input>
            <div class="row borders err">
                 <div class="col-sm-6">
-                    <kec-form crosswise text="国家" width="80px" star="star">
+                    <kec-form crosswise text="国家/地区" width="80px" star="star">
                       <template #input>
                         <el-select v-model="payload.countryCode" class='v-check'
                                         v-checkParam="{required:true}" @change="changeCountryCode" filterable placeholder="" style="width:100%">
@@ -118,7 +125,7 @@
                     <template #input>
                       <el-select v-model="payload.subdivisionId" 
                               filterable
-                              placeholder="" style="width:100%" size="medium">
+                              placeholder="" style="width:100%">
                         <el-option
                           v-for="item in countryCodeList"
                           :key="item.id"
@@ -129,7 +136,6 @@
                     </template>
                     </kec-form>
                 </div>
-                <div class="col-sm-12">
                   <div class="col-sm-6">
                       <kec-form crosswise text="洲" width="80px">
                       <template #input>
@@ -145,7 +151,6 @@
                       </kec-form>
                   </div>
 
-                </div>
                 
                 <div class="col-sm-6">
                     <kec-form crosswise text="城市" width="80px">
@@ -201,6 +206,7 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
         payload:{
                  "id":null,
                  "companyName": "",
+                 "externalCode":"",
                  "vatNumber": "",
                  "contactName": "",
                  "phone": "",
@@ -251,6 +257,7 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
         this.payload={
                  "id":null,
                  "companyName": "",
+                 "externalCode":"",
                  "vatNumber": "",
                  "contactName": "",
                  "phone": "",
@@ -301,6 +308,7 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
         let {
           id,
           companyName,
+          showExternalCode,
           vatNumber,
           contactName,
           phone,
@@ -324,6 +332,7 @@ import {KecForm, KecButton ,KecScroll }  from '@/common/components'
         _.payload = {
            id,
            companyName,
+           externalCode:showExternalCode||"",
            vatNumber,
            contactName,
            phone,

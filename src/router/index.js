@@ -24,6 +24,7 @@ const receivableBill     = ()=>import( '@/pages/customer_management/receivableBi
 const costTable          = ()=>import( '@/pages/vendor_management/costTable.vue')
 const copeBill           = ()=>import( '@/pages/vendor_management/copeBill.vue')
 const costEntry          = ()=>import( '@/pages/vendor_management/costEntry.vue')
+const homeEchart          = ()=>import( '@/pages/home/homeEchart.vue')
 
 Vue.use(Router)
 const originalPush = Router.prototype.push
@@ -40,10 +41,15 @@ const router = new Router({
       path:'/login',name:'login',
       component: login => require(['@/pages/login/index'],login)
     },{
-      path: '/home',
+      path: '/menu',
       component: home => require(['@/pages/home/index'], home),
-      meta : { authority: '/home' , keepAlive: false },
+      meta : { authority: '/menu' , keepAlive: false },
       children:[ 
+                {
+                  path: '/home',name:'homeEchart',
+                  meta : { authority: '/home' , keepAlive: false },
+                  component: homeEchart   //应收账单
+                },
                 {
                   path: '/receivable-bill',name:'receivableBill',
                   meta : { authority: '/product/channel' , keepAlive: false },

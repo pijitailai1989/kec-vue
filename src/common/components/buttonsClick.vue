@@ -11,7 +11,7 @@
 <script>
 
   export default {
-    name:'buttons',
+    name:'KecButtonClick',
     props:{
         icon:String,
         text:String,

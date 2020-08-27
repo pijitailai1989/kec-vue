@@ -8,7 +8,7 @@
 <script>
 
   export default {
-    name:'buttons',
+    name:'KecButtonNo',
     props:{
         icon:String,
         text:String,

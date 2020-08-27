@@ -1,23 +1,7 @@
-<template>
-  <div class="drags flexs a-center j-center">
-     <div class="box" :style="{width:boxWidth}" id="myDrag">
-       <div class="tops" :style="{borderColor:themeColor.content_border_color}" @mousedown="downFunc">
-          <slot name="title"></slot>
-       </div>
-       <div class="centers">
-          <slot></slot>
-       </div>
-       <div class="bottoms">
-          <slot name="btn"></slot>
-       </div>
-    </div>
-  </div>
-</template>
-
 <script>
 import {mapState} from 'vuex'
   export default {
-    name:'drags',
+    name:'KecDrag',
     props:{
         boxWidth:String,
         client:{
@@ -29,7 +13,32 @@ import {mapState} from 'vuex'
       return {
       };
     },
+    render: function(createElement) {
+      return createElement(
+        'div',{ class:'drags flexs a-center j-center' },
+        [
+         createElement(
+           'div',{ class:'box',ref:'myDrag',style:{width:this.boxWidth} },
+           [
+             createElement(
+               'div',{ on:{mousedown:this.downFunc},
+                class:'tops',style:{'border-color':this.themeColor.content_border_color} },
+                [ createElement('div',this.$slots.title) ]
+             ),
+             createElement(
+                'div', { class:'centers' },
+                [ createElement('div',this.$slots.default) ]
+             ),
+             createElement(
+                'div', { class:'bottoms' },
+                [ createElement('div',this.$slots.btn) ]
+             ),
+           ]
 
+         )
+        ]
+      )
+    },
     components: {},
 
     computed: {
@@ -45,7 +54,7 @@ import {mapState} from 'vuex'
         downFunc(e){
           const _ = this ;
           const oEvent = e || event;
-          const oDiv = document.getElementById("myDrag");
+          const oDiv = _.$refs.myDrag;
           if(_.client){
             let disX =  oEvent.clientX - oDiv.offsetLeft;
             let disY =  oEvent.clientY - oDiv.offsetTop;

@@ -12,9 +12,9 @@ export function getPromiseAction( p , commit , mutationType ){
             }
         }, error => {
             
-            return reject(error)
+            return reject('服务器异常 ！')
         }).catch( error => {
-            return reject(error)
+            return reject('服务器异常 ！')
         })
     })
     return promise ;
@@ -31,9 +31,9 @@ export function getPromiseActionNoMutations(p){
                 return reject(message)
             }
         }, error => {
-            return reject(error)
+            return reject('服务器异常 ！')
         }).catch( error => {
-            return reject(error)
+            return reject('服务器异常 ！')
         })
     })
     return promise ;

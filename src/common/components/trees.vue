@@ -17,7 +17,7 @@
 <script>
 
   export default {
-    name:'trees',
+    name:'KecTree',
     props:{
         propsData: Array
     },

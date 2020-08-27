@@ -126,7 +126,7 @@
                             <div class="col-sm-6">
                             <kec-form crosswise text="分区方案" width="70px">
                               <template #input>
-                                     <el-select v-model="statementsData.schemaIds" 
+                                     <el-select v-model="statementsData.schemaIds" filterable
                                       clearable multiple placeholder="" size="medium" style="width:100%">
                                         <el-option
                                         v-for="item in schemasList"
@@ -179,7 +179,7 @@
                                >添加成本项</el-button>
                             </div>
                         </div>
-                        <div class="posi" v-show="tabsIndex==0">
+                        <div class="posi">
                             <!-- <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
                               <div class="padd" style="width:120px">报价方式</div>
                               <div class="padd" style="width:100px">服务类型</div>
@@ -196,7 +196,7 @@
                               <div class="padd" style="width:100px">计收材计重</div>
                               <div class="padd" style="width:80px">操作</div>
                             </div> -->
-                            <kec-scroll :numbers="354" style="border-bottom:1px solid #EBEEF5">
+                            <kec-scroll :numbers="356" style="border-bottom:1px solid #EBEEF5">
                               <el-table
                                 ref="singleTable"
                                   class="scrollbar"
@@ -209,11 +209,12 @@
                                     color:'#FFF',
                                     padding:'0'
                                   }"
+                                  :max-height="tableHeight"
                                   highlight-current-row
                                   @current-change="changeSelectFunc"
                                   :cell-style="{
                                     borderRight:'1px solid #EBEEF5',
-                                    padding:'6px 0'
+                                    padding:'4px 0'
                                   }"
                                   style="width:100%">
                                   <el-table-column
@@ -228,9 +229,9 @@
                                   <el-table-column
                                   prop="offerType"
                                   label="报价方式"
-                                  width="121">
+                                  width="100">
                                   <template slot-scope="scope">
-                                    <el-select v-model="scope.row.offerType" placeholder="请选择" size="small">
+                                    <el-select v-model="scope.row.offerType" :disabled="tabsIndex!=0" placeholder="请选择" size="mini">
                                         <el-option
                                           v-for="item in options"
                                           :key="item.code"
@@ -261,11 +262,11 @@
                                         width="300"
                                         trigger="hover">
                                         <div>
-                                          <el-tag class="pr" type="info" size="small" 
+                                          <el-tag class="pr" type="info" size="mini" 
                                           v-for="(name,i) of scope.row.tagName" 
                                           :key="i">{{name}}</el-tag>
                                         </div>
-                                        <el-tag class="pr ell" type="info" slot="reference" size="small">
+                                        <el-tag class="pr ell" type="info" slot="reference" size="mini">
                                           {{scope.row.tagName[0]}}
                                         </el-tag>
                                       </el-popover>
@@ -292,8 +293,9 @@
                                   >
                                   <template slot-scope="scope">
                                       <el-input-number v-model="scope.row.unitPrice"
+                                      :disabled="tabsIndex!=0"
                                        style="width:100%"
-                                       :controls="false" size="small"
+                                       :controls="false" size="mini"
                                       :min="0.00"></el-input-number>
                                     </template>
                                   </el-table-column>
@@ -302,7 +304,7 @@
                                   label="币种"
                                   width="100">
                                     <template slot-scope="scope">
-                                      <el-select v-model="scope.row.currency" placeholder="请选择" size="small">
+                                      <el-select v-model="scope.row.currency" :disabled="tabsIndex!=0" placeholder="请选择" size="mini">
                                         <el-option
                                           v-for="item in currencyList"
                                           :key="item.id"
@@ -321,7 +323,8 @@
                                   <template slot-scope="scope">
                                       <el-input-number v-model="scope.row.unitRate"
                                        style="width:100%"
-                                       :controls="false" size="small"></el-input-number>
+                                       :disabled="tabsIndex!=0"
+                                       :controls="false" size="mini"></el-input-number>
                                     </template>
                                   </el-table-column>
                                   <el-table-column
@@ -336,7 +339,8 @@
                                   <template slot-scope="scope">
                                       <el-input-number v-model="scope.row.volumeWeightFactory"
                                        style="width:100%"
-                                       :controls="false" size="small"
+                                       :disabled="tabsIndex!=0"
+                                       :controls="false" size="mini"
                                       :min="1"></el-input-number>
                                     </template>
                                   </el-table-column>
@@ -355,7 +359,7 @@
                                       </template>
                                     </el-table-column>
                                     <el-table-column
-                                  width="140"
+                                  :width="tabsIndex!=0?80:140"
                                   fixed="right"
                                   label="操作">
                                   <template slot-scope="scope">
@@ -363,12 +367,13 @@
                                         <el-button size="mini" v-if="scope.row.offerType==='ECHELON'"
                                         type="warning"
                                         @click.native="dislogFunC('编辑阶梯报价',true,'ladderQuotation',scope.row)"
-                                        >编辑</el-button>
+                                        >{{tabsIndex==0?'编辑':'查看'}}</el-button>
                                         <el-button size="mini" v-else
                                         type="warning"
                                         @click.native="dislogFunC('编辑单一报价',true,'onlyQuotation',scope.row)"
-                                        >编辑</el-button>
+                                        >{{tabsIndex==0?'编辑':'查看'}}</el-button>
                                       <kec-del-popover content="确定要删除?" 
+                                      v-show="tabsIndex==0"
                                    @click="delFunc"
                                    :date="{priceId:scope.row.id,
                                    productId:vendorProductId}"></kec-del-popover>
@@ -378,7 +383,7 @@
                               </el-table>
                             </kec-scroll>
                         </div>
-                        <div class="posi" v-show="tabsIndex!=0">
+                        <!-- <div class="posi" v-show="tabsIndex!=0">
                            <kec-table 
                             height="300px"
                             :tableHeader="tableHeader"
@@ -391,7 +396,7 @@
                                   {{slotProps.item==='SEPARATE'?'分项':'包干'}}
                                 </template>
                             </kec-table>
-                        </div>
+                        </div> -->
                     </div>
                   </template>
         </kec-tabs>
@@ -402,6 +407,7 @@
     @close="cancelFunc" 
     :item="itemData"
     :text="textItem"
+    :tabsIndex="tabsIndex"
     ></component>
   </kec-scroll>
 </template>
@@ -411,7 +417,7 @@ import {mapState,mapActions,mapMutations} from 'vuex'
 import {KecButton , KecTable ,KecScroll,KecTabs ,KecButtonClick,KecForm,KecDelPopover}  from '@/common/components'
 import ladderQuotation from './ladderQuotation'
 import onlyQuotation from './onlyQuotation'
-import {formateDate} from '@/utils/fun'
+import {formateDate,getClientHeight} from '@/utils/fun'
   export default {
     name:'costList',
     props:[''],
@@ -478,9 +484,16 @@ import {formateDate} from '@/utils/fun'
     computed: {
       ...mapState('basic',['supplierList','currencyList','serverList']),
       ...mapState('vendor',['vendorProductList','statementsList','versionstList','versionstTwoList','schemasList']),
-      ...mapState('home',['themeColor']),
-      ...mapState('channels',['chargeItemsList'])
-      
+      ...mapState('home',['themeColor','tabsShow']),
+      ...mapState('channels',['chargeItemsList']),
+      tableHeight: function(){
+        let that = this ;
+        if(that.tabsShow === 'show'){
+           return getClientHeight() - 400
+        }else{
+           return getClientHeight() - 360
+        }
+      }
       
     },
 

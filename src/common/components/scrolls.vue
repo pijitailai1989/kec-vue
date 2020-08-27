@@ -7,7 +7,7 @@
 <script>
 import {mapState} from 'vuex'
   export default {
-    name:'scrolls',
+    name:'KecScroll',
     props:{
         numbers:[Number,String]
     },

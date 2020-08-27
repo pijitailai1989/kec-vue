@@ -1,24 +1,43 @@
 <template>
   <div class="row">
-    <div class="col-sm-12">
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <kec-form text="产品名称">
          <template #input>
            <el-input v-model="payload.name" placeholder="" size="medium"></el-input>
          </template>
         </kec-form>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <kec-form text="产品编码">
           <template #input>
             <el-input v-model="payload.code" placeholder="" size="medium"></el-input>
           </template>
         </kec-form>
       </div>
-    </div>
+      <div class="col-sm-4">
+        <kec-form text="货态跟踪">
+          <template #input>
+            <el-select v-model="payload.needCargoTracking" placeholder="" style="width:100%" size="medium">
+                  <el-option
+                    v-for="(item,index) in Tracking"
+                    :key="index"
+                    :label="item.text"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+          </template>
+        </kec-form>
+      </div>
+      <div class="col-sm-12">
+        <kec-form text="外部编码">
+          <template #input>
+            <el-input v-model="payload.externalCode" placeholder="" size="medium"></el-input>
+          </template>
+        </kec-form>
+      </div>
     
-    <div class="col-sm-6">
-        <kec-form text="起运国家">
+    <div class="col-sm-4">
+        <kec-form text="起运地区/国家">
          <template #input>
            <el-select v-model="payload.shippingCountryCode" filterable placeholder="" size="medium" style="width:100%">
               <el-option
@@ -31,7 +50,7 @@
          </template>
         </kec-form>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-4">
         <kec-form text="目的地区/国家">
           <template #input>
             <!-- <el-select v-model="payload.destinationCountryCode" @change="changeCountryCode" :disabled="productsInfo?true:false || destinationShow" filterable placeholder="" size="medium" style="width:100%">
@@ -53,7 +72,7 @@
           </template>
         </kec-form>
     </div>
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <kec-form text="交付方式">
          <template #input>
            <el-select v-model="payload.paymentMethodCode" placeholder=""  size="medium" style="width:100%">
@@ -67,47 +86,8 @@
          </template>
         </kec-form>
       </div>
-      <div class="col-sm-6">
-        <kec-form text="货态跟踪">
-          <template #input>
-            <el-select v-model="payload.needCargoTracking" placeholder="" style="width:100%" size="medium">
-                  <el-option
-                    v-for="(item,index) in Tracking"
-                    :key="index"
-                    :label="item.text"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-          </template>
-        </kec-form>
-      </div>
-    <div class="col-sm-6">
-        <kec-form text="赔付上限">
-         <template #input>
-           <div class="flexs">
-                <el-input v-model="payload.compensationLimit" placeholder=""  size="medium"></el-input>
-                <el-select v-model="payload.compensationCurrency" filterable placeholder="" style="width:100px;margin:0 5px" size="medium">
-                  <el-option
-                    v-for="item in currencyList"
-                    :key="item.id"
-                    :label="item.code"
-                    :value="item.code">
-                  </el-option>
-                </el-select>
-                <el-select v-model="payload.compensationUnitId" placeholder="" style="width:100px" size="medium">
-                  <el-option
-                    v-for="item in unitsList"
-                    :key="item.id"
-                    :label="item.code"
-                    :value="item.id">
-                  </el-option>
-                </el-select>
-           </div>
-           
-         </template>
-        </kec-form>
-    </div>
-    <div class="col-sm-6">
+      
+      <div class="col-sm-4">
         <kec-form text="类型">
           <template #input>
             <el-select v-model="payload.type" placeholder="" style="width:100%" size="medium">
@@ -121,6 +101,33 @@
           </template>
         </kec-form>
       </div>
+    <div class="col-sm-8">
+        <kec-form text="赔付上限">
+         <template #input>
+           <div class="flexs">
+                <el-input v-model="payload.compensationLimit" placeholder=""  size="medium"></el-input>
+                <el-select v-model="payload.compensationCurrency" filterable placeholder="" style="width:200px;margin:0 5px" size="medium">
+                  <el-option
+                    v-for="item in currencyList"
+                    :key="item.id"
+                    :label="item.code"
+                    :value="item.code">
+                  </el-option>
+                </el-select>
+                <el-select v-model="payload.compensationUnitId" placeholder="" style="width:200px" size="medium">
+                  <el-option
+                    v-for="item in unitsList"
+                    :key="item.id"
+                    :label="item.code"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
+           </div>
+           
+         </template>
+        </kec-form>
+    </div>
+    
       <div class="col-sm-6">
         <kec-form text="支持退货">
           <template #input>
@@ -164,6 +171,7 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
         payload:{
           "code": "",
           "name": "",
+          "externalCode":"",
           "destinationCountryCode": "",
           "shippingCountryCode": "",
           "paymentMethodCode": null,
@@ -213,6 +221,7 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
             
            let { code,
                 name,
+                externalCode,
                 destinationCountryCode,
                 shippingCountryCode,
                 paymentMethodCode,
@@ -227,6 +236,7 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
               this.payload = {
                 code,
                 name,
+                externalCode,
                 destinationCountryCode,
                 shippingCountryCode,
                 paymentMethodCode,
@@ -263,7 +273,7 @@ import { mapState ,mapActions,mapMutations} from 'vuex';
 </script>
 <style lang='stylus' scoped>
  .row  
-   padding 20px 5px
+   padding 18px 5px
  .ggs  
    height 58px    
    line-height 76px

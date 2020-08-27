@@ -73,17 +73,18 @@ import ShareDialog from './shareDialog'
            tableData: [],
            letWidth:{
              "0":"100px",
-             "3":"120px",
              "4":"120px",
-             "5":"100px"
+             "5":"120px",
+             "6":"100px"
            },
            lastWidth:'',
            tableHeader:{
              id:{"title":'ID','slot':false},
              name:{"title":'产品名称','slot':false,'sort':'ZH'},
              code:{"title":'产品编码','slot':false,'sort':'OTHER'},
+             externalCode:{"title":'外部编码','slot':false,'sort':'OTHER'},
              destinationCountryCode:{"title":'目的地区/国家','slot':false,'sort':'ZH'},
-             shippingCountryCode:{"title":'起运国家','slot':false,'sort':'ZH'},
+             shippingCountryCode:{"title":'起运地区/国家','slot':false,'sort':'ZH'},
              needCargoTracking:{"title":'货态跟踪','slot':true}
            },
            selectIndex:null,
@@ -171,7 +172,7 @@ import ShareDialog from './shareDialog'
     
     },
     mounted(){
-      this.loadGetPartitionSchemasAll({partitionType:"sale"})
+      this.loadGetPartitionSchemasAll({partitionType:"sale-sort"})
       this.loadChannelGetChannels()
       this.loadPaymentMethods()
       this.loadDictionaryCURRENCY()

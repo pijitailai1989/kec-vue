@@ -14,6 +14,13 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-6">
+                    <kec-form crosswise text="外部编码" width="80px">
+                      <template #input>
+                        <el-input v-model="payload.externalCode" placeholder=""></el-input>
+                      </template>
+                    </kec-form>
+                </div>
+                <div class="col-sm-6">
                     <kec-form crosswise text="VAT#" width="80px">
                     <template #input>
                       <el-input v-model="payload.vatNumber" placeholder=""></el-input>
@@ -94,7 +101,7 @@
          <template #input>
            <div class="row borders err">
                 <div class="col-sm-6">
-                    <kec-form crosswise text="国家" width="80px">
+                    <kec-form crosswise text="国家/地区" width="80px">
                       <template #input>
                         <el-select v-model="payload.countryCode" @change="changeCountryCode" filterable placeholder="" style="width:100%">
                           <el-option
@@ -202,6 +209,7 @@ import {KecForm, KecButton }  from '@/common/components'
       return {
         payload:{
                  "companyName": "",
+                 "externalCode":"",
                  "vatNumber": "",
                  "contactName": "",
                  "phone": "",
@@ -248,6 +256,7 @@ import {KecForm, KecButton }  from '@/common/components'
       closeData(){
         this.payload={
                  "companyName": "",
+                 "externalCode":"",
                  "vatNumber": "",
                  "contactName": "",
                  "phone": "",

@@ -1,8 +1,7 @@
 <template>
-  <kec-dialog 
-      boxWidth="960px"
-      boxTop="8vh"
-      v-if="dialogVisible">
+  <kec-drag 
+      boxWidth="960px" client
+      v-show="dialogVisible">
      <template v-slot:title>
         <span style="font-weight:bold;font-size:17px">{{text}}</span>
       </template>
@@ -49,8 +48,8 @@
                                         filterable
                                         placeholder="">
                                         <el-option
-                                          v-for="item in customerList"
-                                          :key="item.id"
+                                          v-for="(item,index) in customerList"
+                                          :key="index+'-customer'"
                                           :label="item.companyName"
                                           :value="item.id">
                                         </el-option>
@@ -234,7 +233,7 @@
                 <div class="col-sm-12 borders">
                     
                     <div class="col-sm-3">
-                        <kec-form text="起运国" width="70px" crosswise>
+                        <kec-form text="起运地区/国家" width="100px" crosswise>
                         <template #input>
                           <div class="flexs">
                                 <el-select
@@ -334,7 +333,7 @@
           
         </div>
     
-  </kec-dialog>
+  </kec-drag>
 </template>
 
 <script>
@@ -409,7 +408,6 @@ import {formateDate} from '@/utils/fun'
     beforeMount() {},
 
     mounted() {
-      this.productFind()
     },
 
     methods: {

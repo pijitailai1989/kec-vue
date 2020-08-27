@@ -77,6 +77,8 @@ import KecSupplier from './addSupplier'
              companyName:{"title":'公司名称','slot':false,'sort':'ZH'},
              contactName:{"title":'联系人','slot':false,'sort':'ZH'},
              phone:{"title":'联系电话','slot':false,'sort':'1-9'},
+             vendorCode:{"title":'供应商编码','slot':false},
+             showExternalCode:{"title":'外部编码','slot':false},
              email:{"title":'邮箱','slot':false},
              webSite:{"title":'网址','slot':false,'sort':'OTHER'},
            },

@@ -1,40 +1,51 @@
 <template>
   <kec-scroll :numbers="175">
-    <div class="flexs kec-btn j-end">
-      <el-popover
-        placement="left-start"
-        width="700"
-        v-model="addVisible"
-        trigger="click">
-        <kec-customer @close="closeFunc" type="addVisible"></kec-customer>
-        <kec-button slot="reference" text="新建客户" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
-      </el-popover>
-      <kec-button-click
-        @click="eqitVentorFunc"
-        :disabled="selectIndex===null" 
-        slot="reference" text="编辑客户" 
-        icon="fa-pencil" background="#17A2B8" 
-        color="#fff"></kec-button-click>
-      <el-popover
-        placement="left-start"
-        width="160"
-        :disabled="selectIndex===null"
-        v-model="visible">
-        <p>确定删除吗？</p>
-        <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-          <el-button type="primary" size="mini" @click.native="delFunc">确定</el-button>
-        </div>
-        <kec-button slot="reference"
-          :disabled="selectIndex===null" text="删除客户" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
-      </el-popover>
+    
+    <div class="flexs j-between">
+            <div class="flexs" style="padding:5px">
+                <el-input v-model.trim="serachValue" placeholder="请输入编号或者公司" size="small" v-focus clearable></el-input>
+                <kec-button 
+                text="搜索"
+                background="#9822CB" 
+                @click.native="serach"
+                color="#fff"></kec-button>
+            </div>
+            <div class="flexs kec-btn j-end">
+              <el-popover
+                placement="left-start"
+                width="700"
+                v-model="addVisible"
+                trigger="click">
+                <kec-customer @close="closeFunc" type="addVisible"></kec-customer>
+                <kec-button slot="reference" text="新建客户" icon="fa-plus" background="#ED6D01" color="#fff"></kec-button>
+              </el-popover>
+              <kec-button-click
+                @click="eqitVentorFunc"
+                :disabled="selectIndex===null"
+                slot="reference" text="编辑客户"
+                icon="fa-pencil" background="#17A2B8"
+                color="#fff"></kec-button-click>
+              <el-popover
+                placement="left-start"
+                width="160"
+                :disabled="selectIndex===null"
+                v-model="visible">
+                <p>确定删除吗？</p>
+                <div style="text-align: right; margin: 0">
+                  <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+                  <el-button type="primary" size="mini" @click.native="delFunc">确定</el-button>
+                </div>
+                <kec-button slot="reference"
+                  :disabled="selectIndex===null" text="删除客户" icon="fa-eraser" background="#DC3545" color="#fff"></kec-button>
+              </el-popover>
+            </div>
     </div>
     <div class="kec-content">
-          <kec-table 
+          <kec-table
            height="221px"
-           :tableHeader="tableHeader" 
-           :lastWidth="lastWidth" 
-           :tableData="customerList" 
+           :tableHeader="tableHeader"
+           :lastWidth="lastWidth"
+           :tableData="customerList"
            :letWidth="letWidth"
            :selectIndex="selectIndex"
            @active-item="activeItem"
@@ -51,12 +62,13 @@
           </kec-table>
     </div>
   </kec-scroll>
+
 </template>
 
 <script>
 import {mapState,mapActions,mapMutations} from 'vuex'
 import {KecButton , KecTable,KecScroll,KecButtonClick }  from '@/common/components'
-import KecCustomer from './addCustomer' 
+import KecCustomer from './addCustomer'
   export default {
     name:'selectCustomer',
     props:[''],
@@ -64,12 +76,13 @@ import KecCustomer from './addCustomer'
       return {
            addVisible:false,
            changeVisible:false,
+           serachValue:"",
            letWidth:{
              "0":"80px",
              "2":"140px",
              "3":"140px",
              "5":"100px",
-             "6":"80px",
+             "7":"80px",
            },
            lastWidth:'',
            tableHeader:{
@@ -79,8 +92,10 @@ import KecCustomer from './addCustomer'
            phone:{"title":'联系电话','slot':false,'sort':'1-9'},
            email:{"title":'邮箱','slot':false},
            customer_code:{"title":'客户编码','slot':false,'sort':'OTHER'},
+           showExternalCode:{"title":'外部编码','slot':false,'sort':'OTHER'},
            type:{"title":'类型','slot':true},
            webSite:{"title":'网址','slot':false,'sort':'OTHER'},
+           
            },
            selectIndex:null,
            selectItem:null,
@@ -131,7 +146,13 @@ import KecCustomer from './addCustomer'
           }
           if(data.type){
               this[data.type] = false ;
-          } 
+          }
+        },
+        serach(){
+          // let data = str.replace(/^\s+|\s+$/g,this.serachValue)
+          let data = this.serachValue
+          console.log(data)
+          this.loadCustomerQueryAll({status:'ENABLED',customerCode:data,companyName:data})
         },
         delFunc(){
           if(this.selectIndex!==null) {
@@ -149,7 +170,7 @@ import KecCustomer from './addCustomer'
                     type: 'error'
                    });
                 })
-          } 
+          }
         },
         eqitVentorFunc(){
           let item = this.selectItem ;
@@ -165,10 +186,25 @@ import KecCustomer from './addCustomer'
 
 </script>
 <style lang='stylus' scoped>
- .kec-button   
+ .kec-button
    margin-left 10px
- .kec-btn  
-   padding 5px        
- .kec-content  
+ .kec-btn
+   padding 5px
+ .kec-content
    padding 1px
+
+   .headerserach
+      width 100%
+      height 55px
+      padding-top 10px
+
+   .input-box
+     width 100%
+     height 50px
+
+   .input-box .input-box-left,.input-box-right
+     width 20%
+     padding-left 15px
+     float left
+
 </style>

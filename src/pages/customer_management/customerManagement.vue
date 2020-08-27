@@ -1,11 +1,18 @@
 <template>
   <div>
+
     <div style="" class="breadcrub">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item class="cur" @click.native="componentNameFunc(item.components,index)" 
+        <el-breadcrumb-item class="cur" @click.native="componentNameFunc(item.components,index)"
         v-for="(item,index) of breadcrumbArr" :key="index">{{item.name}}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
+
+
+<!-- header sereach start -->
+
+<!-- header sereach end -->
+
     <component :is="componentName" style="margin-top:10px"></component>
   </div>
 </template>
@@ -20,7 +27,8 @@ import {KecPageHeader}  from '@/common/components'
     props:[''],
     data () {
       return {
-          componentName:'selectCustomer'
+          componentName:'selectCustomer',
+          // serachValue:"",
       };
     },
     components:{
@@ -35,12 +43,12 @@ import {KecPageHeader}  from '@/common/components'
     methods: {
       ...mapMutations('home',['delBreadcrumbArr']),
       componentNameFunc(components,index,item){
-         
+
          if(index>=1){
            this.componentName = components ;
            this.delBreadcrumbArr(index) ;
          }
-         
+
       }
     },
     watch: {
@@ -54,7 +62,7 @@ import {KecPageHeader}  from '@/common/components'
         }
        }
       },
-      
+
     }
 
 
@@ -67,4 +75,6 @@ import {KecPageHeader}  from '@/common/components'
    background #fff
    .cur
      cursor pointer !important
+
+
 </style>

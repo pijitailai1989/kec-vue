@@ -72,6 +72,16 @@
                   </template>
                 </kec-form>
             </div>
+            <div class="col-sm-12" style="padding:5px 0">
+                <kec-form crosswise width="100px" text="类型">
+                  <template #input>
+                    <div class="flexs" style="padding:10px 0">
+                        <el-radio v-model="payload.isStandard" :label="1">标准价</el-radio>
+                        <el-radio v-model="payload.isStandard" :label="2">协议价</el-radio>
+                    </div>
+                  </template>
+                </kec-form>
+            </div>
           </div>
       </template>
     </kec-dialog>
@@ -92,7 +102,8 @@ import {KecForm, KecButton ,KecDialog}  from '@/common/components'
            productId:null,
            description: "",
            destinationCountryIds:[],
-           schemaIds:[]
+           schemaIds:[],
+           isStandard:null
         }
       };
     },
@@ -121,15 +132,16 @@ import {KecForm, KecButton ,KecDialog}  from '@/common/components'
            productId:null,
            description: "",
            destinationCountryIds:[],
-           schemaIds:[]
+           schemaIds:[],
+           isStandard:null
         }
       },
       clickConfirm() {
         const _this = this ;
-        let { productId,description,destinationCountryIds,schemaIds} = _this.payload ;
-        let data = {productId,description,destinationCountryIds,schemaIds}
+        let { productId,description,destinationCountryIds,schemaIds,isStandard} = _this.payload ;
+        let data = {productId,description,destinationCountryIds,schemaIds,isStandard}
                 _this.loadPostProductQuotation(data).then(success=>{
-                   this.$emit('close',true)
+                   this.$emit('close',this.payload.isStandard)
                    this.closeData()
                    this.$message( {
                     message: success,

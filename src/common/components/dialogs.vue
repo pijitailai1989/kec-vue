@@ -1,23 +1,7 @@
-<template>
-  <div class="dialogs">
-    <div class="box-content" :style="{width:boxWidth,top:boxTop}">
-       <div class="tops" :style="{borderColor:themeColor.content_border_color}">
-          <slot name="title"></slot>
-       </div>
-       <div class="centers">
-          <slot></slot>
-       </div>
-       <div class="bottoms">
-          <slot name="btn"></slot>
-       </div>
-    </div>
-  </div>
-</template>
-
 <script>
 import {mapState} from 'vuex'
-  export default {
-    name:'dialogs',
+export default {
+    name:'dialogsRender',
     props:{
         boxWidth:String,
         boxTop:String
@@ -27,7 +11,31 @@ import {mapState} from 'vuex'
 
       };
     },
+    render: function(createElement) {
+      return createElement(
+        'div',{ class:'dialogs' },
+        [
+         createElement(
+           'div',{ class:'box-content',style:{width:this.boxWidth,top:this.boxTop} },
+           [
+             createElement(
+               'div',{ class:'tops',style:{'border-color':this.themeColor.content_border_color} },
+                [ createElement('div',this.$slots.title) ]
+             ),
+             createElement(
+                'div', { class:'centers' },
+                [ createElement('div',this.$slots.default) ]
+             ),
+             createElement(
+                'div', { class:'bottoms' },
+                [ createElement('div',this.$slots.btn) ]
+             ),
+           ]
 
+         )
+        ]
+      )
+    },
     components: {},
 
     computed: {

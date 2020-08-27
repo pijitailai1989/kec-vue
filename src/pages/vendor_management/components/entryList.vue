@@ -56,15 +56,20 @@
       </div>
       <div class="flexs kec-btn j-end" ref="box">
           <kec-button 
+          text="添加提单" icon="fa-plus" 
+          background="#47A718" 
+          @click.native="buttonFunc('addBill',null,'addBill')"
+          color="#fff"></kec-button>
+          <kec-button 
           text="添加录入" icon="fa-plus" 
           background="#ED6D01" 
-          @click.native="buttonFunc('addVisible',null)"
+          @click.native="buttonFunc('addVisible',null,'addEntry')"
           color="#fff"></kec-button>
           <kec-button-click
           text="修改录入" icon="fa-pencil" 
           background="#17A2B8" 
           :disabled="selectItem===null"
-          @click="buttonFunc('changeVisible',selectItem)"
+          @click="buttonFunc('changeVisible',selectItem,'addEntry')"
           color="#fff"></kec-button-click>
         <!-- <el-popover
           placement="left-start"
@@ -101,7 +106,7 @@
             </template>
           </kec-table>
     </div>
-    <component :is="'addEntry'" @close="closeFunc"  
+    <component :is="comName" @close="closeFunc"  
     :dialogVisible="dialogVisible" :type="types" 
     :item="selectItems" :text="textItem"></component>
   </kec-scroll>
@@ -111,12 +116,14 @@
 import {mapState,mapActions,mapMutations} from 'vuex'
 import {KecButton , KecTable ,KecScroll,KecButtonClick,KecForm }  from '@/common/components'
 import addEntry from './addEntry' 
+import addBill from './addBill' 
 import {toMoney,formateDate} from '@/utils/fun'
   export default {
     name:'entryList',
     props:[''],
     data () {
       return {
+           comName:'addEntry',
            serviceTypeId:null,
            vendorId:null,
            date:'',
@@ -128,13 +135,14 @@ import {toMoney,formateDate} from '@/utils/fun'
            dialogVisible:false,
            letWidth:{
                0:'100px',
+               2:'140px',
                4:'120px'
            },
            lastWidth:'',
            tableHeader:{
              execDate:{"title":'录入日期','slot':false,'sort':'ZH'},
-             expenseNumber:{"title":'单据号码','slot':false,'sort':'ZH'},
-             expenseNumberTypeText:{"title":'单据类型','slot':false,'sort':'ZH'},
+             expenseNumber:{"title":'提单号码','slot':false,'sort':'ZH'},
+             expenseNumberTypeText:{"title":'提单类型','slot':false,'sort':'ZH'},
              vendorName:{"title":'供应商','slot':false,'sort':'ZH'},
              countMoney:{"title":'费用总额','slot':false}
            },
@@ -148,12 +156,7 @@ import {toMoney,formateDate} from '@/utils/fun'
     },
 
     components: {
-        KecButton ,
-        KecTable,
-        addEntry,
-        KecScroll,
-        KecForm,
-        KecButtonClick
+        addEntry,addBill
     },
 
     computed: {
@@ -176,6 +179,7 @@ import {toMoney,formateDate} from '@/utils/fun'
       this.loadGetExpenseNumberType()
       this.loadVendorGetVendors()
       this.loadDictionaryCURRENCY()
+      this.loadGetSimpleLadingBills()
       let data = {
         pageSize:10000,
         pageNumber:1
@@ -188,7 +192,7 @@ import {toMoney,formateDate} from '@/utils/fun'
     methods: {
         ...mapActions('fidle',['loadGetLastMileExtraInfos','loadDeleltLastMileExtraInfos']),
         ...mapMutations('basic',['filterItem']),
-        ...mapActions('vendor',['loadGetVendorProducts','loadGetExpenses','loadGetExpenseNumberType']),
+        ...mapActions('vendor',['loadGetVendorProducts','loadGetExpenses','loadGetExpenseNumberType','loadGetSimpleLadingBills']),
         ...mapActions('basic',['loadVendorGetVendors','loadDictionaryCURRENCY','loadGetChargeItem']),
         mountFun(data){
           const _ = this ;
@@ -207,9 +211,12 @@ import {toMoney,formateDate} from '@/utils/fun'
         activeItem(item){
           this.selectItem = item ;
         },
-        buttonFunc(type,item){
+        buttonFunc(type,item,comName){
+          this.comName = comName ;
           if(type === 'addVisible'){
              this.textItem = '添加费用录入'
+          }else if(type === 'addBill'){
+             this.textItem = '提单录入'
           }else{
              this.textItem = '修改费用录入'
           }
@@ -236,6 +243,7 @@ import {toMoney,formateDate} from '@/utils/fun'
           this.selectItem = null ;
           this.selectItems = null ;
           this.dialogVisible = false
+          this.comName = 'addEntry'
           if(data.bool) {
             this.mountFun()
           }

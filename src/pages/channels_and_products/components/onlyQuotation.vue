@@ -35,7 +35,7 @@
             
             <div class="col-sm-12">
                 <div class="col-sm-5">
-                    <kec-form text="科目项名称 ：" width="90px" crosswise>
+                    <kec-form text="科目项名称 :" width="100px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.ledgerSubjectName}}
@@ -45,7 +45,7 @@
                 </div>
                 
                 <div class="col-sm-4">
-                    <kec-form text="计费纬度 ：" width="90px" crosswise>
+                    <kec-form text="计费纬度 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.chargeItemAccountingWay}}
@@ -54,7 +54,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-3">
-                    <kec-form text="单位乘数 ：" width="90px" crosswise>
+                    <kec-form text="单位乘数 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.unitRate}}
@@ -63,7 +63,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-5">
-                    <kec-form text="科目编号 ：" width="90px" crosswise>
+                    <kec-form text="科目编号 :" width="100px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.ledgerSubjectNumber}}
@@ -72,7 +72,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-4">
-                    <kec-form text="单位 ：" width="90px" crosswise>
+                    <kec-form text="单位 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.unit}}
@@ -81,7 +81,7 @@
                     </kec-form>
                 </div>
                 <div class="col-sm-3">
-                    <kec-form text="币种 ：" width="90px" crosswise>
+                    <kec-form text="币种 :" width="90px" crosswise>
                       <template #input>
                         <div class="p5">
                           {{payload.currency}}

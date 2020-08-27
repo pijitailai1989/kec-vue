@@ -3,7 +3,7 @@
     <div class="flexs kec-btn j-between a-center" style="width:100%"> 
       <div class="flexs a-center j-start">
            <div class="flexs a-center">
-            <kec-form crosswise text="客户" width="80px">
+              <kec-form crosswise text="客户" width="40px">
                 <template #input>
                   <el-select v-model="companyId" size="medium" clearable @change="changeCompanyId"
                    filterable placeholder="" style="width:200px">
@@ -29,7 +29,7 @@
                         </el-select>
                     </div>
                   </template>
-                </kec-form>
+              </kec-form>
               
               <kec-button-click text="查询" 
                @click="queryFunc(agreementId)"

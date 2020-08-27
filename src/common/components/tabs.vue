@@ -24,7 +24,7 @@
 <script>
 import {mapState} from 'vuex'
   export default {
-    name:'tabs',
+    name:'KecTabs',
     props:{
         height:String,
         titleList:Array,

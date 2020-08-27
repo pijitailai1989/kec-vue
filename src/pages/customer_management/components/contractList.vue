@@ -28,28 +28,48 @@
       </div>
     </div> -->
     <kec-scroll :numbers="179" class="list">
-        <div class="flexs j-end" style="padding:5px">
-            
-            <kec-button 
-            text="新建协议" icon="fa-plus" 
-            background="#ED6D01" 
-            @click.native="buttonFunc('addVisible',null)"
-            color="#fff"></kec-button>
-            <kec-button-click 
-            :disabled="selectIndex===null"
-            text="修改协议" icon="fa-pencil" 
-            background="#17A2B8" 
-            @click="buttonFunc('changeVisible',selectItem)"
-            color="#fff"></kec-button-click>
-            <kec-button-click 
-            :disabled="selectIndex===null || selectItem.examineStatus !== 1"
-            text="协议审核" icon="fa-gavel" 
-            background="#41A813" 
-            @click="buttonFunc('contractApprove',selectItem)"
-            color="#fff"></kec-button-click>
-            
-          
+        <div class="flexs j-between">
+            <div class="flexs" style="padding:5px">
+                <el-input v-model="input" placeholder="请输入协议号或者客户名" v-focus size="small" clearable></el-input>
+                <kec-button 
+                text="搜索"
+                background="#9822CB" 
+                @click.native="mountFunc(20,1,input)"
+                color="#fff"></kec-button>
+            </div>
+            <div class="flexs j-end" style="padding:5px">
+                <kec-button 
+                text="模板下载"
+                background="#E04141" 
+                @click.native="download"
+                color="#fff"></kec-button>
+                <kec-button 
+                text="批量导入" icon="fa-plus" 
+                background="#2D91D2" 
+                @click.native="buttonFunc('batch',null)"
+                color="#fff"></kec-button>
+                <kec-button 
+                text="新建协议" icon="fa-plus" 
+                background="#ED6D01" 
+                @click.native="buttonFunc('addVisible',null)"
+                color="#fff"></kec-button>
+                <kec-button-click 
+                :disabled="selectIndex===null"
+                text="修改协议" icon="fa-pencil" 
+                background="#3B38C2" 
+                @click="buttonFunc('changeVisible',selectItem)"
+                color="#fff"></kec-button-click>
+                <kec-button-click 
+                :disabled="selectIndex===null || selectItem.examineStatus !== 1"
+                text="协议审核" icon="fa-gavel" 
+                background="#41A813" 
+                @click="buttonFunc('contractApprove',selectItem)"
+                color="#fff"></kec-button-click>
+                
+              
+            </div>
         </div>
+        
         <div class="kec-content">
             <kec-table 
             height="260px"
@@ -102,6 +122,8 @@ import {mapState,mapActions,mapMutations} from 'vuex'
 import {KecButton , KecTable ,KecScroll ,KecForm,KecButtonClick}  from '@/common/components'
 import KecContract from './addContract'  
 import contractApprove from './contractApprove'  
+import batchImport from './batchImport'
+import axios from '@/http/config'
   export default {
     name:'contractList',
     props:[''],
@@ -115,25 +137,22 @@ import contractApprove from './contractApprove'
            types:'',
            componentName:'KecContract',
            letWidth:{
-             0:'80px',
-             1:'120px',
-             2:'100px',
-             4:'70px',
-             6:'80px',
-             9:'100px',
-             10:"100px"
+             0:'140px',
+             1:'90px',
+             3:'60px',
+             7:'90px',
+             8:'80px',
 
            },
            lastWidth:'',
            tableHeader:{
-             id:{"title":'ID','slot':false,'sort':'1-9'},
              code:{"title":'服务协议号','slot':false},
              customerCode:{"title":'客户编号','slot':false,'sort':'OTHER'},
              customercompanyName:{"title":'客户名称','slot':false,'sort':'ZH'},
              customerType:{"title":'客户类','slot':false},
-             servicerName:{"title":'销售代表','slot':false},
+             managerName:{"title":'销售代表','slot':false},
             //  paymentPeriod:{"title":'账期','slot':false},
-             managerName:{"title":'客户经理','slot':false},
+             servicerName:{"title":'客服代表','slot':false},
              productName:{"title":'服务产品','slot':false},
              effectiveDate:{"title":'生效日期','slot':false},
              examineStatusText:{"title":'状态','slot':false}
@@ -141,12 +160,13 @@ import contractApprove from './contractApprove'
            selectIndex:null,
            selectItem:null,
            selectItems:null,
-           PageSize:14,
+           PageSize:20,
            PageNum:1,
            total:null,
            orderNum:null,
            beginDate:null,
            endDate:null,
+           input:'',
            tiems:'',
            searchBool:false,
            textItem:'',
@@ -162,7 +182,8 @@ import contractApprove from './contractApprove'
         KecForm,
         KecButtonClick,
         KecContract,
-        contractApprove
+        contractApprove,
+        batchImport
     },
 
     computed: {
@@ -176,6 +197,7 @@ import contractApprove from './contractApprove'
     mounted() {
       this.mountFunc(this.PageSize,this.PageNum)
       this.loadCustomerQueryAll({status:'ENABLED'})
+      this.loadGetFindAll()
       // this.loadGetUsersByRoleCodeSALES()
       // this.loadGetUsersByRoleCodeSERVICE()
       this.loadCountryQueryAll()
@@ -194,9 +216,11 @@ import contractApprove from './contractApprove'
           this.mountFunc(this.PageSize,page)
         },
         searchFunc(){
-          
           this.searchBool = true ;
-          this.mountFunc(14,1)
+          this.mountFunc(20,1)
+        },
+        download(){
+            window.location.href = axios.defaults.baseURL+'/auth/download/agreement-example'
         },
         buttonFunc(types,item){
           this.types = types ;
@@ -209,23 +233,22 @@ import contractApprove from './contractApprove'
             this.textItem = '修改协议'
             this.componentName = 'KecContract'
             this.selectItems = item
-          }else{
+          }else if(types === 'contractApprove'){
             this.componentName = 'contractApprove'
             this.textItem = '协议审核'
-            
             this.$nextTick(()=>{
                this.selectItems = item
             })
-            
+          }else{
+            this.textItem = '批量导入'
+            this.componentName = 'batchImport'
+            this.selectItems = null
           }
             
         },
-        mountFunc(size,num){
+        mountFunc(pageSize,pageNumber,input){
           const _ = this ;
-          let data = {
-            pageSize:size,
-            pageNumber:num
-          }
+          let data = {pageSize,pageNumber,input}
           if(this.searchBool){
               this.beginDate && (data['beginDate'] = this.beginDate)
               this.endDate && (data['endDate'] = this.endDate)
@@ -294,7 +317,6 @@ import contractApprove from './contractApprove'
           this.selectItem = null ;
           this.selectItems = null ;
           this.componentName = 'KecContract'
-          
           this.dialogVisible = false ;
           if(data.bool) {
             if(data.type === 'addVisible') this.PageNum = 1 ;

@@ -8,7 +8,7 @@
 <script>
 
   export default {
-    name:'badges',
+    name:'KecBadge',
     props:{
         value:Number,
         color:String

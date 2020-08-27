@@ -25,7 +25,7 @@
 
   // PORTAL 接口
   const POR_LOGIN_LOGOUT = conf({
-    // dev:  'http://47.106.39.79:8888',
+    // dev:  'http://192.168.2.206:8888',
     dev:  'https://kengine.kec-app.com:8443',
     prod: 'https://kengine.kec-app.com:8443',
     uat:  'http://47.106.39.79:8890'

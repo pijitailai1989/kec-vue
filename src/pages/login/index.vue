@@ -18,6 +18,8 @@ import loginHeader from './components/header'
 import loginLogin from './components/login'
 import reset from './components/reset'
 import { formatDate } from '@/utils/fun'
+// import { post} from "../../untils/user.js";
+
   export default {
     name:'login',
     props:[''],

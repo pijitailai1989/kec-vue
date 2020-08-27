@@ -8,7 +8,7 @@
 <script>
 
   export default {
-    name:'buttons',
+    name:'KecButton',
     props:{
         icon:String,
         text:String,
@@ -34,7 +34,7 @@
    cursor pointer 
    box-shadow 1px 1px 2px #ccc  
    &:hover  
-     opacity .8  
+     opacity .8 
    span,i
      padding 3px
      white-space nowrap

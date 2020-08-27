@@ -10,7 +10,7 @@
 <script>
 
   export default {
-    name:'workstatus',
+    name:'KecWork',
     props:{
         statusText:Number
     },

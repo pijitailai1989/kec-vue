@@ -151,5 +151,8 @@ export default {
     loadPutAgreementQuotations({commit},payload){
       return getPromiseActionNoMutations (api.putAgreementQuotations(payload))
     },
+    loadPostUploadCreate({commit},payload){
+      return getPromiseActionNoMutations (api.postUploadCreate(payload))
+    },
   }
 }

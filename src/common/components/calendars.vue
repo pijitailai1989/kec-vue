@@ -38,7 +38,7 @@ import {mapState,mapMutations,mapActions} from 'vuex'
 import { mGetDate } from '@/utils/fun'
 import  KecWorkStatus  from './workstatus'
   export default {
-    name:'calendars',
+    name:'KecCalendars',
     props:{
         itemDays:Array,
         width:Number,

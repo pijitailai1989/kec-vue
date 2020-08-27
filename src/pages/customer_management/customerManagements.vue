@@ -1,7 +1,7 @@
 <template>
   <div>
-    <kec-page-header 
-      :textArray="['客户管理','客户列表']" 
+    <kec-page-header
+      :textArray="['客户管理','客户列表']"
       @click="tabsFunC"
       :nameComponent="{1:'customerList'}">
     </kec-page-header>
@@ -18,7 +18,7 @@ import {KecPageHeader}  from '@/common/components'
     data () {
       return {
           componentName:'customerList'
-             
+
       };
     },
     components:{
@@ -26,7 +26,7 @@ import {KecPageHeader}  from '@/common/components'
       KecPageHeader
     },
     computed: {
-      
+
     },
     methods: {
       tabsFunC(name) {
@@ -38,6 +38,6 @@ import {KecPageHeader}  from '@/common/components'
 
 </script>
 <style lang='stylus' scoped>
-.content  
+.content
   margin-top 10px
 </style>

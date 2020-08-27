@@ -6,7 +6,9 @@ const fetch = (options) => {
     let tokenLacalStorage =  sessionStorage.getItem('token') ;
     if(tokenLacalStorage && nums === 0){
       nums ++ ;
-      axios.defaults.headers['Authorization'] = 'Bearer ' + tokenLacalStorage 
+      let {hostname} = location ;
+
+      axios.defaults.headers['Authorization'] = 'Bearer ' + tokenLacalStorage ;
     }
     switch (methods.toLowerCase()) {
         case 'get':

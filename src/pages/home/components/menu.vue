@@ -6,7 +6,7 @@
       :unique-opened="true"
       :background-color="backgroundColor"
       :text-color="textColor"
-      >
+      @select="selectFun">
       <template v-for="item in menuList">
         <template v-if="item.children">
            <el-submenu :index="item.id" :key="item.id" v-show="item.authorityText in isShowMenu">
@@ -16,7 +16,7 @@
              </template>
               <el-menu-item :style="{'color':routerPath===todo.path?activeColor:textColor}"
               :index="todo.id" v-for="todo of item.children" :key="todo.id"
-              @click.native="RouterLinkTo(todo)" v-show="todo.authorityText in isShowMenu"
+              v-show="todo.authorityText in isShowMenu"
                >
                 <i :class="['fa',todo.icon]"></i>
                 <span slot="title">{{menu[todo.title]}}</span>
@@ -25,8 +25,7 @@
         </template>
         <template v-else>
           <el-menu-item :style="{'color':routerPath===item.path?activeColor:textColor}"
-          :index="item.id" :key="item.id" v-show="item.authorityText in isShowMenu"
-           @click.native="RouterLinkTo(item)">
+          :index="item.id" :key="item.id" v-show="item.authorityText in isShowMenu">
             <i :class="['fa',item.icon]"></i>
             <span class="menu-span" slot="title">{{menu[item.title]}}</span>
           </el-menu-item>
@@ -337,11 +336,18 @@ import {mapState,mapMutations} from 'vuex'
     },
     methods: {
       ...mapMutations('home',['setTableTabs','setBreadcrumbArr']),
-        RouterLinkTo(item) {
+        selectFun(index,indexPath){
+            const _this = this ;
+            const id = indexPath[0]
+            let {children} = _this.menuList.find(item => { return id == item.id })
+            let item = children.find(todo => { return index == todo.id })
+            item && _this.routerLinkTo(item)
+        },
+        routerLinkTo(item) {
           const _this = this ;
           const path = _this.$route.path;
-          if(path === item.path) return ;
           _this.$router.push({path:item.path})
+          if(path == item.path) return ;
           let data = {
              title:item.title,
              id:item.id,

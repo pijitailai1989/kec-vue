@@ -209,7 +209,6 @@ import {KecForm, KecButton ,KecDrag}  from '@/common/components'
             if(val){
                let payload = JSON.parse(JSON.stringify(val) );
                let { code,description,name,nameEn,serviceId,seq,status,id,chargeItemIds } = payload
-               console.log(this.chargeItemList,'chargeItemList')
                _.payload = {code,description: description || '',name,nameEn:nameEn || '',serviceId,seq,status,id,chargeItemIds}
 
             } 

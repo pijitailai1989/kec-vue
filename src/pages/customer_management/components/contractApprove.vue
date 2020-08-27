@@ -1,7 +1,6 @@
 <template>
-  <kec-dialog 
-      boxWidth="1020px"
-      boxTop="1vh"
+  <kec-drag 
+      boxWidth="1020px" client
       v-if="dialogVisible">
      <template v-slot:title>
         <span style="font-weight:bold;font-size:17px">{{text}}</span>
@@ -28,14 +27,8 @@
               <kec-form text="协议属性" >
                 <template #input>
                      <div  class="col-sm-12 borders" style="margin-bottom:5px">
-                        <div class="col-sm-4">
-                            <kec-form text="协议编号" width="70px" crosswise>
-                            <template #input>
-                              <el-input v-model="payload.code" placeholder="" disabled></el-input>
-                            </template>
-                            </kec-form>
-                        </div>
-                        <div class="col-sm-4">
+                        
+                        <div class="col-sm-8">
                             <kec-form text="客户" width="70px" crosswise>
                             <template #input>
                               <div class="flexs">
@@ -81,19 +74,40 @@
                         
                         
                         <div class="col-sm-4">
+                            <kec-form text="运营主体" width="70px" crosswise>
+                            <template #input>
+                              <div class="flexs">
+                                    <el-select
+                                      style="width:100%"
+                                      disabled
+                                        v-model="payload.organizationId"
+                                        filterable
+                                        placeholder="">
+                                        <el-option
+                                          v-for="item in operationList"
+                                          :key="item.id"
+                                          :label="item.name"
+                                          :value="item.id">
+                                        </el-option>
+                                      </el-select>
+                                </div>
+                            </template>
+                            </kec-form>
+                        </div>
+                        <div class="col-sm-4">
                             <kec-form text="销售代表" width="70px" crosswise>
                             <template #input>
                               <div class="flexs">
                                     <el-select
                                       style="width:100%"
                                       disabled
-                                        v-model="payload.managerId"
+                                        v-model="payload.salesmanId"
                                         filterable
                                         placeholder="">
                                         <el-option
-                                          v-for="item in SALES"
+                                          v-for="item in service['SALES']"
                                           :key="item.id"
-                                          :label="item.userName"
+                                          :label="item.name"
                                           :value="item.id">
                                         </el-option>
                                       </el-select>
@@ -112,9 +126,9 @@
                                         filterable
                                         placeholder="">
                                         <el-option
-                                          v-for="item in SERVICE"
+                                          v-for="item in service['CUSTOMER_SERVICE']"
                                           :key="item.id"
-                                          :label="item.userName"
+                                          :label="item.name"
                                           :value="item.id">
                                         </el-option>
                                       </el-select>
@@ -266,7 +280,7 @@
                 </kec-form>
             </div>
         </div>
-  </kec-dialog>
+  </kec-drag>
 </template>
 
 <script>
@@ -291,7 +305,7 @@ import {formatDate} from '@/utils/fun'
           effectiveDate:null,
           productId:null,
           customerId:null,
-          managerId:null,
+          salesmanId:null,
           servicerId:null,
           normalItem:false,
           sensitiveItem:false,
@@ -300,7 +314,7 @@ import {formatDate} from '@/utils/fun'
           deliveryDay:null,
           shippingCountryCode:null,
           destinationCountryCode:null,
-          code:null
+          organizationId:null
         },
         tableHeader:{
              offerType:{"title":'报价方式','slot':true,'sort':'ZH'},
@@ -342,7 +356,7 @@ import {formatDate} from '@/utils/fun'
     },
 
     computed: {
-      ...mapState('basic',['customerList','currencyList','countryList']),
+      ...mapState('basic',['customerList','currencyList','countryList','service','operationList']),
       ...mapState('vendor',['cyclesList']),
       ...mapState('customer',['agreementQueryPage','SALES','SERVICE','productLists','quotationsList','costByProductList','examineList']),
     },
@@ -358,22 +372,22 @@ import {formatDate} from '@/utils/fun'
       closeData(){
         this.payload={
             id:null,
-            currency:null,
-            billCycle:null,
-            startPaymentDate:null,
-            effectiveDate:null,
-            productId:null,
-            customerId:null,
-            managerId:null,
-            servicerId:null,
-            normalItem:false,
-            sensitiveItem:false,
-            stateTrack:false,
-            cod:false,
-            deliveryDay:null,
-            shippingCountryCode:null,
+          currency:null,
+          billCycle:null,
+          startPaymentDate:null,
+          effectiveDate:null,
+          productId:null,
+          customerId:null,
+          salesmanId:null,
+          servicerId:null,
+          normalItem:false,
+          sensitiveItem:false,
+          stateTrack:false,
+          cod:false,
+          deliveryDay:null,
+          shippingCountryCode:null,
           destinationCountryCode:null,
-          code:null
+          organizationId:null
         }
       },
       productFind(shippingCountryCode,destinationCountryCode){
@@ -413,16 +427,17 @@ import {formatDate} from '@/utils/fun'
               let {customerId,productId,billCycle
               ,startPaymentDate
               ,effectiveDate
-              ,managerId
+              ,examineStatus
+              ,salesmanId
               ,servicerId,
               deliveryDay
               ,normalItem
               ,sensitiveItem
               ,stateTrack
               ,cod
-              ,id
               ,currency
-              ,code
+              ,organizationId
+              ,id
               } = payload ;
 
               this.payload = {
@@ -430,17 +445,18 @@ import {formatDate} from '@/utils/fun'
               ,billCycle
               ,startPaymentDate
               ,effectiveDate
+              ,examineStatus
               ,productId
               ,customerId
-              ,managerId
+              ,salesmanId
               ,servicerId
-              ,id
               ,normalItem:normalItem == 1 ? true :false
               ,sensitiveItem:sensitiveItem == 1 ? true :false
               ,stateTrack:stateTrack == 1 ? true :false
               ,cod:cod == 1 ? true :false
               ,deliveryDay
-              ,code}
+              ,organizationId
+              ,id}
               this.loadGetProductQuotations([id]).then(success=>{
                   this.list = this.quotationsList ;
               }).catch(error=> {

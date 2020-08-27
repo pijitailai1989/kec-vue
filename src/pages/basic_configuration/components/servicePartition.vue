@@ -26,54 +26,58 @@
         
     </div>
     <div class="kec-content">
-        <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
-          <div-sort class="padd" style="width:119px" @clickSort="sortFunc" :sortType="{a:'countryCode',b:'ZH'}">国家编码</div-sort>
+        <!-- <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
+          <div-sort class="padd" style="width:99px" @clickSort="sortFunc" :sortType="{a:'countryCode',b:'ZH'}">国家编码</div-sort>
           <div-sort class="padd flx" @clickSort="sortFunc" :sortType="{a:'schemaName',b:'ZH'}">方案名称</div-sort>
           <div class="padd" style="width:150px">分区类型</div>
           <div class="padd" style="width:120px">分区名</div>
 
-        </div>
+        </div> -->
         <kec-scroll :numbers="260" style="border-bottom:1px solid #EBEEF5">
           <el-table
              ref="singleTable"
               class="scrollbar"
               :data="tableRole"
               :header-cell-style="{
+                background:themeColor.content_border_color,
+                borderRight:'1px solid #FFF',
                 fontWeight:'bold',
                 height:'38px',
-                color:'#000',
+                color:'#fff',
                 padding:'0'
               }"
+              :max-height="tableHeight"
               highlight-current-row
               @current-change="changeSelectFunc"
               :cell-style="{
                 borderRight:'1px solid #EBEEF5',
                 padding:'6px 0'
-              }"
-              style="width:100%">
+              }">
               <el-table-column
               prop="countryCode"
-              width="120"
-              label=""
+              width="100"
+              label="国家编码"
               >
               </el-table-column>
               <el-table-column
               prop="schemaName"
-              label=""
+              label="方案名称"
               >
               </el-table-column>
               <el-table-column
-              label=""
+              label="分区类型"
               width="150"
               >
               <template slot-scope="scope">
                   <div class="flexs">
-                    {{scope.row.partitionType==='sale'?'销售方案 ':'供应商方案'}}
+                    <span v-show="scope.row.partitionType==='sale'">销售方案</span>
+                    <span v-show="scope.row.partitionType==='sort'">分拣方案</span>
+                    <span v-show="scope.row.partitionType==='vendor'">供应商方案</span>
                   </div>
                 </template>
               </el-table-column>
               <el-table-column
-              label=""
+              label="分区名"
               width="120">
               <template slot-scope="scope">
                   <el-popover
@@ -111,7 +115,7 @@
 
 <script>
 import {mapState,mapActions,mapMutations} from 'vuex'
-import {sortCompare } from '@/utils/fun'
+import {sortCompare ,getClientHeight } from '@/utils/fun'
 import {KecButton , KecTable ,KecScroll ,KecButtonClick,KecForm,KecSort}  from '@/common/components'
 import addPartition from './addPartitions' 
   export default {
@@ -153,6 +157,9 @@ import addPartition from './addPartitions'
       ...mapState('home',['themeColor']),
       filteredTableData: function(){
         return this.table
+      },
+      tableHeight: function(){
+        return getClientHeight() - 261
       }
       
     },

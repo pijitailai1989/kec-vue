@@ -34,7 +34,7 @@
     </div>
 
     <div class="kec-content">
-        <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
+        <!-- <div class="tableHeader flexs" :style="{background:themeColor.content_border_color}">
           <div-sort class="padd" style="width:120px" @clickSort="sortFunc" :sortType="{a:'code',b:'OTHER'}">科目项编号</div-sort>
           <div class="padd" style="width:100px">标签类型</div>
           <div class="padd flx" style="min-width:80px">描述</div>
@@ -46,14 +46,16 @@
           <div class="padd" style="width:100px">创建时间</div>
           <div class="padd" style="width:80px">状态</div>
           <div class="padd" style="width:100px">操作</div>
-        </div>
-        <kec-scroll :numbers="260">
+        </div> -->
+        <kec-scroll :numbers="260" >
           <el-table
               class="scrollbar"
               ref="singleTable"
-
+              :max-height="tableHeight"
               :data="codeList"
               :header-cell-style="{
+                background:themeColor.content_border_color,
+                borderRight:'1px solid #FFF',
                 fontWeight:'bold',
                 height:'38px',
                 color:'#fff',
@@ -120,6 +122,7 @@
               </el-table-column>
               <el-table-column
               prop=""
+              fixed="right"
               width="100"
               label="操作">
                 <template slot-scope="scope">
@@ -144,7 +147,7 @@
 
 <script>
 import {mapState,mapActions,mapMutations} from 'vuex'
-import {sortCompare } from '@/utils/fun'
+import {sortCompare,getClientHeight } from '@/utils/fun'
 import {KecButton , KecTable ,KecScroll,KecButtonClick,KecSort }  from '@/common/components'
 import KecCode from './addCode'
 import KecAllocation from './allocation'
@@ -201,6 +204,9 @@ import KecAllocationList from './allocationList'
     computed: {
       ...mapState('basic',['codeRuleData']),
       ...mapState('home',['themeColor']),
+      tableHeight: function(){
+        return getClientHeight() - 261
+      }
     },
 
     beforeMount() {},
@@ -271,7 +277,7 @@ import KecAllocationList from './allocationList'
           code && ( data['code'] = code )
           _.loadCodeQueryPage(data).then(success => {
             let {content,totalElements} = _.codeRuleData;
-            _.codeList = content ;
+            _.codeList.push(...content)  ;
             _.total = totalElements ;
           })
         },

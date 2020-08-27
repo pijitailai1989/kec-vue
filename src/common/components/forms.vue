@@ -10,7 +10,7 @@
 <script>
 
   export default {
-    name:'forms',
+    name:'KecForm',
     props:{
       text:String,
       bold:String,

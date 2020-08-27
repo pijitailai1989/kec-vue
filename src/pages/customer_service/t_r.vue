@@ -1,7 +1,7 @@
 <template>
  <div>
     <div class="flexs kec-btn btn-fun" >
-      <kec-form crosswise bold="bold" text="订单编号 / 参考号:" width="120px" style="width:100%">
+      <kec-form crosswise bold="bold" text="订单编号/参考号:" width="120px" style="width:100%">
         <template #input>
           <el-input placeholder="请输入订单编号/参考号" v-model="orderNum" style="width:100%">
             <el-button @click.native="searchOrder(orderNum)" slot="append" icon="el-icon-search"></el-button>
@@ -72,7 +72,6 @@ import {KecButton , KecForm ,KecScroll }  from '@/common/components'
         ...mapActions('customer',['loadGetOrderState']),
         ...mapMutations('customer',['setOrderStateList']),
         searchOrder(order) {
-          console.log(order,'order')
           const _this = this ;
           if(order){
             order !== _this.orderNumCopy && _this.loadGetOrderState([order]) 

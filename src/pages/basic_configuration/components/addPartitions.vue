@@ -133,6 +133,7 @@
                                             :data="payload.sectionType === 'code'?item.partitionZipCode:item.partitionTags"
                                             tooltip-effect="dark"
                                             :cell-style="{ padding:'3px 0' }"
+                                            :header-cell-style="{ padding:'5px 0',backgroundColor:'#F5F7FA'}"
                                             style="width: 100%">
                                             <el-table-column
                                               v-if="payload.sectionType === 'code'"
@@ -267,7 +268,8 @@ import {KecButton , KecForm ,KecDialog ,KecTabs,KecButtonClick,KecScroll}  from 
         removeArr:0,
         typess:[
           {code:'sale',text:'销售方案'},
-          {code:'vendor',text:'供应商方案'}
+          {code:'vendor',text:'供应商方案'},
+          {code:'sort',text:'分拣方案'}
         ],
         typex:[
           {code:'code',text:'邮编区段'},
